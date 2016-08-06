@@ -5,7 +5,7 @@
 	
 
 		echo '
-			<h1>Вы вошли как гость. <br />Войдите в систему, используя логин и пароль.</h1>
+			<h1>Войдите в систему, используя логин и пароль.</h1>
 			<form action="testreg.php" method="post">
 				<div class="cellsBlock2">
 					<div class="cellLeft">Логин:</div>
