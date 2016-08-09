@@ -5,7 +5,7 @@
 	
     require_once 'header.php';
 	require_once 'header_tags.php';
-	
+	//!!!
 	unset($_SESSION['journal_tooth_status_temp']);
 	unset($_SESSION['permissions']);
 	unset($_SESSION['filial']);

@@ -3,11 +3,19 @@
 // массив для хранения ошибок
 $errorContainer = array();
 // полученные данные
-$arrayFields = array(
-    'client' => $_POST['client'],
-    'filial' => $_POST['filial'],
-);
- 
+$arrayFields = array();
+
+if (isset($_POST['client']))
+    $arrayFields['client'] = $_POST['client'];
+if (isset($_POST['worker']))
+    $arrayFields['worker'] = $_POST['worker'];
+if (isset($_POST['filial']))
+    $arrayFields['filial'] = $_POST['filial'];
+if (isset($_POST['name']))
+    $arrayFields['name'] = $_POST['name'];
+if (isset($_POST['age']))
+    $arrayFields['age'] = $_POST['age'];
+
 // проверка всех полей на пустоту
 foreach($arrayFields as $fieldName => $oneField){
     if($oneField == '' || !isset($oneField) || ($oneField == '0')){

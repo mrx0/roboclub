@@ -77,7 +77,7 @@
 			echo '
 				</header>';
 			
-			DrawFilterOptions ('clients', $it, $cosm, $stom, $workers, $clients, $offices, $god_mode);
+			DrawFilterOptions ('clients', 0, 0, 0, $workers, $clients, $offices, $god_mode);
 				echo '
 					<div class="cellsBlock2" style="width: 400px; ">
 						<div class="cellRight">

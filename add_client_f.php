@@ -36,11 +36,11 @@
 						//echo
 						$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
 						
-						WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['contacts'],  $_POST['comment'], $birthday, $_POST['sex']);
+						$client_id = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['contacts'],  $_POST['comment'], $birthday, $_POST['sex'], $_POST['filial']);
 					
 						echo '
 							<h1>Добавлен в базу.</h1>
-							ФИО: '.$full_name.'
+							ФИО: <a href="client.php?id='.$client_id.'">'.$full_name.'</a>
 							<br /><br />
 							<a href="add_client.php" class="b">Добавить ещё</a>
 							<a href="clients.php" class="b">К списку клиентов</a>

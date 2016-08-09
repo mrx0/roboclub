@@ -69,6 +69,18 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">Комментарий</div>
 									<div class="cellRight">'.$client[0]['comments'].'</div>
+								</div>
+								<div class="cellsBlock2">
+									<div class="cellLeft">Филиал</div>
+									<div class="cellRight">';
+				$filials = SelDataFromDB('spr_office', $client[0]['filial'], 'offices');
+				if ($filials != 0){
+					echo	$filials[0]['name'];
+				}else{
+					echo '-';
+				}
+				echo '
+									</div>
 								</div>';
 
 

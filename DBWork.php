@@ -154,32 +154,33 @@
 		//!!!AddLog ('0', $create_person, '', 'Изменение в расписании. ['.date('d.m.y H:i', $time).']. ОФис: ['.$office.']. клиент: ['.$client.']. Описание: ['.$for_log.']. Комментарий: '.$comment);
 	}
 
-	//Вставка записей в журнал Cosmet из-под Web
-	function WriteToDB_EditCosmet ($office, $client, $description, $create_time, $create_person, $last_edit_time, $last_edit_person, $worker, $comment){
+	//Вставка записей в журнал Group из-под Web
+	function WriteToDB_EditGroup ($name, $filial, $age, $worker, $comment, $session_id){
 		$param = '';
 		$values = '';
 		$for_log = '';
-		foreach($description as $key => $value){
-			$param .= "`{$key}`, ";
-			$values .= "'{$value}', ";
-			
-			$for_log .= $key.' => '.$value;
-		}
+
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
-		$query = "INSERT INTO `journal_cosmet1` (
-			`office`, `client`, $param `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `worker`, `comment`) 
+		$query = "INSERT INTO `journal_groups` (
+			`name`, `filial`, `age`, `worker`, `comment`) 
 			VALUES (
-			'{$office}', '{$client}', $values '{$create_time}', '{$create_person}', '{$last_edit_time}', '{$last_edit_person}', '{$worker}', '{$comment}') ";
+			'{$name}', '{$filial}', '{$age}', '{$worker}', '{$comment}') ";
 		mysql_query($query) or die(mysql_error());
+		
+		$mysql_insert_id = mysql_insert_id();
+	
 		mysql_close();
 		
 		//логирование
-		AddLog ('0', $create_person, '', 'Добавлено посещение. ['.date('d.m.y H:i', $create_time).']. ОФис: ['.$office.']. клиент: ['.$client.']. Описание: ['.$for_log.']. Комментарий: '.$comment);
+		AddLog ('0', $session_id, '', 'Добавлена группа. ['.date('d.m.y H:i', $time).']. Филиал: ['.$filial.']. Название: ['.$name.']. Возраст: ['.$age.']. Тренер: ['.$worker.']. Комментарий: '.$comment);
+		
+		return ($mysql_insert_id);
 	}
+	
 	
 	//Обновление записей в журнале Cosmet из-под Web
 	function WriteToDB_UpdateCosmet ($id, $office, $last_edit_time, $last_edit_person, $comment, $create_time, $rezult){
@@ -352,26 +353,31 @@
 	}
 	
 	//+++Вставка и обновление списка клиентов из-под Web
-	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $contacts, $comments, $birthday, $sex){
+	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $contacts, $comments, $birthday, $sex, $filial){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `spr_clients` (
-			`name`, `full_name`, `f`, `i`, `o`, `contacts`, `sex`, `birthday`, `comments`)
+			`name`, `full_name`, `f`, `i`, `o`, `contacts`, `sex`, `birthday`, `comments`, `filial`)
 			VALUES (
-			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$contacts}', '{$sex}', '{$birthday}', '{$comments}') ";
+			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$contacts}', '{$sex}', '{$birthday}', '{$comments}', '{$filial}') ";
 		mysql_query($query) or die(mysql_error());
+		
+		$mysql_insert_id = mysql_insert_id();
+		
 		mysql_close();
 		
 		//логирование
-		AddLog ('0', $session_id, '', 'Добавлен клиент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Контакты: ['.$contacts.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Комментарий: ['.$comments.']');
+		AddLog ('0', $session_id, '', 'Добавлен клиент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Контакты: ['.$contacts.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Комментарий: ['.$comments.']. Филиал: ['.$filial.']');
+		
+		return ($mysql_insert_id);
 	}
 	
 	
 	//+++Обновление карточки клиента из-под Web
-	function WriteClientToDB_Update($session_id, $id, $contacts, $comments, $birthday, $sex){
+	function WriteClientToDB_Update($session_id, $id, $contacts, $comments, $birthday, $sex, $filial){
 		$old = '';
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -383,17 +389,17 @@
 		$number = mysql_num_rows($res);
 		if ($number != 0){
 			$arr = mysql_fetch_assoc($res);
-			$old = 'Контакты: ['.$arr['contacts'].']. Дата рождения: ['.$arr['birthday'].']. Пол: ['.$arr['sex'].']. Комментарий: ['.$arr['comments'].']';
+			$old = 'Контакты: ['.$arr['contacts'].']. Дата рождения: ['.$arr['birthday'].']. Пол: ['.$arr['sex'].']. Комментарий: ['.$arr['comments'].']. Филиал: ['.$arr['filial'].']';
 		}else{
 			$old = 'Не нашли старую запись.';
 		}
 		$time = time();
-		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `comments`='{$comments}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `comments`='{$comments}', `contacts`='{$contacts}', `filial`='{$filial}' WHERE `id`='{$id}'";
 		mysql_query($query) or die(mysql_error());
 		mysql_close();
 		
 		//логирование
-		AddLog ('0', $session_id, $old, 'Отредактирован клиент ['.$id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.'].  Комментарий: ['.$comments.']');
+		AddLog ('0', $session_id, $old, 'Отредактирован клиент ['.$id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Комментарий: ['.$comments.']. Филиал: ['.$filial.']');
 	}
 
 	//Обновление ФИО клиента из-под Web
@@ -570,8 +576,9 @@
 				$q = " ORDER BY `office` ASC";
 			}elseif ($type == 'sort_added'){
 				$q = " ORDER BY `create_time` DESC";
-			}elseif (($datatable == 'journal_cosmet') || ($datatable == 'journal_cosmet1')){
-				$q =  "ORDER BY `create_time` DESC";
+			/// !!! +++
+			}elseif ($datatable == 'journal_groups'){
+				$q = ' ORDER BY `filial` ASC';
 			}else{
 				$q = '';
 			}
@@ -587,8 +594,9 @@
 			}elseif ($datatable == 'removes_open'){
 					$q = ' WHERE `'.$type.'` = '.$sw.' AND `closed` = 0 ORDER BY `create_time` DESC';
 					$datatable = 'removes';
-			}elseif (($datatable == 'journal_soft') && ($type == 'see_own')){
-				$q = ' WHERE `create_person` = '.$sw.' ORDER BY `create_time` DESC';
+			/// !!! +++
+			}elseif (($datatable == 'journal_groups') && ($type == 'worker')){
+				$q = ' WHERE `worker`='.$sw.' ORDER BY `filial` ASC';
 			}elseif (($datatable == 'spr_kd_img') && ($type == 'img')){
 				$q = ' WHERE `client` = '.$sw.' ORDER BY `uptime` ASC';
 			}else{
@@ -603,11 +611,7 @@
 				}
 				if ($type == 'alpha'){
 					if ($datatable == 'spr_clients'){
-						if ($sw != 'all'){
-							$q = " WHERE `full_name`  LIKE '$sw%' ORDER BY `full_name` ASC";
-						}else{
-							$q = " ORDER BY `full_name` ASC";
-						}
+						$q = " WHERE `full_name`  LIKE '$sw%' ORDER BY `full_name` ASC";
 					}else{
 						//$q = ' WHERE '.$sw.' ORDER BY `create_time` DESC';
 					}

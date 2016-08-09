@@ -114,6 +114,24 @@
 										<textarea name="comments" id="comments" cols="35" rows="5">'.$client[0]['comments'].'</textarea>
 									</div>
 								</div>';
+				$filials = SelDataFromDB('spr_office', '', '');
+				echo '				
+								<div class="cellsBlock2">
+									<div class="cellLeft">
+										Филиал
+									</div>
+									<div class="cellRight">
+										<select name="filial" id="filial">
+											<option value="0" selected>Выберите филиал</option>';
+				if ($filials !=0){
+					for ($i=0;$i<count($filials);$i++){
+						echo "<option value='".$filials[$i]['id']."' ", $client[0]['filial'] == $filials[$i]['id'] ? 'selected' : '' ,">".$filials[$i]['name']."</option>";
+					}
+				}
+				echo '
+										</select>
+									</div>
+								</div>';
 								
 				echo '					
 											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
@@ -130,6 +148,8 @@
 														sel_date:document.getElementById("sel_date").value,
 														sel_month:document.getElementById("sel_month").value,
 														sel_year:document.getElementById("sel_year").value,
+														
+														filial:document.getElementById("filial").value,
 
 														sex:sex_value,
 														

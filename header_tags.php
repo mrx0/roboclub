@@ -218,95 +218,67 @@
 		}
 		if (!$god_mode){
 			if ($permissions != 0){
-				$it = json_decode($permissions[0]['it'], true);
-				//var_dump($it);
-				$cosm = json_decode($permissions[0]['cosm'], true);
-				$stom = json_decode($permissions[0]['stom'], true);
 				$clients = json_decode($permissions[0]['clients'], true);
 				$workers = json_decode($permissions[0]['workers'], true);
+				$groups = json_decode($permissions[0]['groups'], true);
 				$offices = json_decode($permissions[0]['offices'], true);
-				$soft = json_decode($permissions[0]['soft'], true);
 				$scheduler = json_decode($permissions[0]['scheduler'], true);
 				$zapis = json_decode($permissions[0]['zapis'], true);
 				//var_dump($offices);
 			}
 		}else{
 			//Видимость
-			$it['see_all'] = 0;
-			$it['see_own'] = 0;
-			$cosm['see_all'] = 0;
-			$cosm['see_own'] = 0;
-			$stom['see_all'] = 0;
-			$stom['see_own'] = 0;
 			$workers['see_all'] = 0;
 			$workers['see_own'] = 0;
+			$groups['see_all'] = 0;
+			$groups['see_own'] = 0;
 			$clients['see_all'] = 0;
 			$clients['see_own'] = 0;
 			$offices['see_all'] = 0;
 			$offices['see_own'] = 0;
-			$soft['see_all'] = 0;
-			$soft['see_own'] = 0;
 			$scheduler['see_all'] = 0;
 			$scheduler['see_own'] = 0;
 			$zapis['see_all'] = 0;
 			$zapis['see_own'] = 0;
 			//
-			$it['add_new'] = 0;
-			$it['add_own'] = 0;
-			$cosm['add_new'] = 0;
-			$cosm['add_own'] = 0;
-			$stom['add_new'] = 0;
-			$stom['add_own'] = 0;
 			$workers['add_new'] = 0;
 			$workers['add_own'] = 0;
+			$groups['add_new'] = 0;
+			$groups['add_own'] = 0;
 			$clients['add_new'] = 0;
 			$clients['add_own'] = 0;
 			$offices['add_new'] = 0;
 			$offices['add_own'] = 0;
-			$soft['add_new'] = 0;
-			$soft['add_own'] = 0;
 			$scheduler['add_new'] = 0;
 			$scheduler['add_own'] = 0;
 			$zapis['add_new'] = 0;
 			$zapis['add_own'] = 0;
 			//
-			$it['edit'] = 0;
-			$cosm['edit'] = 0;
-			$stom['edit'] = 0;
 			$workers['edit'] = 0;
+			$groups['edit'] = 0;
 			$clients['edit'] = 0;
 			$offices['edit'] = 0;
-			$soft['edit'] = 0;
 			$scheduler['edit'] = 0;
 			$zapis['edit'] = 0;
 			//
-			$it['close'] = 0;
-			$cosm['close'] = 0;
-			$stom['close'] = 0;
 			$workers['close'] = 0;
+			$groups['close'] = 0;
 			$clients['close'] = 0;
 			$offices['close'] = 0;
-			$soft['close'] = 0;
 			$scheduler['close'] = 0;
 			$zapis['close'] = 0;
 			//
-			$it['reopen'] = 0;
-			$cosm['reopen'] = 0;
-			$stom['reopen'] = 0;
 			$workers['reopen'] = 0;
+			$groups['reopen'] = 0;
 			$clients['reopen'] = 0;
 			$offices['reopen'] = 0;
-			$soft['reopen'] = 0;
 			$scheduler['reopen'] = 0;
 			$zapis['reopen'] = 0;
 			//
-			$it['add_worker'] = 0;
-			$cosm['add_worker'] = 0;
-			$stom['add_worker'] = 0;
 			$workers['add_worker'] = 0;
+			$groups['add_worker'] = 0;
 			$clients['add_worker'] = 0;
 			$offices['add_worker'] = 0;
-			$soft['add_worker'] = 0;
 			$scheduler['add_worker'] = 0;
 			$zapis['add_worker'] = 0;
 			//
@@ -319,6 +291,9 @@
 		}*/
 		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
 			echo '<li><a href="clients.php">Клиенты</a></li>';
+		}
+		if (($groups['see_all'] == 1) || ($groups['see_own'] == 1) || $god_mode){
+			echo '<li><a href="groups.php">Группы</a></li>';
 		}
 		if (($offices['see_all'] == 1) || ($offices['see_own'] == 1) || $god_mode){
 			echo '<li><a href="filials.php">Филиалы</a></li>';
