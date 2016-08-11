@@ -75,7 +75,7 @@
 										<option value="0" selected>Выберите возраст</option>';
 									if ($j_age != 0){
 										for ($i=0;$i<count($j_age);$i++){
-											echo '<option value="'.$j_age[$i]['id'].'">'.$j_age[$i]['from'].'-'.$j_age[$i]['to'].' лет</option>';
+											echo '<option value="'.$j_age[$i]['id'].'">'.$j_age[$i]['from_age'].'-'.$j_age[$i]['to_age'].' лет</option>';
 										}
 									}
 									echo '

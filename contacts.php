@@ -47,17 +47,24 @@
 					if ($contacts[$i]['permissions'] != '777'){
 						$permissions = SearchInArray($arr_permissions, $contacts[$i]['permissions'], 'name');
 						//var_dump($permissions);
+						
+						if ($contacts[$i]['fired'] == '1'){
+							$cl_color = ' background-color: rgba(161,161,161,1);';
+						}else{
+							$cl_color = '';
+						}
+						
 						echo '
-								<li class="cellsBlock cellsBlockHover ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'">
-									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref" id="4filter" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['full_name'].'</a>
-									<div class="cellOffice" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>', $permissions != '0' ? $permissions : '-' ,'</div>
-									<div class="cellText" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['contacts'].'</div>
-									<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['login'].'</div>';
+								<li class="cellsBlock cellsBlockHover">
+									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref" id="4filter" style="'.$cl_color.'">'.$contacts[$i]['full_name'].'</a>
+									<div class="cellOffice" style="'.$cl_color.'">', $permissions != '0' ? $permissions : '-' ,'</div>
+									<div class="cellText" style="'.$cl_color.'">'.$contacts[$i]['contacts'].'</div>
+									<div class="cellName" style="text-align: center; '.$cl_color.'">'.$contacts[$i]['login'].'</div>';
 						if ($god_mode){			
 							echo '
-									<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['password'].'</div>';
+									<div class="cellName" style="text-align: center; '.$cl_color.'">'.$contacts[$i]['password'].'</div>';
 						}else{
-							echo '<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>****</div>';
+							echo '<div class="cellName" style="text-align: center; '.$cl_color.'">****</div>';
 						}
 						echo '
 								</li>';

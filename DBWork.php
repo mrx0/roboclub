@@ -639,6 +639,9 @@
 				if ($type == 'offices'){
 					$q = " WHERE `id` = '$sw'";
 				}
+				if ($type == 'ages'){
+					$q = " WHERE `id` = '$sw'";
+				}
 				if ($type == 'login'){
 					$q = " WHERE `login` = '$sw'";
 				}
