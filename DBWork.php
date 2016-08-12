@@ -155,7 +155,7 @@
 	}
 
 	//Вставка записей в журнал Group из-под Web
-	function WriteToDB_EditGroup ($name, $filial, $age, $worker, $comment, $session_id){
+	function WriteToDB_EditGroup ($name, $filial, $age, $worker, $comment, $session_id, $color){
 		$param = '';
 		$values = '';
 		$for_log = '';
@@ -166,9 +166,9 @@
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `journal_groups` (
-			`name`, `filial`, `age`, `worker`, `comment`) 
+			`name`, `filial`, `age`, `worker`, `comment`, `color`) 
 			VALUES (
-			'{$name}', '{$filial}', '{$age}', '{$worker}', '{$comment}') ";
+			'{$name}', '{$filial}', '{$age}', '{$worker}', '{$comment}', '{$color}') ";
 		mysql_query($query) or die(mysql_error());
 		
 		$mysql_insert_id = mysql_insert_id();
@@ -637,6 +637,9 @@
 					$q = " WHERE `full_name` = '$sw'";
 				}
 				if ($type == 'offices'){
+					$q = " WHERE `id` = '$sw'";
+				}
+				if ($type == 'group'){
 					$q = " WHERE `id` = '$sw'";
 				}
 				if ($type == 'ages'){

@@ -1,7 +1,9 @@
 <?php
 
-//task_edit_cosmet.php
-//Редактирование посещения косметолога
+// !!!! Если что-то закрыто или кто-то уволен, то не надо их показывать в списках
+
+//edit_filial.php
+//Редактирование филиала
 
 	require_once 'header.php';
 	
@@ -80,10 +82,10 @@
 									<div class="cellRight">';
 					if (!$closed){
 						echo '
-										<a href="close_filial.php?id='.$filial[0]['id'].'&close=1"><img src="img/delete.png" title="Закрыть"></a>';
+										<a href="close_filial.php?id='.$filial[0]['id'].'&close=1" style="float: right;"><img src="img/delete.png" title="Закрыть"></a>';
 					}else{
 						echo '
-										<a href="close_filial.php?id='.$filial[0]['id'].'&close=1"><img src="img/reset.png" title="Открыть"></a>';
+										<a href="close_filial.php?id='.$filial[0]['id'].'&close=1" style="float: right;"><img src="img/reset.png" title="Открыть"></a>';
 					}
 					echo '
 									</div>

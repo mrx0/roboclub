@@ -16,7 +16,7 @@
 				$_POST['worker'] = 0;
 			}
 								
-			$group_id = WriteToDB_EditGroup ($_POST['name'], $_POST['filial'], $_POST['age'], $_POST['worker'], $_POST['comment'], $_POST['session_id']);
+			$group_id = WriteToDB_EditGroup ($_POST['name'], $_POST['filial'], $_POST['age'], $_POST['worker'], $_POST['comment'], $_POST['session_id'], '#'.$_POST['color']);
 					
 			echo '
 				Добавлена группа.

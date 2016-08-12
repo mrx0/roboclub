@@ -55,7 +55,7 @@
 			
 			<script type="text/javascript" src="js/search_fast_client.js"></script>
 			
-
+			<script type="text/javascript" src="js/jscolor.js"></script>
 
 
 <script src="js/modernizr.custom.js"></script>

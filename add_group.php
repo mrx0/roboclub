@@ -23,20 +23,20 @@
 						<h2>Добавляем новую группу</h2>
 						Заполните поля
 					</header>';
-//!!!!
+//!!!! стиль тут убрать может?
 			echo '
 			
-<style>
-.label_desc{
-    display: block;
-}
-.error{
-    display: none;
-}
-.error_input{
-    border: 2px solid #FF0000; 
-}
-</style>	
+				<style>
+				.label_desc{
+					display: block;
+				}
+				.error{
+					display: none;
+				}
+				.error_input{
+					border: 2px solid #FF0000; 
+				}
+				</style>	
 			
 			
 					<div id="data">';
@@ -102,6 +102,11 @@
 							</div>	
 
 							<div class="cellsBlock2">
+								<div class="cellLeft">Цвет</div>
+								<div class="cellRight"><input id="color" class="jscolor" value="FFFFFF"></div>
+							</div>
+							
+							<div class="cellsBlock2">
 								<div class="cellLeft">Комментарий</div>
 								<div class="cellRight"><textarea name="comment" id="comment" cols="35" rows="5"></textarea></div>
 							</div>';
@@ -127,7 +132,7 @@
 						
 						//alert(filial+age);
 						
-						var req = "Группа "+filial+age;
+						var req = "Гр. "+filial+"/"+age;
 						
 						document.getElementById("name").value = req;
 					}
@@ -170,6 +175,8 @@
 											age:document.getElementById("age").value,
 											
 											worker:document.getElementById("worker").value,
+											
+											color:document.getElementById("color").value,
 											
 											comment:document.getElementById("comment").value,
 											

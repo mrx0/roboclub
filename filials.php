@@ -5,9 +5,7 @@
 
 	require_once 'header.php';
 
-	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
-		header("location: enter.php");
-	}else{
+	if ($enter_ok){
 		require_once 'header_tags.php';
 		//var_dump ($offices);
 		echo '
@@ -33,7 +31,7 @@
 						<div class="cellOffice" style="text-align: center">Филиал</div>
 						<div class="cellAddress" style="text-align: center">Адрес</div>
 						<div class="cellText" style="text-align: center">Контакты</div>';
-		if (($offices['add_new'] == 1) || $god_mode){
+		if (($offices['edit'] == 1) || $god_mode){
 			echo '
 						<div class="cellCosmAct" style="text-align: center">-</div>
 						<div class="cellCosmAct" style="text-align: center">-</div>';
@@ -65,7 +63,7 @@
 								<div class="cellOffice" style="text-align: center;'.$bg_color.'" id="4filter">'.$filials[$i]['name'].'</div>
 								<div class="cellAddress" style="text-align: left;'.$bg_color.'">'.$filials[$i]['address'].'</div>
 								<div class="cellText" style="text-align: left;'.$bg_color.'">'.$filials[$i]['contacts'].'</div>';
-				if (($offices['add_new'] == 1) || $god_mode){
+				if (($offices['edit'] == 1) || $god_mode){
 					$result_html .= '
 								<div class="cellCosmAct" style="text-align: center"><a href="edit_filial.php?id='.$filials[$i]['id'].'"><img src="img/edit.png" title="Редактировать"></a></div>
 								<div class="cellCosmAct" style="text-align: center"><a href="close_filial.php?id='.$filials[$i]['id'].'&close=1">'.$cls_img.'</a></div>';
@@ -85,6 +83,8 @@
 		echo '
 				</ul>
 			</div>';
+	}else{
+		header("location: enter.php");
 	}
 		
 	require_once 'footer.php';

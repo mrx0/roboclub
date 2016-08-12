@@ -4,9 +4,9 @@
 //Группы
 
     require_once 'header.php';
-	require_once 'header_tags.php';
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
 		//var_dump($_SESSION);
 		if (($groups['see_all'] == 1) || ($groups['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
@@ -49,7 +49,13 @@
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Филиал</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Возраст</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Тренер</div>
-							<div class="cellText" style="text-align: center">Комментарий</div>
+							<div class="cellText" style="text-align: center">Комментарий</div>';
+			if (($groups['edit'] == 1) || $god_mode){
+				echo '
+							<div class="cellCosmAct" style="text-align: center">-</div>
+							<div class="cellCosmAct" style="text-align: center">-</div>';
+			}
+			echo '
 						</li>';
 						
 			if ($journal_groups != 0){
@@ -63,8 +69,10 @@
 					//Если закрыта группа
 					if ($journal_groups[$i]['close'] == '1'){
 						$bg_color = ' background-color: rgba(161,161,161,1);';
+						$cls_img = '<img src="img/reset.png" title="Открыть">';
 					}else{
 						$bg_color = '';
+						$cls_img = '<img src="img/delete.png" title="Закрыть">';						
 					}
 
 					//Филиалы
@@ -86,11 +94,17 @@
 					//временная переменная
 					$result_html .= '
 								<li class="cellsBlock cellsBlockHover">
-									<a href="group.php?id='.$journal_groups[$i]['id'].'" class="cellName ahref" style="'.$bg_color.'">'.$journal_groups[$i]['name'].'</a>
+									<a href="group.php?id='.$journal_groups[$i]['id'].'" class="cellName ahref" style="background-color: '.$journal_groups[$i]['color'].';">'.$journal_groups[$i]['name'].'</a>
 									<div class="cellName" style="text-align: center;'.$bg_color.'" id="4filter">'.$filial.'</div>
-									<div class="cellName" style="text-align: center;'.$bg_color.'">'.$age.'</div>
+									<div class="cellName" style="text-align: center; '.$bg_color.'">'.$age.'</div>
 									<a href="user.php?id='.$journal_groups[$i]['worker'].'" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.WriteSearchUser('spr_workers', $journal_groups[$i]['worker'], 'user').'</a>
-									<div class="cellText" style="text-align: right;'.$bg_color.'">'.$journal_groups[$i]['comment'].'</div>
+									<div class="cellText" style="text-align: right;'.$bg_color.'">'.$journal_groups[$i]['comment'].'</div>';
+					if (($groups['edit'] == 1) || $god_mode){
+						$result_html .= '
+									<div class="cellCosmAct" style="text-align: center"><a href="edit_group.php?id='.$journal_groups[$i]['id'].'"><img src="img/edit.png" title="Редактировать"></a></div>
+									<div class="cellCosmAct" style="text-align: center"><a href="close_group.php?id='.$journal_groups[$i]['id'].'&close=1">'.$cls_img.'</a></div>';
+					}
+					echo '
 								</li>';
 								
 					if ($journal_groups[$i]['close'] == 0){
