@@ -49,6 +49,7 @@
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Филиал</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Возраст</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Тренер</div>
+							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Участников</div>
 							<div class="cellText" style="text-align: center">Комментарий</div>';
 			if (($groups['edit'] == 1) || $god_mode){
 				echo '
@@ -98,7 +99,14 @@
 									<div class="cellName" style="text-align: center;'.$bg_color.'" id="4filter">'.$filial.'</div>
 									<div class="cellName" style="text-align: center; '.$bg_color.'">'.$age.'</div>
 									<a href="user.php?id='.$journal_groups[$i]['worker'].'" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.WriteSearchUser('spr_workers', $journal_groups[$i]['worker'], 'user').'</a>
-									<div class="cellText" style="text-align: right;'.$bg_color.'">'.$journal_groups[$i]['comment'].'</div>';
+									<div class="cellName" style="text-align: center; '.$bg_color.'">';
+					//Сколько участников есть в группе
+					$uch_arr = SelDataFromDB('spr_clients', $journal_groups[$i]['id'], 'client_group');
+					if ($uch_arr != 0) $result_html .= count($uch_arr);
+					else $result_html .= 0;
+					$result_html .= '	
+									</div>
+									<div class="cellText" style="text-align: left;'.$bg_color.'">'.$journal_groups[$i]['comment'].'</div>';
 					if (($groups['edit'] == 1) || $god_mode){
 						$result_html .= '
 									<div class="cellCosmAct" style="text-align: center"><a href="edit_group.php?id='.$journal_groups[$i]['id'].'"><img src="img/edit.png" title="Редактировать"></a></div>
