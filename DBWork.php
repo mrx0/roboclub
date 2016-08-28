@@ -565,6 +565,8 @@
 	function SelDataFromDB ($datatable, $sw, $type){
 		$arr = array();
 		$rez = array();
+		$q = '';
+		
 		if ($sw == ''){
 			if (($datatable == 'spr_workers') || ($datatable == 'spr_clients')){
 				$q = " ORDER BY `full_name` ASC";
@@ -643,8 +645,19 @@
 				if ($type == 'offices'){
 					$q = " WHERE `id` = '$sw'";
 				}
-				if ($type == 'group'){
-					$q = " WHERE `id` = '$sw'";
+				if ($type == 'client_group'){
+					if ($datatable == 'spr_clients'){
+						$q = "  WHERE `id` IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` = '$sw') ORDER BY `full_name` ASC";
+					}else{
+						$q = " WHERE `id` = '$sw'";
+					}
+				}
+				if ($type == 'free_client_group'){
+					if ($datatable == 'spr_clients'){
+						$q = " WHERE `filial` = (SELECT `filial` FROM `journal_groups` WHERE `id` = '$sw') AND `id` NOT IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` = '$sw') ORDER BY `full_name` ASC";
+					}else{
+						$q = " WHERE `id` = '$sw'";
+					}
 				}
 				if ($type == 'ages'){
 					$q = " WHERE `id` = '$sw'";
