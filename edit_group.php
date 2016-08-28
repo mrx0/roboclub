@@ -138,7 +138,7 @@
 									<div class="cellRight">';
 					if (!$closed){
 						echo '
-										<input id="color" class="jscolor" value="FFFFFF">';
+										<input id="color" class="jscolor" value="'.$j_group[0]['color'].'">';
 					}else{
 						echo '
 										<span style="background-color: '.$j_group[0]['color'].';">'.$j_group[0]['color'].'<span>';

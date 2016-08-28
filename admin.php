@@ -18,7 +18,11 @@
 				<div id="data">';
 				
 			//echo '<a href="/sxd">SXD</a><br />';
-			echo '<a href="logs.php">LOGS</a>';
+			
+			
+			echo '<a href="shed_temlates.php" class="b">Шаблоны графиков</a>';
+			echo '<a href="logs.php" class="b">LOGS</a>';
+			
 			$permissions = SelDataFromDB('spr_permissions', '', '');
 			//var_dump ($permissions);
 			if ($permissions != 0){

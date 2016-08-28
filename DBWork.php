@@ -579,6 +579,8 @@
 			}elseif ($type == 'sort_added'){
 				$q = " ORDER BY `create_time` DESC";
 			/// !!! +++
+			}elseif ($datatable == 'spr_shed_time'){
+				$q = ' ORDER BY `from_time` ASC';
 			}elseif ($datatable == 'journal_groups'){
 				$q = ' ORDER BY `filial` ASC';
 			}else{
@@ -601,6 +603,8 @@
 				$q = ' WHERE `worker`='.$sw.' ORDER BY `filial` ASC';
 			}elseif (($datatable == 'spr_kd_img') && ($type == 'img')){
 				$q = ' WHERE `client` = '.$sw.' ORDER BY `uptime` ASC';
+			}elseif (($datatable == 'spr_shed_templs') && ($type == 'group')){
+				$q = ' WHERE `group` = '.$sw.'';
 			}else{
 				if ($type == 'filter'){
 					if ($datatable == 'spr_clients'){

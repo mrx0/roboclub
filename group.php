@@ -91,6 +91,10 @@
 					//if ($j_group[0]['close'] != '1'){
 						echo '
 									<a href="group_client.php?id='.$_GET['id'].'" class="b">Участники</a>';
+				}
+				if (($scheduler['see_all'] == 1) || $god_mode){
+						echo '
+									<a href="add_shed_group.php?id='.$_GET['id'].'" class="b">График</a>';
 
 						echo '
 									<br /><br />';
