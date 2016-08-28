@@ -9,7 +9,8 @@ $(function(){
 				type:"POST",
 				data:
 				{
-					'searchdata':this.value
+					'searchdata':this.value,
+					path: path
 				},
 				response: 'text',
 				success: function(data){

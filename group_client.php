@@ -16,13 +16,23 @@
 			if ($j_group != 0){
 				echo '
 					<div id="status">
+						<div id="request"></div>
 						<header>
 							<h2>Группа < <a href="group.php?id='.$_GET['id'].'" class="ahref">'.$j_group[0]['name'].'</a> ></h2>
+							<span style="font-size: 90%; color: #999">Комментарий: '.$j_group[0]['comment'].'</span>
 						</header>';
 				if ($j_group[0]['close'] == '1'){
 					echo '<span style="color:#EF172F;font-weight:bold;">ЗАКРЫТА</span>';
 				}
 
+				echo '
+					<script>
+						var group = '.$_GET['id'].';
+						var session_id = '.$_SESSION['id'].';
+					</script>
+				';
+				
+				
 				echo '
 						<div id="data">';
 
@@ -95,7 +105,8 @@
 
 							echo '
 										<div class="cellTime" style="width: 140px; text-align: center">', $uch_arr[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $uch_arr[$i]['birthday']) ,' / <b>'.getyeardiff( $uch_arr[$i]['birthday']).' лет</b></div>
-										<div class="cellCosmAct" style="text-align: center"> -
+										<div id="delClientFromGroup" clientid="'.$uch_arr[$i]['id'].'" class="cellCosmAct delClientFromGroup" style="text-align: center">
+											<i class="fa fa-minus" style="color: red; cursor: pointer;"></i>
 										</div>
 									</li>';
 						}
@@ -121,30 +132,33 @@
 										<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 										
 							for ($i = 0; $i < count($free_uch_arr); $i++) { 
-								echo '
-										<li class="cellsBlock cellsBlockHover" style="width: auto;">
-											<a href="client.php?id='.$uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$free_uch_arr[$i]['full_name'].'</a>';
-								echo '
-											<div class="cellCosmAct" style="text-align: center">';
-								if ($free_uch_arr[$i]['sex'] != 0){
-									if ($free_uch_arr[$i]['sex'] == 1){
-										echo 'М';
+								if ((getyeardiff($free_uch_arr[$i]['birthday']) >= $ages[0]['from_age']) && (getyeardiff( $free_uch_arr[$i]['birthday']) <= $ages[0]['to_age'])){
+									echo '
+											<li class="cellsBlock cellsBlockHover" style="width: auto;">
+												<a href="client.php?id='.$free_uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$free_uch_arr[$i]['full_name'].'</a>';
+									echo '
+												<div class="cellCosmAct" style="text-align: center">';
+									if ($free_uch_arr[$i]['sex'] != 0){
+										if ($free_uch_arr[$i]['sex'] == 1){
+											echo 'М';
+										}
+										if ($free_uch_arr[$i]['sex'] == 2){
+											echo 'Ж';
+										}
+									}else{
+										echo '-';
 									}
-									if ($free_uch_arr[$i]['sex'] == 2){
-										echo 'Ж';
-									}
-								}else{
-									echo '-';
-								}
-								
-								echo '
-											</div>';
+									
+									echo '
+												</div>';
 
-								echo '
-											<div class="cellTime" style="width: 140px; text-align: center">', $free_uch_arr[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $free_uch_arr[$i]['birthday']) ,' / <b>'.getyeardiff( $free_uch_arr[$i]['birthday']).' лет</b></div>
-											<div class="cellCosmAct" style="text-align: center"> +
-											</div>
-										</li>';
+									echo '
+												<div class="cellTime" style="width: 140px; text-align: center">', $free_uch_arr[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $free_uch_arr[$i]['birthday']) ,' / <b>'.getyeardiff( $free_uch_arr[$i]['birthday']).' лет</b></div>
+												<div id="addClientInGroup" clientid="'.$free_uch_arr[$i]['id'].'" class="cellCosmAct addClientInGroup" style="text-align: center">
+													<i class="fa fa-plus" style="color: green; cursor: pointer;"></i>
+												</div>
+											</li>';
+								}
 							}
 								
 							echo '
@@ -156,11 +170,76 @@
 								</div>';
 						}
 						
-						echo '
-									<a href="group_add_client.php?id='.$_GET['id'].'" class="b">Заполнить участниками</a>';
+						/*echo '
+									<a href="group_add_client.php?id='.$_GET['id'].'" class="b">Заполнить участниками</a>';*/
 
 						echo '
 									<br /><br />';
+									
+						echo '
+							<div style="font-size: 90%; margin-bottom: 10px;">
+								Добавление "в лоб": <br>
+								<span  style="font-size: 70%; color: rgb(100,100,100);">Поиск и добавление участников,<br>в обход критериев (район, возраст...)</span>
+							</div>';
+									
+						echo '
+							<div class="cellsBlock2" style="width: 400px; ">
+								<div class="cellRight">
+									<span style="font-size: 70%;">Быстрый поиск клиента</span><br />
+									<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
+									<div id="search_result_fc2"></div>
+								</div>
+							</div>';	
+									
+						echo '
+							<script>
+								$(document).ready(function(){
+									$(\'.addClientInGroup\').on(\'click\', function(data){
+										var id = $(this).attr(\'clientid\');
+										ajax({
+											url: "add_ClientInGroup_f.php",
+											method: "POST",
+											
+											data:
+											{
+												id: id,
+												group: '.$_GET['id'].',
+												session_id: '.$_SESSION['id'].'
+											},
+											success: function(req){
+												//document.getElementById("request").innerHTML = req;
+												alert(req);
+												location.reload(true);
+											}
+										})
+									})
+									
+									$(\'.delClientFromGroup\').on(\'click\', function(data){
+										var rys = confirm("Вы уверены?");
+										if (rys){
+											var id = $(this).attr(\'clientid\');
+											ajax({
+												url: "del_ClientFromGroup_f.php",
+												method: "POST",
+												
+												data:
+												{
+													id: id,
+													group: '.$_GET['id'].',
+													session_id: '.$_SESSION['id'].'
+												},
+												success: function(req){
+													//document.getElementById("request").innerHTML = req;
+													alert(req);
+													location.reload(true);
+												}
+											})
+										}
+									})
+								});
+							</script>
+						';			
+									
 					}
 				}
 			}else{

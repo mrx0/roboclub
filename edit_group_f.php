@@ -1,6 +1,6 @@
 <?php 
 
-	var_dump ($_POST);
+	//var_dump ($_POST);
 	if ($_POST){
 		if (isset($_POST['id']) && isset($_POST['name']) && isset($_POST['filial']) && isset($_POST['age'])){
 			include_once 'DBWork.php';
@@ -27,7 +27,7 @@
 				echo '
 					Группа отредактирована.
 					<br /><br />
-					<a href="index.php" class="b">На главную</a>
+					<a href="group.php?id='.$_POST['id'].'" class="b">В группу</a>
 					';
 			}else{
 				echo '<h1>Не найдена такая группа</h1><a href="index.php">Вернуться на главную</a>';

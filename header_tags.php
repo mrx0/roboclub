@@ -17,6 +17,8 @@
 			<title>:)</title>
 			
 			<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+			<!-- Font Awesome -->
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 			<link rel="stylesheet" href="css/style.css" type="text/css" />
 			<!--<link rel="stylesheet" href="css/menu.css">-->
 			<!--<link rel="stylesheet" type="text/css" href="css/default.css" />-->
@@ -189,6 +191,12 @@
 				$(\'#div1\').slideUp(\'slow\');
 			});
 		});
+    </script>
+	
+	<!--адрес страницы-->				
+    <script>
+		var patharr = location.pathname.split(\'/\');
+		var path = patharr[patharr.length - 1];
     </script>
 	
 	<!--для печати-->	
