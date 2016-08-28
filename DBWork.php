@@ -611,7 +611,11 @@
 				}
 				if ($type == 'alpha'){
 					if ($datatable == 'spr_clients'){
-						$q = " WHERE `full_name`  LIKE '$sw%' ORDER BY `full_name` ASC";
+						if ($sw != 'all'){
+							$q = " WHERE `full_name`  LIKE '$sw%' ORDER BY `full_name` ASC";
+						}else{
+							$q = ' ORDER BY `full_name` ASC';
+						}
 					}else{
 						//$q = ' WHERE '.$sw.' ORDER BY `create_time` DESC';
 					}
