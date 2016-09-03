@@ -102,9 +102,6 @@
 		});
     </script>
 			
-
-<script src="js/DrawTeethMapMenu.js"></script>
-			
 			<script type="text/javascript">
 				function XmlHttp()
 				{

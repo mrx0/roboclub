@@ -79,16 +79,16 @@
 										$checked = '';
 										
 										if ($spr_shed_templs != 0){
-											if ($spr_shed_templs_arr[$i+1]['time_id'] == $j){
-												$bg_color = 'background: rgba(0, 255, 0, 0.5)';
+											if ($spr_shed_templs_arr[$j]['time_id'] == $i+1){
+												$bg_color = 'background: rgba(0, 255, 0, 0.5);';
 												$checked = 'checked';
 											}
 										}
 										echo '
-													<div class="cellTime" style="text-align: center; '.$bg_color.'; min-width: 80px;">';
+													<div class="cellTime" style="text-align: center; '.$bg_color.' min-width: 80px;">';
 										if ($canEdit){
 											echo '
-														<input type="checkbox" class="changeColor" '.$checked.'>';
+														<input type="checkbox" name="'.($i+1).'_'.$j.'" value="1" class="changeColor shedItem" '.$checked.'>';
 										}
 										echo '
 													</div>';
@@ -123,37 +123,15 @@
 						echo '
 							<script>
 								$(document).ready(function(){
-									$(\'.addShedTimes\').on(\'click\', function(data){
+									$(".addShedTimes").on("click", function(data){
 										
 									})
 									
-									$(\'.changeColor\').on(\'click\', function(data){
+									$(".changeColor").on("click", function(data){
 										if (this.parentNode.style.background == ""){
 											this.parentNode.style.background = "rgba(0, 255, 0, 0.5)";
 										}else{
 											this.parentNode.style.background = "";
-										}
-									})
-									
-									$(\'.delClientFromGroup\').on(\'click\', function(data){
-										var rys = confirm("Вы уверены?");
-										if (rys){
-											var id = $(this).attr(\'clientid\');
-											ajax({
-									url: "del_ClientFromGroup_f.php",
-									method: "POST",
-									
-									data:
-									{
-										id: id,
-										session_id: '.$_SESSION['id'].'
-									},
-									success: function(req){
-										//document.getElementById("request").innerHTML = req;
-										alert(req);
-										location.reload(true);
-									}
-											})
 										}
 									})
 								});
@@ -163,66 +141,60 @@
 							<script>  
 							
 								function Ajax_change_shed() {
-									// убираем класс ошибок с инпутов
-									$(\'input\').each(function(){
-										$(this).removeClass(\'error_input\');
-									});
-									// прячем текст ошибок
-									$(\'.error\').hide();
-									 
-									$.ajax({
-										// метод отправки 
-										type: "POST",
-										// путь до скрипта-обработчика
-										url: "ajax_test.php",
-										// какие данные будут переданы
-										data: {
-											name:document.getElementById("name").value,
-										},
-										// тип передачи данных
-										dataType: "json",
-										// действие, при ответе с сервера
-										success: function(data){
-											// в случае, когда пришло success. Отработало без ошибок
-											if(data.result == \'success\'){   
-												//alert(\'форма корректно заполнена\');
-												ajax({
-													url:"add_group_f.php",
-													statbox:"status",
-													method:"POST",
-													data:
-													{
-														name:document.getElementById("name").value,
-														filial:document.getElementById("filial").value,
-														age:document.getElementById("age").value,
-														
-														worker:document.getElementById("worker").value,
-														
-														color:document.getElementById("color").value,
-														
-														comment:document.getElementById("comment").value,
-														
-														session_id:'.$_SESSION['id'].',
-													},
-													success:function(data){
-														document.getElementById("status").innerHTML=data;
-													}
-												})
-											// в случае ошибок в форме
-											}else{
-												// перебираем массив с ошибками
-												for(var errorField in data.text_error){
-													// выводим текст ошибок 
-													$(\'#\'+errorField+\'_error\').html(data.text_error[errorField]);
-													// показываем текст ошибок
-													$(\'#\'+errorField+\'_error\').show();
-													// обводим инпуты красным цветом
-												   // $(\'#\'+errorField).addClass(\'error_input\');                      
-												}
-												document.getElementById("errror").innerHTML=\'<span style="color: red">Ошибка, что-то заполнено не так.</span>\'
+									
+									var items = $(".shedItem");
+									var resShedItems = 
+										{
+											"1": {
+												"time_id": "0"
+											},
+											"2": {
+												"time_id": "0"
+											},
+											"3": {
+												"time_id": "0"
+											},
+											"4": {
+												"time_id": "0"
+											},
+											"5": {
+												"time_id": "0"
+											},
+											"6": {
+												"time_id": "0"
+											},
+											"7": {
+												"time_id": "0"
 											}
+										};
+
+									$.each(items, function(){
+										var arr = (this.name).split("_");
+										if (this.checked){
+											console.log(arr[1]);
+											console.log(arr[0]);
+											resShedItems[arr[1]]["time_id"] = arr[0];
+										}else{
+											//resShedItems[arr[1]]["time_id"] = 0;
 										}
-									});						
+									});
+									
+									console.log(resShedItems);
+									
+									ajax({
+										url:"change_shed_f.php",
+										statbox:"status",
+										method:"POST",
+										data:
+										{
+											group_id: '.$_GET['id'].',
+											shedItems: JSON.stringify(resShedItems),
+											session_id:'.$_SESSION['id'].',
+										},
+										success:function(data){
+											document.getElementById("status").innerHTML=data;
+										}
+									});				
 								};  
 								  
 							</script> 

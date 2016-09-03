@@ -19,10 +19,6 @@
 			</header>';			
 		}
 		echo '
-					<!--<p style="margin: 5px 0; padding: 2px;">
-						Фильтр: 
-						<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-					</p>-->
 					<div id="data">
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 		echo '
@@ -60,7 +56,7 @@
 				$result_html .= '
 							<li class="cellsBlock">
 								<div class="cellPriority" style="'.$bg_color.'"></div>
-								<div class="cellOffice" style="text-align: center;'.$bg_color.'" id="4filter">'.$filials[$i]['name'].'</div>
+								<div class="cellOffice" style="text-align: center;'.$bg_color.'" id="4filter"><a href="filial.php?id='.$filials[$i]['id'].'" class="ahref">'.$filials[$i]['name'].'</a></div>
 								<div class="cellAddress" style="text-align: left;'.$bg_color.'">'.$filials[$i]['address'].'</div>
 								<div class="cellText" style="text-align: left;'.$bg_color.'">'.$filials[$i]['contacts'].'</div>';
 				if (($offices['edit'] == 1) || $god_mode){
