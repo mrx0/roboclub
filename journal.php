@@ -74,7 +74,7 @@
 										<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
 									</p>-->';
 								
-								for ($i = 1; $i < count($spr_shed_templs_arr); $i++) {
+								for ($i = 1; $i <= count($spr_shed_templs_arr); $i++) {
 									//var_dump($spr_shed_templs_arr[$i]['time_id']);
 									if ($spr_shed_templs_arr[$i]['time_id'] != 0){
 										//var_dump($i);
@@ -217,7 +217,7 @@
 											<input type="button" class="b" value="Сохранить изменения" onclick=Ajax_change_journal()>
 											
 										</div>';
-										
+
 									echo '	
 										<script type="text/javascript">
 											function JournalEdit(id, data){
@@ -226,15 +226,15 @@
 													elem.style.backgroundColor = "rgba(0, 255, 0, 0.5)";
 													elem.innerHTML = "<i class=\"fa fa-check\"></i>";
 												}else{
-													if (elem.style.backgroundColor === "rgba(0, 255, 0, 0.5)"){
+													if ((elem.style.backgroundColor === "rgba(0, 255, 0, 0.5)") || ((elem.style.backgroundColor).indexOf("rgba(0, 255, 0,")) != -1){
 														elem.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
 														elem.innerHTML = "<i class=\"fa fa-times\"></i>";	
 													}else{
-														if (elem.style.backgroundColor === "rgba(255, 0, 0, 0.5)"){
+														if ((elem.style.backgroundColor === "rgba(255, 0, 0, 0.5)") || ((elem.style.backgroundColor).indexOf("rgba(255, 0, 0,")) != -1){
 															elem.style.backgroundColor = "rgba(255, 252, 0, 0.5)";
 															elem.innerHTML = "<i class=\"fa fa-file-text-o\"></i>";
 														}else{
-															if (elem.style.backgroundColor === "rgba(255, 252, 0, 0.5)"){
+															if ((elem.style.backgroundColor === "rgba(255, 252, 0, 0.5)") || ((elem.style.backgroundColor).indexOf("rgba(255, 252, 0,")) != -1){
 																elem.style.backgroundColor = "";
 																elem.innerHTML = "-";	
 															}

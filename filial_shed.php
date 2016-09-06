@@ -106,6 +106,9 @@
 										foreach($spr_shed_templs as $group => $shed_times){
 											if ($shed_times[$j]['time_id'] == $i+1){
 												$j_group = SelDataFromDB('journal_groups', $group, 'group');
+												
+												$uch_arr = SelDataFromDB('spr_clients', $group, 'client_group');
+												
 												if ($j_group != 0){
 													$bg_color = 'background: '.$j_group[0]['color'].';';
 													$grop_shed_templs .= '<a href="group.php?id='.$j_group[0]['id'].'" class="b2" style="background: '.$j_group[0]['color'].';"><span style="font-weight: bold;">'.$j_group[0]['name'].'</span><br>';
@@ -113,7 +116,13 @@
 													//Возрасты
 													$ages = SelDataFromDB('spr_ages', $j_group[0]['age'], 'ages');
 													if ($ages != 0){
-														$grop_shed_templs .= '<span style="font-size: 80%;">'.$ages[0]['from_age'].' - '.$ages[0]['to_age'].' лет</span>';
+														$grop_shed_templs .= '<span style="font-size: 80%;">'.$ages[0]['from_age'].' - '.$ages[0]['to_age'].' лет</span> <span style="font-weight: bold; font-size: 110%;">';
+														//var_dump ($uch_arr);
+														if ($uch_arr != 0) 
+															$grop_shed_templs .= count($uch_arr); 
+														else 
+															$grop_shed_templs .= 0;
+														$grop_shed_templs .= ' чел.</span>';
 													}else{
 														$grop_shed_templs .= '<span style="color: red; font-size: 75%">возраст не указан</span>';
 													}	
