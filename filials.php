@@ -55,7 +55,7 @@
 				
 				$result_html .= '
 							<li class="cellsBlock">
-								<div class="cellPriority" style="'.$bg_color.'"></div>
+								<div class="cellPriority" style="text-align: center; background-color: '.$filials[$i]['color'].';"></div>
 								<div class="cellOffice" style="text-align: center;'.$bg_color.'" id="4filter"><a href="filial.php?id='.$filials[$i]['id'].'" class="ahref">'.$filials[$i]['name'].'</a></div>
 								<div class="cellAddress" style="text-align: left;'.$bg_color.'">'.$filials[$i]['address'].'</div>
 								<div class="cellText" style="text-align: left;'.$bg_color.'">'.$filials[$i]['contacts'].'</div>';

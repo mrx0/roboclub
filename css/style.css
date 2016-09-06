@@ -448,7 +448,7 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 }
 
 .b2{
-	margin: 0;	
+	margin: 0;
 }
 
 .b, .b2 {
@@ -471,10 +471,16 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 	 cursor:pointer;
 }
 
-.b:hover, .b2:hover {
+.b:hover{
     box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
     background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
     color: #a00;
+}
+
+.b2:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
+    background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
+    color: #999;
 }
 
 /*Ссылки выборки*/
@@ -491,6 +497,7 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 }
 
 .ahref:hover {
+	font-weight: bold;
 	/*background: rgba(00,255,255,0.7);*/
 }
 
@@ -1546,5 +1553,14 @@ input[type="number"].mod{
 
 #uploaded-files a {
 	color: #1bacbf;
+}
+
+.verticalText {
+	-moz-transform: rotate(270deg);
+	-webkit-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	width: 300px;
+	height: 200px;
 }
 

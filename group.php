@@ -1,4 +1,5 @@
 <?php
+
 //user.php
 //
 
@@ -95,11 +96,13 @@
 				if (($scheduler['see_all'] == 1) || $god_mode){
 						echo '
 									<a href="add_shed_group.php?id='.$_GET['id'].'" class="b">График</a>';
-
+				}
+				if (($scheduler['see_all'] == 1) || $god_mode){
+						echo '
+									<a href="journal.php?id='.$_GET['id'].'" class="b">Журнал</a>';
+				}
 						echo '
 									<br /><br />';
-					//}
-				}
 				if (($groups['edit'] == 1) || $god_mode){
 					echo '
 									<a href="edit_group.php?id='.$_GET['id'].'" class="b">Редактировать</a>';

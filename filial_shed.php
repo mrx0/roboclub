@@ -51,55 +51,89 @@
 						
 						if ($rez !=0){
 
+							//массив со всеми группами имеющими расписания
 							$spr_shed_templs = array();
+							//массив с группами
+							//$grop_shed_templs = array();
+							//массив с расписаниями
+							//$shed_templs = array();
 							
 							foreach($rez as $value){
 								$spr_shed_templs[$value['group']] = json_decode($value['template'], true);
 							}
 								
-							var_dump($spr_shed_templs);
-								
+							//var_dump($spr_shed_templs);
+
 							echo '
 									<div id="data">';
 							echo '
 										<div style="margin-bottom: 20px;">
 											<div class="cellsBlock">
-												<div class="cellTime" style="text-align: center; background-color:#CCC; min-width: 80px;"></div>
-												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; min-width: 80px;"><b>ПН</b></div>
-												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; min-width: 80px;"><b>ВТ</b></div>
-												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; min-width: 80px;"><b>СР</b></div>
-												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; min-width: 80px;"><b>ЧТ</b></div>
-												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; min-width: 80px;"><b>ПТ</b></div>
-												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; min-width: 80px;"><b>СБ</b></div>
-												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; min-width: 80px;"><b>ВС</b></div>
+												<div class="cellTime" style="text-align: center; background-color:#CCC; width: 100px; min-width: 100px; max-width: 100px;"></div>
+												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 100px; min-width: 100px; max-width: 100px;"><b>ПН</b></div>
+												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 100px; min-width: 100px; max-width: 100px;"><b>ВТ</b></div>
+												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 100px; min-width: 100px; max-width: 100px;"><b>СР</b></div>
+												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 100px; min-width: 100px; max-width: 100px;"><b>ЧТ</b></div>
+												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 100px; min-width: 100px; max-width: 100px;"><b>ПТ</b></div>
+												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 100px; min-width: 100px; max-width: 100px;"><b>СБ</b></div>
+												<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 100px; min-width: 100px; max-width: 100px;"><b>ВС</b></div>
 											</div>';
 											
 											
 							$spr_shed_times = SelDataFromDB('spr_shed_time', '', '');
 							
+							//var_dump($spr_shed_times);
+							
 							if ($spr_shed_times != 0){
-									
+								//время	
 								for ($i = 0; $i < count($spr_shed_times); $i++) {
 									echo '
 												<div class="cellsBlock cellsBlockHover" style="height: 70px;">
-													<div class="cellTime" style="text-align: center; min-width: 80px;">
+													<div class="cellTime" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
 														<b>'.$spr_shed_times[$i]['from_time'].' - '.$spr_shed_times[$i]['to_time'].'</b>
 													</div>';
-													
+									
+									//день
 									for ($j = 1; $j <= 7; $j++) {
 										
 										$bg_color = '';
-										$checked = '';
+										$grop_shed_templs = '';
 										
-										//if ($spr_shed_templs != 0){
-										//	if ($spr_shed_templs_arr[$j]['time_id'] == $i+1){
-										//		$bg_color = 'background: rgba(0, 255, 0, 0.5);';
-										//		$checked = 'checked';
-										//	}
-										//}
 										echo '
-													<div class="cellTime" style="text-align: center; '.$bg_color.' min-width: 80px;">';
-											echo '
+													<div class="cellTime" style="text-align: center; ';
+
+
+										foreach($spr_shed_templs as $group => $shed_times){
+											if ($shed_times[$j]['time_id'] == $i+1){
+												$j_group = SelDataFromDB('journal_groups', $group, 'group');
+												if ($j_group != 0){
+													$bg_color = 'background: '.$j_group[0]['color'].';';
+													$grop_shed_templs .= '<a href="group.php?id='.$j_group[0]['id'].'" class="b2" style="background: '.$j_group[0]['color'].';"><span style="font-weight: bold;">'.$j_group[0]['name'].'</span><br>';
+													
+													//Возрасты
+													$ages = SelDataFromDB('spr_ages', $j_group[0]['age'], 'ages');
+													if ($ages != 0){
+														$grop_shed_templs .= '<span style="font-size: 80%;">'.$ages[0]['from_age'].' - '.$ages[0]['to_age'].' лет</span>';
+													}else{
+														$grop_shed_templs .= '<span style="color: red; font-size: 75%">возраст не указан</span>';
+													}	
+													$grop_shed_templs .= '<br><span style="font-size: 80%">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</span>';
+													$grop_shed_templs .= '</a>';
+													
+												}else{
+													$grop_shed_templs .= '<span style="color: red; font-size: 70%">нет группы</span>';
+												}
+												$grop_shed_templs .= '<br>';
+											}
+										}
+										
+										echo $bg_color;
+											
+										echo ' width: 100px; min-width: 100px; max-width: 100px;">';
+										//var_dump($j_group);
+										echo $grop_shed_templs ;
+													
+										echo '
 													</div>';
 									}
 									

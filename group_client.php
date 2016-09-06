@@ -131,8 +131,25 @@
 							echo '
 										<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 										
-							for ($i = 0; $i < count($free_uch_arr); $i++) { 
+							for ($i = 0; $i < count($free_uch_arr); $i++) {
 								if ((getyeardiff($free_uch_arr[$i]['birthday']) >= $ages[0]['from_age']) && (getyeardiff( $free_uch_arr[$i]['birthday']) <= $ages[0]['to_age'])){
+									//а не находится ли он в другой группе
+									$inGroup = '';
+									$groups = SelDataFromDB('journal_groups_clients', $free_uch_arr[$i]['id'], 'client');
+									if ($groups != 0){
+										//var_dump ($groups);
+										foreach($groups as $key => $value){
+											$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
+											if ($group != 0){
+												$inGroup .= '<a href="group.php?id='.$value['group_id'].'" class="ahref" style="padding: 0 4px; background-color: '.$group[0]['color'].'">'.$group[0]['name'].'</a>';	
+											}else{
+												$inGroup .= 'ошибка группы';
+											}
+										}
+									}else{
+										$inGroup .= 'не в группе';
+									}
+									
 									echo '
 											<li class="cellsBlock cellsBlockHover" style="width: auto;">
 												<a href="client.php?id='.$free_uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$free_uch_arr[$i]['full_name'].'</a>';
@@ -156,6 +173,9 @@
 												<div class="cellTime" style="width: 140px; text-align: center">', $free_uch_arr[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $free_uch_arr[$i]['birthday']) ,' / <b>'.getyeardiff( $free_uch_arr[$i]['birthday']).' лет</b></div>
 												<div id="addClientInGroup" clientid="'.$free_uch_arr[$i]['id'].'" class="cellCosmAct addClientInGroup" style="text-align: center">
 													<i class="fa fa-plus" style="color: green; cursor: pointer;"></i>
+												</div>
+												<div id="cellTime" class="cellTime" style="text-align: center; font-size: 80%;">
+													'.$inGroup.'
 												</div>
 											</li>';
 								}

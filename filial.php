@@ -32,7 +32,7 @@
 					echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Название</div>
-									<div class="cellRight">'.$filial[0]['name'].'</div>
+									<div class="cellRight" style="background-color: '.$filial[0]['color'].';">'.$filial[0]['name'].'</div>
 								</div>
 								
 								<div class="cellsBlock2">

@@ -75,9 +75,30 @@
 									<div class="cellRight">';
 				$filials = SelDataFromDB('spr_office', $client[0]['filial'], 'offices');
 				if ($filials != 0){
-					echo	$filials[0]['name'];
+					echo '<a href="filial.php?id='.$filials[0]['id'].'" class="ahref">'.$filials[0]['name'].'</a>';	
 				}else{
-					echo '-';
+					echo 'Не указан филиал';
+				}
+				echo '
+									</div>
+								</div>
+
+								<div class="cellsBlock2">
+									<div class="cellLeft">Группа</div>
+									<div class="cellRight">';
+				$groups = SelDataFromDB('journal_groups_clients', $_GET['id'], 'client');
+				if ($groups != 0){
+					//var_dump ($groups);
+					foreach($groups as $key => $value){
+						$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
+						if ($group != 0){
+							echo '<a href="group.php?id='.$value['group_id'].'" class="ahref" style="padding: 0 4px; background-color: '.$group[0]['color'].'">'.$group[0]['name'].'</a>';	
+						}else{
+							echo 'ошибка группы';
+						}
+					}
+				}else{
+					echo 'Не в группе';
 				}
 				echo '
 									</div>

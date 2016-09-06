@@ -684,6 +684,9 @@
 				if ($type == 'client_id'){
 					$q = " WHERE `id` = '$sw'";
 				}
+				if ($type == 'client'){
+					$q = " WHERE `client` = '$sw'";
+				}
 				if ($type == 'id'){
 					$q = " WHERE `id` = '$sw'";
 				}
@@ -723,7 +726,7 @@
 		mysql_query("SET NAMES 'utf8'");
 		$query = "SELECT * FROM `$datatable`".$q;
 		//echo $query;
-		$res = mysql_query($query) or die($q);
+		$res = mysql_query($query) or die($q.' _ '.$query);
 		$number = mysql_num_rows($res);
 		if ($number != 0){
 			while ($arr = mysql_fetch_assoc($res)){

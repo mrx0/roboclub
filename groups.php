@@ -45,6 +45,7 @@
 				<div id="data">
 					<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 						<li class="cellsBlock sticky" style="font-weight:bold; background-color:#FEFEFE;">
+							<div class="cellPriority" style="text-align: center"></div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Название</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Филиал</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Возраст</div>
@@ -80,8 +81,10 @@
 					$filials = SelDataFromDB('spr_office', $journal_groups[$i]['filial'], 'offices');
 					if ($filials != 0){
 						$filial = $filials[0]['name'];
+						$filialColor = $filials[0]['color'];
 					}else{
 						$filial = 'unknown';
+						$filialColor = '#FFF';
 					}
 					
 					//Возрасты
@@ -95,8 +98,9 @@
 					//временная переменная
 					$result_html .= '
 								<li class="cellsBlock cellsBlockHover">
-									<a href="group.php?id='.$journal_groups[$i]['id'].'" class="cellName ahref" style="background-color: '.$journal_groups[$i]['color'].';">'.$journal_groups[$i]['name'].'</a>
-									<div class="cellName" style="text-align: center;'.$bg_color.'" id="4filter">'.$filial.'</div>
+									<div class="cellPriority" style="text-align: center; background-color: '.$journal_groups[$i]['color'].';"></div>
+									<a href="group.php?id='.$journal_groups[$i]['id'].'" class="cellName ahref" style="background-color: '.$filialColor.';">'.$journal_groups[$i]['name'].'</a>
+									<a href="filial.php?id='.$filials[0]['id'].'" id="4filter" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.$filial.'</a>
 									<div class="cellName" style="text-align: center; '.$bg_color.'">'.$age.'</div>
 									<a href="user.php?id='.$journal_groups[$i]['worker'].'" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.WriteSearchUser('spr_workers', $journal_groups[$i]['worker'], 'user').'</a>
 									<div class="cellName" style="text-align: center; '.$bg_color.'">';

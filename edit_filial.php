@@ -63,6 +63,7 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">Контакты</div>
 									<div class="cellRight">';
+									
 					if (!$closed){
 						echo '
 										<textarea name="contacts" id="contacts" cols="35" rows="5">'.$filial[0]['contacts'].'</textarea>';
@@ -75,8 +76,24 @@
 					}
 					echo '
 									</div>
-								</div>
+								</div>';
+					echo '			
+								<div class="cellsBlock2">
+									<div class="cellLeft">Цвет</div>
+									<div class="cellRight">';
+					if (!$closed){
+						echo '
+										<input id="color" class="jscolor" value="'.$filial[0]['color'].'">';
+					}else{
+						echo '
+										<span style="background-color: '.$filial[0]['color'].';">'.$filial[0]['color'].'<span>';
+					}
+					
+										echo '
+									</div>
+								</div>';
 								
+					echo '			
 								<div class="cellsBlock2">
 									<div class="cellLeft">Закрыть</div>
 									<div class="cellRight">';
@@ -103,6 +120,7 @@
 											name:document.getElementById("name").value,
 											address:document.getElementById("address").value,
 											contacts:document.getElementById("contacts").value,
+											color:document.getElementById("color").value,
 											session_id:'.$_SESSION['id'].',
 										},
 										success:function(data){document.getElementById("status").innerHTML=data;}

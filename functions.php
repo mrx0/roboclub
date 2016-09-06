@@ -560,5 +560,35 @@
 		return $sanat;
 	}
 	
+	function getWeekDays ($weekDay, $month, $year){
+		
+		$rezult = array();
+
+		$date = new DateTime("01.{$month}.{$year}");
+		//var_dump($date);
+		$flag = false;
+		$m = $date -> format("m");
+		while (($date -> format("Y") == $year) && ($date -> format("m") == $month)){
+			if ($flag === false){
+				if ($date -> format("N") === $weekDay){
+					$flag = true;
+				}else{
+					$date -> add(new DateInterval("P1D"));
+				}
+			}
+			if ($flag === true){
+				//var_dump($date);
+				//var_dump ($date->format("Y.m.d"));
+				array_push($rezult, $date -> format("Y.m.d"));
+				$date -> add(new DateInterval("P1W"));
+			}
+			/*if ($m != $date->format("m")){
+				$m = $date->format("m");
+				echo "\r\n\r\n";
+			}*/
+		}
+		
+		return $rezult;
+	}
 
 ?>

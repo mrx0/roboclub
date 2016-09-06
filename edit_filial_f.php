@@ -13,7 +13,7 @@
 				mysql_select_db($dbName) or die(mysql_error()); 
 				mysql_query("SET NAMES 'utf8'");
 				$time = time();
-				$query = "UPDATE `spr_office` SET `name`='{$_POST['name']}', `address`='{$_POST['address']}', `contacts`='{$_POST['contacts']}'  WHERE `id`='{$_POST['id']}'";
+				$query = "UPDATE `spr_office` SET `name`='{$_POST['name']}', `address`='{$_POST['address']}', `contacts`='{$_POST['contacts']}', `color`='".'#'.$_POST['color']."'  WHERE `id`='{$_POST['id']}'";
 				mysql_query($query) or die(mysql_error());
 				mysql_close();
 				
