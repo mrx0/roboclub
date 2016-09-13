@@ -22,7 +22,7 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>График филиала < <a href="group.php?id='.$_GET['id'].'" class="ahref">'.$filial[0]['name'].'</a> ></h2>
+								<h2>Расписание филиала < <a href="filial.php?id='.$_GET['id'].'" class="ahref">'.$filial[0]['name'].'</a> ></h2>
 							</header>';
 					if ($filial[0]['close'] == '1'){
 						echo '<span style="color:#EF172F;font-weight:bold;">Филиал ЗАКРЫТ</span>';
@@ -98,20 +98,25 @@
 										
 										$bg_color = '';
 										$grop_shed_templs = '';
-										
+									
 										echo '
 													<div class="cellTime" style="text-align: center; ';
 
 
 										foreach($spr_shed_templs as $group => $shed_times){
+											$groupTitleComment = '';
+											
 											if ($shed_times[$j]['time_id'] == $i+1){
 												$j_group = SelDataFromDB('journal_groups', $group, 'group');
 												
 												$uch_arr = SelDataFromDB('spr_clients', $group, 'client_group');
 												
 												if ($j_group != 0){
+													
+													$groupTitleComment = 'title="'.$j_group[0]['comment'].'"';
+													
 													$bg_color = 'background: '.$j_group[0]['color'].';';
-													$grop_shed_templs .= '<a href="group.php?id='.$j_group[0]['id'].'" class="b2" style="background: '.$j_group[0]['color'].';"><span style="font-weight: bold;">'.$j_group[0]['name'].'</span><br>';
+													$grop_shed_templs .= '<a href="group.php?id='.$j_group[0]['id'].'" class="b2" style="background: '.$j_group[0]['color'].';" '.$groupTitleComment.'><span style="font-weight: bold;">'.$j_group[0]['name'].'</span><br>';
 													
 													//Возрасты
 													$ages = SelDataFromDB('spr_ages', $j_group[0]['age'], 'ages');
@@ -133,6 +138,8 @@
 													$grop_shed_templs .= '<span style="color: red; font-size: 70%">нет группы</span>';
 												}
 												$grop_shed_templs .= '<br>';
+												
+												
 											}
 										}
 										

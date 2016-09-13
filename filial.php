@@ -43,35 +43,38 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">Контакты</div>
 									<div class="cellRight">'.$filial[0]['contacts'].'</div>
-								</div>
-								
+								</div>';
+					if (($offices['edit'] == 1) || $god_mode){
+						echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Закрыть</div>
 									<div class="cellRight">';
-					if (!$closed){
-						echo '
+						if (!$closed){
+							echo '
 										<a href="close_filial.php?id='.$filial[0]['id'].'&close=1" style="float: right;"><img src="img/delete.png" title="Закрыть"></a>';
-					}else{
-						echo '
+						}else{
+							echo '
 										<a href="close_filial.php?id='.$filial[0]['id'].'&close=1" style="float: right;"><img src="img/reset.png" title="Открыть"></a>';
-					}
-					echo '
+						}
+						echo '
 									</div>
 								</div>';
+					}
 					if (!$closed){
 						echo '
 								<br /><br />
 								
 								<a href="filial_shed.php?id='.$filial[0]['id'].'" class="b">Расписание филиала</a>';
 					}			
-
-					if (!$closed){	
-						echo '
+					if (($offices['edit'] == 1) || $god_mode){
+						if (!$closed){
+							echo '
 								<br /><br />
 								<a href="edit_filial.php?id='.$filial[0]['id'].'" class="b">Редактировать</a>';
+						}
 					}
-					echo '
-							</form>';	
+					/*echo '
+							</form>';	*/
 		
 				}else{
 					echo '<h1>Какая-то ошибка</h1>';

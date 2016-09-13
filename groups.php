@@ -34,20 +34,22 @@
 			echo '
 				</header>';
 			
-				
-			echo '
-				<p style="margin: 5px 0; padding: 1px; font-size:80%;">
-					Быстрый поиск: 
-					<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-				</p>';
-					
+			if (($groups['see_all'] == 1) || $god_mode){	
+				echo '
+					<p style="margin: 5px 0; padding: 1px; font-size:80%;">
+						Быстрый поиск: 
+						<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
+					</p>';
+			}		
 			echo '
 				<div id="data">
 					<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 						<li class="cellsBlock sticky" style="font-weight:bold; background-color:#FEFEFE;">
 							<div class="cellPriority" style="text-align: center"></div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Название</div>
+							<div class="cellCosmAct" style="text-align: center" title="Журнал группы">-</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Филиал</div>
+							<div class="cellCosmAct" style="text-align: center" title="Расписание филиала">-</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Возраст</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Тренер</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Участников</div>
@@ -100,7 +102,9 @@
 								<li class="cellsBlock cellsBlockHover">
 									<div class="cellPriority" style="text-align: center; background-color: '.$journal_groups[$i]['color'].';"></div>
 									<a href="group.php?id='.$journal_groups[$i]['id'].'" class="cellName ahref" style="background-color: '.$filialColor.';">'.$journal_groups[$i]['name'].'</a>
+									<a href="journal.php?id='.$journal_groups[$i]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: green" title="Журнал группы"><i class="fa fa-calendar"></i></a>
 									<a href="filial.php?id='.$filials[0]['id'].'" id="4filter" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.$filial.'</a>
+									<a href="filial_shed.php?id='.$filials[0]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: rgb(182, 82, 227);" title="Расписание филиала"><i class="fa fa-clock-o"></i></a>
 									<div class="cellName" style="text-align: center; '.$bg_color.'">'.$age.'</div>
 									<a href="user.php?id='.$journal_groups[$i]['worker'].'" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.WriteSearchUser('spr_workers', $journal_groups[$i]['worker'], 'user').'</a>
 									<div class="cellName" style="text-align: center; '.$bg_color.'">';

@@ -67,9 +67,13 @@
 
 		
 <script src="js/jszakaz.js"></script>
-<script src="js/jquery-ui.min-1.8.js"></script>
+<script src="js/jquery-ui.min.js"></script>
 
-
+<script>
+	$(function(){
+		$(document).tooltip();
+	});
+</script>
 
 			
 			<script type="text/javascript">
@@ -292,18 +296,18 @@
 		echo '<a href="index.php">Главная</a>';
 
 		/*if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
-			echo '<li><a href="scheduler.php">График</a></li>';
+			echo '<li><a href="scheduler.php">Расписание</a></li>';
 		}*/
-		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
+		if (($clients['see_all'] == 1) || $god_mode){
 			echo '<li><a href="clients.php">Клиенты</a></li>';
 		}
 		if (($groups['see_all'] == 1) || ($groups['see_own'] == 1) || $god_mode){
 			echo '<li><a href="groups.php">Группы</a></li>';
 		}
-		if (($offices['see_all'] == 1) || ($offices['see_own'] == 1) || $god_mode){
+		if (($offices['see_all'] == 1) || $god_mode){
 			echo '<li><a href="filials.php">Филиалы</a></li>';
 		}
-		if (($workers['see_all'] == 1) || ($workers['see_own'] == 1) || $god_mode){
+		if (($workers['see_all'] == 1) || $god_mode){
 			echo '<li><a href="contacts.php">Сотрудники</a></li>';
 		}
 		if ($god_mode){

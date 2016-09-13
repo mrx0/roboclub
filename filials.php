@@ -26,7 +26,8 @@
 						<div class="cellPriority" style="text-align: center"></div>
 						<div class="cellOffice" style="text-align: center">Филиал</div>
 						<div class="cellAddress" style="text-align: center">Адрес</div>
-						<div class="cellText" style="text-align: center">Контакты</div>';
+						<div class="cellText" style="text-align: center">Контакты</div>
+						<div class="cellCosmAct" style="text-align: center" title="Расписание филиала">-</div>';
 		if (($offices['edit'] == 1) || $god_mode){
 			echo '
 						<div class="cellCosmAct" style="text-align: center">-</div>
@@ -58,7 +59,8 @@
 								<div class="cellPriority" style="text-align: center; background-color: '.$filials[$i]['color'].';"></div>
 								<div class="cellOffice" style="text-align: center;'.$bg_color.'" id="4filter"><a href="filial.php?id='.$filials[$i]['id'].'" class="ahref">'.$filials[$i]['name'].'</a></div>
 								<div class="cellAddress" style="text-align: left;'.$bg_color.'">'.$filials[$i]['address'].'</div>
-								<div class="cellText" style="text-align: left;'.$bg_color.'">'.$filials[$i]['contacts'].'</div>';
+								<div class="cellText" style="text-align: left;'.$bg_color.'">'.$filials[$i]['contacts'].'</div>
+								<a href="filial_shed.php?id='.$filials[$i]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: rgb(182, 82, 227);" title="Расписание филиала"><i class="fa fa-clock-o"></i></a>';
 				if (($offices['edit'] == 1) || $god_mode){
 					$result_html .= '
 								<div class="cellCosmAct" style="text-align: center"><a href="edit_filial.php?id='.$filials[$i]['id'].'"><img src="img/edit.png" title="Редактировать"></a></div>

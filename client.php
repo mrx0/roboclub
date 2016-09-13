@@ -20,7 +20,8 @@
 						<header>
 							<h2>Карточка клиента #'.$client[0]['id'].'</h2>
 						</header>';
-				echo '
+				if (($clients['see_all'] == 1) || $god_mode){
+					echo '
 						<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
 							<div class="cellRight">
 								<span style="font-size: 70%;">Быстрый поиск клиента</span><br />
@@ -28,7 +29,7 @@
 								<div id="search_result_fc2"></div>
 							</div>
 						</div>';
-
+				}
 				echo '
 						<div id="data">';
 

@@ -7,7 +7,7 @@
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
+		if (($clients['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'filter.php';
