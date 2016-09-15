@@ -25,7 +25,7 @@
 				$clients = json_decode($permissions[0]['clients'], true);
 				$workers = json_decode($permissions[0]['workers'], true);
 				$offices = json_decode($permissions[0]['offices'], true);
-				$zapis = json_decode($permissions[0]['zapis'], true);
+				$finance = json_decode($permissions[0]['finance'], true);
 				$scheduler = json_decode($permissions[0]['scheduler'], true);
 				//var_dump($offices);
 			}

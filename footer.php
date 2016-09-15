@@ -9,7 +9,7 @@
 	<div class="no_print"> 
 		<!--</section>-->
 		<footer>
-
+			<div style="font-size: 70%; color: #CCC; float: right;"><a href="https://vk.com/id148681572" class="ahrefCreator">creator <i class="fa fa-copyright" aria-hidden="true"></i></a></div>
 		</footer>
 	</div>';
 			

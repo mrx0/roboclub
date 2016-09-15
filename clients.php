@@ -159,25 +159,9 @@
 							</li>';
 
 				for ($i = 0; $i < count($clients_j); $i++) { 
-				//var_dump($_SESSION['id']);
-				//	if (isset($_GET['own_clients']) && ($_GET['own_clients'] == 'yes') && ($_SESSION['id'] == $clients_j[$i]['therapist'])){
-				//		var_dump('мой');
-				//	}
 					echo '
 							<li class="cellsBlock cellsBlockHover">
 								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
-					/*if (($stom['add_own'] == 1) || $god_mode){
-						echo '
-									<div class="cellCosmAct" style="text-align: center"><a href="add_task_stomat.php?client='.$clients_j[$i]['id'].'"><img src="img/stom_add.png" title="Добавить посещение Стоматолога"></a></div>';
-					}
-					if (($cosm['add_own'] == 1) || $god_mode){
-						echo '
-									<div class="cellCosmAct" style="text-align: center"><a href="add_task_cosmet.php?client='.$clients_j[$i]['id'].'"><img src="img/cosm_add.png" title="Добавить посещение Косметолога"></a></div>';
-					}
-					if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
-						echo '
-									<div class="cellCosmAct" style="text-align: center"><a href="stom_history.php?client='.$clients_j[$i]['id'].'"><img src="img/stom_hist.png" title="История  (стоматология)"></a></div>';
-					}*/
 					echo '
 								<div class="cellCosmAct" style="text-align: center">';
 					if ($clients_j[$i]['sex'] != 0){

@@ -103,10 +103,15 @@
 				}
 				echo '
 									</div>
-								</div>';
+								</div>
+								<br>';
 
 
 									
+				if (($clients['edit'] == 1) || $god_mode){
+					echo '
+							<a href="add_finance.php?client='.$_GET['id'].'" class="b">Добавить платёж <i class="fa fa-rub"></i></a><br><br>';
+				}
 				if (($clients['edit'] == 1) || $god_mode){
 					echo '
 							<a href="client_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';

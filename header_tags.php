@@ -69,7 +69,7 @@
 <script src="js/jszakaz.js"></script>
 <script src="js/jquery-ui.min.js"></script>
 
-<script>
+<script type="text/javascript">
 	$(function(){
 		$(document).tooltip();
 	});
@@ -96,7 +96,7 @@
 	});
 </script>
 			
-    <script>
+    <script type="text/javascript">
 		$(function () {
 			$.scrollUp({
 				animation: \'slide\',
@@ -181,7 +181,7 @@
 			</script>
 			
 	<!--для скрытых блоков-->				
-    <script>
+    <script type="text/javascript">
 		$(document).ready(function () {
 			$(\'#showDiv1\').click(function () {
 				$(\'#div1\').stop(true, true).slideToggle(\'slow\');
@@ -195,7 +195,7 @@
     </script>
 	
 	<!--адрес страницы-->				
-    <script>
+    <script type="text/javascript">
 		var patharr = location.pathname.split(\'/\');
 		var path = patharr[patharr.length - 1];
     </script>
@@ -232,7 +232,7 @@
 				$groups = json_decode($permissions[0]['groups'], true);
 				$offices = json_decode($permissions[0]['offices'], true);
 				$scheduler = json_decode($permissions[0]['scheduler'], true);
-				$zapis = json_decode($permissions[0]['zapis'], true);
+				$finance = json_decode($permissions[0]['finance'], true);
 				//var_dump($offices);
 			}
 		}else{
@@ -247,8 +247,8 @@
 			$offices['see_own'] = 0;
 			$scheduler['see_all'] = 0;
 			$scheduler['see_own'] = 0;
-			$zapis['see_all'] = 0;
-			$zapis['see_own'] = 0;
+			$finance['see_all'] = 0;
+			$finance['see_own'] = 0;
 			//
 			$workers['add_new'] = 0;
 			$workers['add_own'] = 0;
@@ -260,36 +260,36 @@
 			$offices['add_own'] = 0;
 			$scheduler['add_new'] = 0;
 			$scheduler['add_own'] = 0;
-			$zapis['add_new'] = 0;
-			$zapis['add_own'] = 0;
+			$finance['add_new'] = 0;
+			$finance['add_own'] = 0;
 			//
 			$workers['edit'] = 0;
 			$groups['edit'] = 0;
 			$clients['edit'] = 0;
 			$offices['edit'] = 0;
 			$scheduler['edit'] = 0;
-			$zapis['edit'] = 0;
+			$finance['edit'] = 0;
 			//
 			$workers['close'] = 0;
 			$groups['close'] = 0;
 			$clients['close'] = 0;
 			$offices['close'] = 0;
 			$scheduler['close'] = 0;
-			$zapis['close'] = 0;
+			$finance['close'] = 0;
 			//
 			$workers['reopen'] = 0;
 			$groups['reopen'] = 0;
 			$clients['reopen'] = 0;
 			$offices['reopen'] = 0;
 			$scheduler['reopen'] = 0;
-			$zapis['reopen'] = 0;
+			$finance['reopen'] = 0;
 			//
 			$workers['add_worker'] = 0;
 			$groups['add_worker'] = 0;
 			$clients['add_worker'] = 0;
 			$offices['add_worker'] = 0;
 			$scheduler['add_worker'] = 0;
-			$zapis['add_worker'] = 0;
+			$finance['add_worker'] = 0;
 			//
 			
 		}
@@ -309,6 +309,9 @@
 		}
 		if (($workers['see_all'] == 1) || $god_mode){
 			echo '<li><a href="contacts.php">Сотрудники</a></li>';
+		}
+		if (($finance['see_all'] == 1) || $god_mode){
+			echo '<li><a href="finances.php">Финансы</a></li>';
 		}
 		if ($god_mode){
 			echo '<li><a href="admin.php">Adm</a></li>';

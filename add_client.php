@@ -121,7 +121,7 @@ echo '
 									}
 									echo '
 									</select>
-									<label id="filial_error" class="error">
+									<label id="filial_error" class="error"></label>
 								</div>
 							</div>';
 			echo '				

@@ -1,5 +1,6 @@
 <?php 
 
+
 	session_start();
 	
 	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
@@ -7,7 +8,7 @@
 	}else{
 		//var_dump ($_POST);
 		if ($_POST){
-			if (isset($_POST['id']) && isset($_POST['group'])){
+			if (isset($_POST['id'])){
 					include_once 'DBWork.php';
 				
 					require 'config.php';
@@ -15,12 +16,12 @@
 					mysql_select_db($dbName) or die(mysql_error()); 
 					mysql_query("SET NAMES 'utf8'");
 					$time = time();
-					$query = "DELETE FROM `journal_groups_clients` WHERE `group_id`='{$_POST['group']}' AND `client`='{$_POST['id']}'";
-					mysql_query($query) or die(mysql_error());
+					$query = "DELETE FROM `journal_finance` WHERE `id`='{$_POST['id']}'";
+					mysql_query($query) or die($query.' -> '.mysql_error());
 					mysql_close();
 					
 					//логирование
-					AddLog ('0', $_SESSION['id'], '', 'Клиент ['.$_POST['id'].'] удален из группы ['.$_POST['group'].']');	
+					AddLog ('0', $_SESSION['id'], '', 'Платёж ['.$_POST['id'].'] удален из базы');	
 				
 					echo 'Удаление прошло успешно';
 			}else{
@@ -28,4 +29,5 @@
 			}
 		}
 	}
+	
 ?>

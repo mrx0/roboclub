@@ -26,7 +26,7 @@
 				}
 
 				echo '
-					<script>
+					<script type="text/javascript">
 						var group = '.$_GET['id'].';
 						var session_id = '.$_SESSION['id'].';
 					</script>
@@ -212,7 +212,7 @@
 							</div>';	
 									
 						echo '
-							<script>
+							<script type="text/javascript">
 								$(document).ready(function(){
 									$(\'.addClientInGroup\').on(\'click\', function(data){
 										var id = $(this).attr(\'clientid\');

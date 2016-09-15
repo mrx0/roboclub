@@ -17,99 +17,12 @@
 				</header>		
 				<div id="data">';
 				
-			//echo '<a href="/sxd">SXD</a><br />';
-			
-			
 			//echo '<a href="shed_temlates.php" class="b">Шаблоны графиков</a>';
+			echo '<a href="settins.php" class="b">Настройки</a>';
 			echo '<a href="logs.php" class="b">LOGS</a>';
-			
-			$permissions = SelDataFromDB('spr_permissions', '', '');
-			//var_dump ($permissions);
-			if ($permissions != 0){
-				for ($i=0; $i<count($permissions); $i++){
-					echo '
-						<div class="cellsBlock2">
-							<div class="cellLeft" style="width:20px; min-width:20px;"><b>'.$permissions[$i]['id'].'</b></div>
-							<div class="cellLeft"><b>'.$permissions[$i]['name'].'</b></div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">
-								IT
-							</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">';
+			echo '<a href="wrights.php" class="b">Права</a>';
+			echo '<a href="/sxd" class="b">SXD</a>';			
 
-					echo
-							'</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">
-								cosmet
-							</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">';
-
-					echo
-							'</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">
-								stomat
-							</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">';
-
-					echo
-							'</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">
-								clients
-							</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">';
-					$clients = json_decode($permissions[$i]['clients'], true);
-					foreach ($clients as $key => $value){
-						echo $key.'->'.$value.'<br />';					
-					}
-					echo
-							'</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">
-								workers
-							</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">';
-					$workers = json_decode($permissions[$i]['workers'], true);
-					foreach ($workers as $key => $value){
-						echo $key.'->'.$value.'<br />';					
-					}
-					echo
-							'</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">
-								offices
-							</div>
-						</div>
-						<div class="cellsBlock2">
-							<div class="cellLeft">';
-					$offices = json_decode($permissions[$i]['offices'], true);
-					foreach ($offices as $key => $value){
-						echo $key.'->'.$value.'<br />';					
-					}
-					echo 
-							'</div>
-						</div>
-					';
-				}
-			}
 				
 			echo '			
 				</div>';

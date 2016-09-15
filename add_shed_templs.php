@@ -114,7 +114,7 @@
 			//Фунция JS
 			
 			echo '
-				<script>
+				<script type="text/javascript">
 					$(document).ready(function(){
 						$(\'.addShedTimes\').on(\'click\', function(data){
 							
@@ -153,7 +153,7 @@
 				</script>';			
 
 			echo '
-				<script>  
+				<script type="text/javascript">  
 				
 					function Ajax_add_shed_templs() {
 						// убираем класс ошибок с инпутов

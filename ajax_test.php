@@ -15,12 +15,39 @@ if (isset($_POST['name']))
     $arrayFields['name'] = $_POST['name'];
 if (isset($_POST['age']))
     $arrayFields['age'] = $_POST['age'];
+if (isset($_POST['summ']))
+    $arrayFields['summ'] = $_POST['summ'];
+if (isset($_POST['admSettings'])){
+	//var_dump($_POST);
+	foreach($_POST['admSettings'] as $key => $value){
+		$arrayFields[$key] = $value;
+	}
+}
 
 // проверка всех полей на пустоту
 foreach($arrayFields as $fieldName => $oneField){
+	
     if($oneField == '' || !isset($oneField) || ($oneField == '0')){
-        $errorContainer[$fieldName] = '<span style="color: red">Поле обязательно для заполнения</span>';
+        $errorContainer[$fieldName] = '<span style="color: red">В этом поле ошибка</span>';
     }
+	
+	if (isset($_POST['summ'])){
+		if (!is_numeric($oneField)) {
+			$errorContainer[$fieldName] = '<span style="color: red">В этом поле ошибка</span>';
+		}
+		if ($oneField <= 0){
+			$errorContainer[$fieldName] = '<span style="color: red">В этом поле ошибка</span>';
+		}
+	}
+	
+	if (isset($_POST['admSettings'])){
+		if (!is_numeric($oneField)) {
+			$errorContainer[$fieldName] = '<span style="color: red">В этом поле ошибка</span>';
+		}
+		if ($oneField <= 0){
+			$errorContainer[$fieldName] = '<span style="color: red">В этом поле ошибка</span>';
+		}
+	}
 }
  /*
 // сравнение введенных паролей

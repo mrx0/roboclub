@@ -124,19 +124,34 @@
 										echo '<span style="font-size: 80%; color: #CCC;">Сегодня: <a href="journal.php?id='.$_GET['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';	
 										echo '
 											<div id="data">		
-												<ul class="live_filter" style="margin-left: 6px;">
+												<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
 													<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
 														<a href="journal.php?id='.$_GET['id'].'&m='.$prev.'&y='.$pYear.'" class="cellTime ahref" style="text-align: center;">
-															<span style="font-weight: normal; font-size: 70%;"><< '.$monthsName[$prev].'</span>
+															<span style="font-weight: normal; font-size: 70%;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
 														</a>
 														<div class="cellTime" style="text-align: center;">
-															<span style="color: #2EB703">'.$monthsName[$month].'</span>
+															<span style="color: #2EB703">'.$monthsName[$month].'</span><br>'.$year.'
 														</div>
 														<a href="journal.php?id='.$_GET['id'].'&m='.$next.'&y='.$nYear.'" class="cellTime ahref" style="text-align: center;">
-															<span style="font-weight: normal; font-size: 70%;">'.$monthsName[$next].' >></span>
+															<span style="font-weight: normal; font-size: 70%;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
 														</a>
+														
+														<div class="cellTime" style="text-align: center; width: auto;">
+															<select id="iWantThisMonth">';
+										foreach ($monthsName as $val => $name){
+											echo '
+																<option value="'.$val.'" ', ($val == $month) ? 'selected' : '' ,'>'.$name.'</option>';
+										}
+										echo '
+															</select>
+															<input id="iWantThisYear" type="number" value="'.$year.'" min="2000" max="9999" size="4" style="width: 60px;">
+															<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate()"></i>
+														</div>
 													</li>
 													<br>
+													
+													
+													
 													<li class="cellsBlock" style="font-weight: bold; width: auto;">	
 														<div class="cellPriority" style="text-align: center"></div>
 														<div class="cellFullName" style="text-align: center">ФИО</div>';
@@ -154,25 +169,43 @@
 										
 										if ($uch_arr != 0){	
 
+											$arr = array();
+											$journal_uch = array();
+										
+											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+											mysql_select_db($dbName) or die(mysql_error()); 
+											mysql_query("SET NAMES 'utf8'");
+											//$query = "SELECT `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND `user_id` = '{$uch_arr[$i]['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+											$query = "SELECT `user_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+											$res = mysql_query($query) or die(mysql_error());
+											$number = mysql_num_rows($res);
+											if ($number != 0){
+												while ($arr = mysql_fetch_assoc($res)){
+													$journal_uch[$arr['user_id']][$arr['day']] = $arr['status'];
+												}
+											}
+											//var_dump($journal_uch);
+										
 											for ($i = 0; $i < count($uch_arr); $i++) {
-												$arr = array();
-												$journal_uch = array();
+												//$arr = array();
+												//$journal_uch = array();
 												
-												mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+												/*mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 												mysql_select_db($dbName) or die(mysql_error()); 
 												mysql_query("SET NAMES 'utf8'");
-												$query = "SELECT `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND `user_id` = '{$uch_arr[$i]['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+												//$query = "SELECT `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND `user_id` = '{$uch_arr[$i]['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+												$query = "SELECT `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 												$res = mysql_query($query) or die(mysql_error());
 												$number = mysql_num_rows($res);
 												if ($number != 0){
 													while ($arr = mysql_fetch_assoc($res)){
 														$journal_uch[$arr['day']] = $arr['status'];
 													}
-												}
+												}*/
 												//var_dump($journal_uch);
 												
 												echo '
-													<li class="cellsBlock" style="font-weight: bold; width: auto;">	
+													<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto;">	
 														<div class="cellPriority" style="text-align: center"></div>
 														<a href="client.php?id='.$uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$uch_arr[$i]['full_name'].'</a>';
 												
@@ -181,37 +214,126 @@
 												
 												for ($j = 0; $j < count($weekDays); $j++) {
 													$weekDaysArr = explode('.', $weekDays[$j]);
-													if (isset($journal_uch[$weekDaysArr[2]])){
-														if ($journal_uch[$weekDaysArr[2]] == 1){
+													if (isset($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]])){
+														if ($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 1){
 															$backgroundColor = "background-color: rgba(0, 255, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-check"></i>';
-														}elseif($journal_uch[$weekDaysArr[2]] == 2){
+															$journal_value = 1;
+														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 2){
 															$backgroundColor = "background-color: rgba(255, 0, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-times"></i>';
-														}elseif($journal_uch[$weekDaysArr[2]] == 3){
+															$journal_value = 2;
+														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 3){
 															$backgroundColor = "background-color: rgba(255, 252, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-file-text-o"></i>';
+															$journal_value = 3;
+														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 4){
+															$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
+															$journal_ico = '<i class="fa fa-check"></i>';
+															$journal_value = 3;
 														}else{
 															$backgroundColor = '';
 															$journal_ico = '-';
+															$journal_value = 0;
 														}
+														
+														unset($journal_uch[$uch_arr[$i]['id']]);
+														
 													}else{
 														$backgroundColor = '';
 														$journal_ico = '-';
+														$journal_value = 0;
 													}
 													echo '<div id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$uch_arr[$i]['id'].', \''.$weekDays[$j].'\');">'.$journal_ico.'</div>';
+													echo '<input type="hidden" id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'_value" class="journalItemVal" value="'.$journal_value.'">';
 												}									
 					
 												echo '				
 													</li>';
 											}
+											
 										}else{
 											echo '<h3>В этой группе нет участников</h3>';
 										}
 													
 										echo '
-												</ul>
+												</ul>';
+												
+										if (count($journal_uch) > 0){
+											//var_dump($journal_uch);
+											
+											echo '
+												<span style="font-size: 80%; color: #AAA;">Ниже перечислены участники, которые ранее были в этой группе и отмечались в журнале.<br>Сейчас этих участников в данной группе нет.</span>
+												<br>
+												<br>
+												<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
+													<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto;">	
+														<div class="cellPriority" style="text-align: center"></div>
+														<div class="cellFullName" style="text-align: center">ФИО</div>';
+											
+											for ($i = 0; $i < count($weekDays); $i++) {
+												$weekDaysArr = explode('.', $weekDays[$i]);
+												echo '<div class="cellTime" style="text-align: center; width: 70px; min-width: 70px;">'.$weekDaysArr[2].'</div>';
+											}										
+						
+											echo '				
+													</li>';
 
+											foreach ($journal_uch as $us_id => $value) {
+												
+												echo '
+														<li class="cellsBlock" style="font-weight: bold; width: auto;">	
+															<div class="cellPriority" style="text-align: center"></div>
+															<a href="client.php?id='.$us_id.'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $us_id, 'user').'</a>';
+													
+												$weekDaysArr = array();
+												//var_dump($weekDays);
+													
+												for ($j = 0; $j < count($weekDays); $j++) {
+													$weekDaysArr = explode('.', $weekDays[$j]);
+													if (isset($value[$weekDaysArr[2]])){
+														if ($value[$weekDaysArr[2]] == 1){
+															$backgroundColor = "background-color: rgba(0, 255, 0, 0.5)";
+															$journal_ico = '<i class="fa fa-check"></i>';
+															$journal_value = 1;
+														}elseif($value[$weekDaysArr[2]] == 2){
+															$backgroundColor = "background-color: rgba(255, 0, 0, 0.5)";
+															$journal_ico = '<i class="fa fa-times"></i>';
+															$journal_value = 2;
+														}elseif($value[$weekDaysArr[2]] == 3){
+															$backgroundColor = "background-color: rgba(255, 252, 0, 0.5)";
+															$journal_ico = '<i class="fa fa-file-text-o"></i>';
+															$journal_value = 3;
+														}elseif($value[$weekDaysArr[2]] == 4){
+															$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
+															$journal_ico = '<i class="fa fa-check"></i>';
+															$journal_value = 3;
+														}else{
+															$backgroundColor = '';
+															$journal_ico = '-';
+															$journal_value = 0;
+														}
+														
+														unset($journal_uch[$us_id]);
+														
+													}else{
+														$backgroundColor = '';
+														$journal_ico = '-';
+														$journal_value = 0;
+													}
+													echo '<div id="'.$us_id.'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$us_id.', \''.$weekDays[$j].'\');">'.$journal_ico.'</div>';
+													echo '<input type="hidden" id="'.$us_id.'_'.$weekDays[$j].'_value" class="journalItemVal" value="'.$journal_value.'">';
+												}									
+												
+												echo '				
+														</li>';
+											}
+														
+											echo '
+													</ul>';
+										}
+										
+										echo '
 												</div>
 												<br><br>
 												<div id="errror"></div>
@@ -225,51 +347,92 @@
 											<script type="text/javascript">
 												function JournalEdit(id, data){
 													elem = document.getElementById(id + "_" + data);
-													if (elem.style.backgroundColor === ""){
+													elem_val = document.getElementById(id + "_" + data + "_value");';
+												
+										if (($scheduler['see_all'] == 1) || $god_mode){
+											echo '	
+													if (elem_val.value == 0){
 														elem.style.backgroundColor = "rgba(0, 255, 0, 0.5)";
 														elem.innerHTML = "<i class=\"fa fa-check\"></i>";
+														elem_val.value = 1;
 													}else{
-														if ((elem.style.backgroundColor === "rgba(0, 255, 0, 0.5)") || ((elem.style.backgroundColor).indexOf("rgba(0, 255, 0,")) != -1){
+														if (elem_val.value == 1){
 															elem.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-															elem.innerHTML = "<i class=\"fa fa-times\"></i>";	
+															elem.innerHTML = "<i class=\"fa fa-times\"></i>";
+															elem_val.value = 2;
 														}else{
-															if ((elem.style.backgroundColor === "rgba(255, 0, 0, 0.5)") || ((elem.style.backgroundColor).indexOf("rgba(255, 0, 0,")) != -1){
+															if (elem_val.value == 2){
 																elem.style.backgroundColor = "rgba(0, 201, 255, 0.5)";
 																elem.innerHTML = "<i class=\"fa fa-check\"></i>";
+																elem_val.value = 4;
 															}else{
-																if ((elem.style.backgroundColor === "rgba(0, 201, 255, 0.5)") || ((elem.style.backgroundColor).indexOf("rgba(0, 201, 255,")) != -1){
+																if (elem_val.value == 4){
 																	elem.style.backgroundColor = "rgba(255, 252, 0, 0.5)";
 																	elem.innerHTML = "<i class=\"fa fa-file-text-o\"></i>";
+																	elem_val.value = 3;
 																}else{
-																	if ((elem.style.backgroundColor === "rgba(255, 252, 0, 0.5)") || ((elem.style.backgroundColor).indexOf("rgba(255, 252, 0,")) != -1){
+																	if (elem_val.value == 3){
 																		elem.style.backgroundColor = "";
 																		elem.innerHTML = "-";	
+																		elem_val.value = 0;
 																	}
 																}
 															}
 														}
-													}
-													document.getElementById("errror").innerHTML = "<span style=\"color: blue;\">Вы внесли изменения в журнал, не забудьте сохранить.</span>";
+													}';
+										}else{
+											if ($scheduler['see_own'] == 1){
+												echo '	
+													if (elem_val.value == 0){
+														elem.style.backgroundColor = "rgba(0, 255, 0, 0.5)";
+														elem.innerHTML = "<i class=\"fa fa-check\"></i>";
+														elem_val.value = 1;
+													}else{
+														if (elem_val.value == 1){
+															elem.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+															elem.innerHTML = "<i class=\"fa fa-times\"></i>";
+															elem_val.value = 2;
+														}else{
+															if (elem_val.value == 2){
+																elem.style.backgroundColor = "rgba(0, 201, 255, 0.5)";
+																elem.innerHTML = "<i class=\"fa fa-check\"></i>";
+																elem_val.value = 4;
+															}else{
+																	if ((elem_val.value == 3) || (elem_val.value == 4)){
+																		elem.style.backgroundColor = "";
+																		elem.innerHTML = "-";	
+																		elem_val.value = 0;
+																	}
+															}
+														}
+													}';
+											}
+										}
+										echo '											
+													document.getElementById("errror").innerHTML = "<span style=\"color: blue; font-size: 80%;\">Вы внесли изменения в журнал, не забудьте сохранить.<br>Или обновите страницу для сброса.</span>";
 												}
 												
 												function Ajax_change_journal() {
 													
-													var items = $(".journalItem");
+													var items = $(".journalItemVal");
 													var resJournalItems = {};
 													
 													$.each(items, function(){
 														//var arr = (this.id).split("_");
-														if (this.style.backgroundColor === ""){
+														if (this.value == 0){
 															resJournalItems[this.id] = "0";
 														}
-														if ((this.style.backgroundColor === "rgba(0, 255, 0, 0.5)") || ((this.style.backgroundColor).indexOf("rgba(0, 255, 0,")) != -1){
+														if (this.value == 1){
 															resJournalItems[this.id] = "1";
 														}
-														if ((this.style.backgroundColor === "rgba(255, 0, 0, 0.5)") || ((this.style.backgroundColor).indexOf("rgba(255, 0, 0,")) != -1){
+														if (this.value == 2){
 															resJournalItems[this.id] = "2";
 														}
-														if ((this.style.backgroundColor === "rgba(255, 252, 0, 0.5)") || ((this.style.backgroundColor).indexOf("rgba(255, 252, 0,")) != -1){
+														if (this.value == 3){
 															resJournalItems[this.id] = "3";
+														}
+														if (this.value == 4){
+															resJournalItems[this.id] = "4";
 														}
 													});
 													//console.log(resJournalItems);
@@ -294,6 +457,15 @@
 												
 											</script>
 										';
+										echo '
+											<script type="text/javascript">
+												function iWantThisDate(){
+													var iWantThisMonth = document.getElementById("iWantThisMonth").value;
+													var iWantThisYear = document.getElementById("iWantThisYear").value;
+													
+													window.location.replace("journal.php?id='.$_GET['id'].'&m="+iWantThisMonth+"&y="+iWantThisYear);
+												}
+											</script>';
 									}
 								}else{
 									echo '<h3>Для группы не заполнено расписание</h3>';
