@@ -175,7 +175,6 @@
 											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 											mysql_select_db($dbName) or die(mysql_error()); 
 											mysql_query("SET NAMES 'utf8'");
-											//$query = "SELECT `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND `user_id` = '{$uch_arr[$i]['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 											$query = "SELECT `user_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 											$res = mysql_query($query) or die(mysql_error());
 											$number = mysql_num_rows($res);
@@ -187,22 +186,6 @@
 											//var_dump($journal_uch);
 										
 											for ($i = 0; $i < count($uch_arr); $i++) {
-												//$arr = array();
-												//$journal_uch = array();
-												
-												/*mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-												mysql_select_db($dbName) or die(mysql_error()); 
-												mysql_query("SET NAMES 'utf8'");
-												//$query = "SELECT `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND `user_id` = '{$uch_arr[$i]['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
-												$query = "SELECT `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
-												$res = mysql_query($query) or die(mysql_error());
-												$number = mysql_num_rows($res);
-												if ($number != 0){
-													while ($arr = mysql_fetch_assoc($res)){
-														$journal_uch[$arr['day']] = $arr['status'];
-													}
-												}*/
-												//var_dump($journal_uch);
 												
 												echo '
 													<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto;">	
@@ -230,14 +213,17 @@
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 4){
 															$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
 															$journal_ico = '<i class="fa fa-check"></i>';
-															$journal_value = 3;
+															$journal_value = 4;
 														}else{
 															$backgroundColor = '';
 															$journal_ico = '-';
 															$journal_value = 0;
 														}
 														
-														unset($journal_uch[$uch_arr[$i]['id']]);
+														unset($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]]);
+														if (empty($journal_uch[$uch_arr[$i]['id']])){
+															unset($journal_uch[$uch_arr[$i]['id']]);
+														}
 														
 													}else{
 														$backgroundColor = '';
@@ -307,7 +293,7 @@
 														}elseif($value[$weekDaysArr[2]] == 4){
 															$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
 															$journal_ico = '<i class="fa fa-check"></i>';
-															$journal_value = 3;
+															$journal_value = 4;
 														}else{
 															$backgroundColor = '';
 															$journal_ico = '-';

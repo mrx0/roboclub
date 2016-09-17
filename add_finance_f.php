@@ -37,7 +37,7 @@
 					echo '
 						Платёж <a href="finance.php?id='.$mysql_insert_id.'">#'.$mysql_insert_id.'</a> добавлен.
 						<br /><br />
-						<a href="finances.php" class="b">Финансы</a>';
+						<a href="finances.php" class="b">Финансы</a><a href="user_finance.php?client='.$client[0]['id'].'" class="b">История <i class="fa fa-rub"></i></a>';
 			}else{
 				echo 'Что-то пошло не так';
 			}

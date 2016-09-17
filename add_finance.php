@@ -90,7 +90,7 @@
 							</div>
 							
 							<div class="cellsBlock2">
-								<div class="cellLeft">Месяц</div>
+								<div class="cellLeft">За какой месяц</div>
 								<div class="cellRight">
 									<select name="month" id="month">';
 										foreach ($monthsName as $key => $value){

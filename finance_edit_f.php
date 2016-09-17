@@ -29,7 +29,7 @@
 			}
 			$time = time();
 			$query = "UPDATE `journal_finance` SET 
-			`month`='{$_POST['month']}', `year`='{$_POST['year']}', `summ`='{$_POST['summ']}', `type`='{$_POST['type']}', `comment`='{$_POST['comment']}', `last_edit_person`='{$_SESSION['id']}', `last_edit_time`='{$time}'";
+			`month`='{$_POST['month']}', `year`='{$_POST['year']}', `summ`='{$_POST['summ']}', `type`='{$_POST['type']}', `comment`='{$_POST['comment']}', `last_edit_person`='{$_SESSION['id']}', `last_edit_time`='{$time}' WHERE `id`='{$_POST['id']}'";
 			mysql_query($query) or die(mysql_error());
 			mysql_close();
 			

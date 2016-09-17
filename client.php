@@ -12,8 +12,8 @@
 			include_once 'functions.php';
 
 			$client = SelDataFromDB('spr_clients', $_GET['id'], 'user');
-			
 			//var_dump($user);
+			
 			if ($client != 0){
 				echo '
 					<div id="status">
@@ -66,11 +66,15 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">Контакты</div>
 									<div class="cellRight">'.$client[0]['contacts'].'</div>
-								</div>
+								</div>';
+				if (($clients['see_all'] == 1) || $god_mode){
+					echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Комментарий</div>
 									<div class="cellRight">'.$client[0]['comments'].'</div>
-								</div>
+								</div>';
+				}
+				echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Филиал</div>
 									<div class="cellRight">';
@@ -108,10 +112,17 @@
 
 
 									
-				if (($clients['edit'] == 1) || $god_mode){
+				if (($finance['add_new'] == 1) || $god_mode){
 					echo '
-							<a href="add_finance.php?client='.$_GET['id'].'" class="b">Добавить платёж <i class="fa fa-rub"></i></a><br><br>';
+							<a href="add_finance.php?client='.$_GET['id'].'" class="b">Добавить платёж <i class="fa fa-rub"></i></a>';
 				}
+				if (($finance['see_all'] == 1) || $god_mode){
+					echo '
+							<a href="user_finance.php?client='.$_GET['id'].'" class="b">История <i class="fa fa-rub"></i></a>';
+				}
+				
+				echo '<br><br>';
+				
 				if (($clients['edit'] == 1) || $god_mode){
 					echo '
 							<a href="client_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
