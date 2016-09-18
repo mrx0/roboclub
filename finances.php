@@ -9,11 +9,7 @@
 		require_once 'header_tags.php';
 		
 		if (($finance['see_all'] == 1) || $god_mode){
-			echo '
-				<header style="margin-bottom: 5px;">
-					<h1>Внесённые платежи</h1>
-				</header>';
-				
+			
 			if (isset($_GET['m']) && isset($_GET['y'])){
 				$year = $_GET['y'];
 				$month = $_GET['m'];
@@ -21,6 +17,42 @@
 				$year = date("Y");
 				$month = date("m");
 			}
+			
+			if (isset($_GET['in'])){
+				if ($_GET['in'] == 1){
+					//нулевой день следующего месяца - это последний день предыдущего
+					$firstday = strtotime('1.'.$month.'.'.$year);
+					$lastday = mktime(0, 0, 0, $month+1, 0, $year);
+					
+					//var_dump($firstday);
+					//var_dump($lastday);
+					
+					$pageHeader = 'Все платежи, внесённые в этом месяце';
+					$pageHeaderAnother = 'Все платежи, внесённые за этот месяц';
+					$link = '?m='.$month.'&y='.$year;
+					//$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}'";
+					$query = "SELECT * FROM `journal_finance` WHERE `create_time` BETWEEN '{$firstday}' AND '{$lastday}' ";
+				}else{
+					$pageHeader = 'Все платежи, внесённые за этот месяц';
+					$pageHeaderAnother = 'Все платежи, внесённые в этом месяце';
+					$link = '?in=1&m='.$month.'&y='.$year;
+					$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}'";
+				}
+			}else{
+				$pageHeader = 'Все платежи, внесённые за этот месяц';
+				$pageHeaderAnother = 'Все платежи, внесённые в этом месяце';
+				$link = '?in=1&m='.$month.'&y='.$year;
+				$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}'";
+			}
+
+			
+			
+			echo '
+				<header style="margin-bottom: 5px;">
+					<h1>'.$pageHeader.'</h1>
+					<a href="finances.php'.$link.'" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">'.$pageHeaderAnother.'</a>
+				</header>';
+				
 			
 			include_once 'DBWork.php';
 			include_once 'functions.php';
@@ -125,7 +157,7 @@
 			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 			mysql_select_db($dbName) or die(mysql_error()); 
 			mysql_query("SET NAMES 'utf8'");
-			$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}'";
+			//$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}'";
 			$res = mysql_query($query) or die(mysql_error());
 			$number = mysql_num_rows($res);
 			if ($number != 0){

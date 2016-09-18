@@ -16,30 +16,13 @@
 				$j_group = SelDataFromDB('journal_groups', $_GET['id'], 'group');
 				//var_dump($j_group);
 			
-				//Определяем подмены
-				$iReplace = FALSE;
-				
-				require 'config.php';	
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
-				$query = "SELECT * FROM `journal_replacement` WHERE `group_id`='{$_GET['id']}' AND `user_id`='{$_SESSION['id']}'";
-				$res = mysql_query($query) or die(mysql_error());
-				$number = mysql_num_rows($res);
-				if ($number != 0){
-					$iReplace = TRUE;
-				}else{
-				}
-				mysql_close();	
-			
-			
 				echo '
 					<div id="status">
 						<header>
-							<h2>Группа</h2>
+							<h2>Добавить подмену</h2>
 						</header>';
 				if ($j_group != 0){
-					if (($groups['see_all'] == 1) || (($groups['see_own'] == 1) && (($j_group[0]['worker'] == $_SESSION['id']) || ($iReplace))) || $god_mode){
+					if (($groups['see_all'] == 1) || (($groups['see_own'] == 1) && ($j_group[0]['worker'] == $_SESSION['id'])) || $god_mode){
 						if ($j_group[0]['close'] == '1'){
 							echo '<span style="color:#EF172F;font-weight:bold;">ЗАКРЫТА</span>';
 						}
@@ -48,10 +31,12 @@
 								<div id="data">';
 
 						echo '
-
+									<form action="add_replacement_f.php">
 										<div class="cellsBlock2">
 											<div class="cellLeft">Название группы</div>
-											<div class="cellRight" style="background-color: '.$j_group[0]['color'].';">'.$j_group[0]['name'].'</div>
+											<div class="cellRight" style="background-color: '.$j_group[0]['color'].';">
+												<a href="group.php?id='.$j_group[0]['id'].'" class="ahref">'.$j_group[0]['name'].'</a>
+											</div>
 										</div>
 
 										<div class="cellsBlock2">
@@ -136,31 +121,104 @@
 											<div class="cellLeft">Комментарий</div>
 											<div class="cellRight">'.$j_group[0]['comment'].'</div>
 										</div>
-
-										<br /><br />';
-						if (($groups['edit'] == 1) || ($groups['see_own'] == 1) || $god_mode){
-							//если не закрыта
-							//if ($j_group[0]['close'] != '1'){
-								echo '
-											<a href="group_client.php?id='.$_GET['id'].'" class="b">Участники</a>';
-						}
-						if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
-								echo '
-											<a href="add_shed_group.php?id='.$_GET['id'].'" class="b">Расписание</a>';
-						}
-						if (($scheduler['see_all'] == 1) || $god_mode){
-								echo '
-											<a href="add_replacement.php?id='.$_GET['id'].'" class="b">Подмена</a>';
-						}
-						if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
-								echo '
-											<a href="journal.php?id='.$_GET['id'].'" class="b">Журнал</a>';
-						}
-								echo '
-											<br /><br />';
-						if (($groups['edit'] == 1) || $god_mode){
+										<br>';
+						
+						if ($j_group[0]['close'] == '1'){
+						}else{							
+							//Добавление подмены
+							$j_workers = SelDataFromDB('spr_workers', '', '');
+							
 							echo '
-											<a href="edit_group.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
+									<div class="cellsBlock2">
+										<div class="cellLeft">Тренер на подмену</div>
+										<div class="cellRight">';
+								echo '
+												<select name="worker" id="worker">
+													<option value="0" selected>Не выбрано</option>';
+								if ($j_workers != 0){
+									for ($i=0;$i<count($j_workers);$i++){
+										echo '<option value="'.$j_workers[$i]['id'].'">'.$j_workers[$i]['name'].'</option>';
+									}
+								}
+								echo '
+											</select>
+											<label id="worker_error" class="error">';
+						
+							echo '
+											</div>
+										</div>';
+											
+											
+									echo '
+										<br>';
+							if (($groups['edit'] == 1) || $god_mode){
+								echo '
+										<div id="errror"></div>
+									<input type="button" class="b" value="Добавить подмену" onclick="Ajax_add_replacement()">
+									<script>  
+										function Ajax_add_replacement() {
+											// убираем класс ошибок с инпутов
+											$(\'input\').each(function(){
+												$(this).removeClass(\'error_input\');
+											});
+											// прячем текст ошибок
+											$(\'.error\').hide();
+											 
+											$.ajax({
+												// метод отправки 
+												type: "POST",
+												// путь до скрипта-обработчика
+												url: "ajax_test.php",
+												// какие данные будут переданы
+												data: {
+													worker:document.getElementById("worker").value,
+												},
+												// тип передачи данных
+												dataType: "json",
+												// действие, при ответе с сервера
+												success: function(data){
+													// в случае, когда пришло success. Отработало без ошибок
+													if(data.result == \'success\'){   
+														//alert(\'форма корректно заполнена\');
+														ajax({
+															url:"add_replacement_f.php",
+															statbox:"status",
+															method:"POST",
+															data:
+															{
+																group_id:'.$j_group[0]['id'].',
+																
+																worker:document.getElementById("worker").value,
+
+																session_id:'.$_SESSION['id'].',
+															},
+															success:function(data){
+																document.getElementById("status").innerHTML=data;
+															}
+														})
+													// в случае ошибок в форме
+													}else{
+														// перебираем массив с ошибками
+														for(var errorField in data.text_error){
+															// выводим текст ошибок 
+															$(\'#\'+errorField+\'_error\').html(data.text_error[errorField]);
+															// показываем текст ошибок
+															$(\'#\'+errorField+\'_error\').show();
+															// обводим инпуты красным цветом
+														   // $(\'#\'+errorField).addClass(\'error_input\');                      
+														}
+														document.getElementById("errror").innerHTML=\'<span style="color: red">Ошибка, что-то заполнено не так.</span>\'
+													}
+												}
+											});						
+										};  
+										  
+									</script> ';
+						
+							}
+							
+							echo '
+								</form>';
 						}
 					}else{
 						echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

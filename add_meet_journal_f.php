@@ -46,9 +46,26 @@
 				}
 		
 				$j_group = SelDataFromDB('journal_groups', $_POST['group_id'], 'group');
+				
+				//Определяем подмены
+				$iReplace = FALSE;
+				
+				require 'config.php';	
+				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+				mysql_select_db($dbName) or die(mysql_error()); 
+				mysql_query("SET NAMES 'utf8'");
+				$query = "SELECT * FROM `journal_replacement` WHERE `group_id`='{$_POST['group_id']}' AND `user_id`='{$_SESSION['id']}'";
+				$res = mysql_query($query) or die(mysql_error());
+				$number = mysql_num_rows($res);
+				if ($number != 0){
+					$iReplace = TRUE;
+				}else{
+				}
+				mysql_close();	
+				
 				if ($j_group !=0){	
 					
-					if (($scheduler['see_all'] == 1) || (($scheduler['see_own'] == 1) && ($j_group[0]['worker'] == $_POST['session_id'])) || $god_mode){
+					if (($scheduler['see_all'] == 1) || (($scheduler['see_own'] == 1) && (($j_group[0]['worker'] == $_POST['session_id']) || ($iReplace))) || $god_mode){
 						
 						$tempJSON = json_decode($_POST['journalItems'], true);
 						//var_dump ($tempJSON);
@@ -57,12 +74,17 @@
 						
 						foreach($tempJSON as $key => $newStatus){
 							$tempArr = explode("_", $key);
-							$user_id = $tempArr[0];
+							$client_id = $tempArr[0];
+							if ($iReplace){
+								$user_id = $_SESSION['id'];
+							}else{
+								$user_id = $j_group[0]['worker'];
+							}
 							$dateArr = explode(".", $tempArr[1]);
 							$day = $dateArr[2];
 							$month = $dateArr[1];
 							$year = $dateArr[0];
-							//var_dump($_POST['group_id'].' + '.$user_id.' + '.$day.' + '.$month.' + '.$year.' -> '.$newStatus.'<br>');
+							//var_dump($_POST['group_id'].' + '.$client_id.' + '.$day.' + '.$month.' + '.$year.' -> '.$newStatus.'<br>');
 							
 							$time = time();
 							
@@ -83,7 +105,7 @@
 							mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 							mysql_select_db($dbName) or die(mysql_error()); 
 							mysql_query("SET NAMES 'utf8'");
-							$query = "SELECT `status` FROM `journal_user` WHERE `group_id` = '{$_POST['group_id']}' AND `user_id` = '{$user_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+							$query = "SELECT `status` FROM `journal_user` WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 							$res = mysql_query($query) or die('1->'.mysql_error().'->'.$query);
 							$number = mysql_num_rows($res);
 							if ($number != 0){
@@ -102,10 +124,10 @@
 											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 											mysql_select_db($dbName) or die(mysql_error()); 
 											mysql_query("SET NAMES 'utf8'");
-											$query = "DELETE FROM `journal_user` WHERE `group_id` = '{$_POST['group_id']}' AND `user_id` = '{$user_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+											$query = "DELETE FROM `journal_user` WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 											mysql_query($query) or die('2->'.mysql_error().'->'.$query);
 											mysql_close();
-											AddLog ('0', $_POST['session_id'], '', 'Из журнала удалена запись о посещении. Группа ['.$_POST['group_id'].']. Клиент ['.$user_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$res['status'].']');	
+											AddLog ('0', $_POST['session_id'], '', 'Из журнала удалена запись о посещении. Группа ['.$_POST['group_id'].']. Клиент ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$res['status'].']');	
 										}
 									}else{
 										$editError = TRUE;
@@ -125,10 +147,10 @@
 												mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 												mysql_select_db($dbName) or die(mysql_error()); 
 												mysql_query("SET NAMES 'utf8'");
-												$query = "UPDATE `journal_user` SET `status`='{$newStatus}'  WHERE `group_id` = '{$_POST['group_id']}' AND `user_id` = '{$user_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+												$query = "UPDATE `journal_user` SET `status`='{$newStatus}'  WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 												mysql_query($query) or die('3->'.mysql_error().'->'.$query);
 												mysql_close();
-												AddLog ('0', $_POST['session_id'], '', 'В журнале изменена запись о посещении. Группа ['.$_POST['group_id'].']. Клиент ['.$user_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');	
+												AddLog ('0', $_POST['session_id'], '', 'В журнале изменена запись о посещении. Группа ['.$_POST['group_id'].']. Клиент ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');	
 											}
 										}else{
 											$editError = TRUE;
@@ -150,10 +172,10 @@
 											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 											mysql_select_db($dbName) or die(mysql_error()); 
 											mysql_query("SET NAMES 'utf8'");
-											$query = "INSERT INTO `journal_user` (`user_id`, `group_id`, `day`, `month`, `year`, `status`) VALUES ('{$user_id}', '{$_POST['group_id']}', '{$day}', '{$month}', '{$year}', '{$newStatus}')";
+											$query = "INSERT INTO `journal_user` (`client_id`, `group_id`, `user_id`, `day`, `month`, `year`, `status`) VALUES ('{$client_id}', '{$_POST['group_id']}', '{$user_id}', '{$day}', '{$month}', '{$year}', '{$newStatus}')";
 											mysql_query($query) or die('4->'.mysql_error().'->'.$query);
 											mysql_close();
-											AddLog ('0', $_POST['session_id'], '', 'В журнал добавлена запись о посещении. Группа ['.$_POST['group_id'].']. Клиент ['.$user_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');	
+											AddLog ('0', $_POST['session_id'], '', 'В журнал добавлена запись о посещении. Группа ['.$_POST['group_id'].']. Клиент ['.$client_id.']. Добавил ['.$user_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');	
 										}
 									}else{
 										$editError = TRUE;

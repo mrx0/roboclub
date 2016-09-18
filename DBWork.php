@@ -601,10 +601,14 @@
 			/// !!! +++
 			}elseif (($datatable == 'journal_groups') && ($type == 'worker')){
 				$q = ' WHERE `worker`='.$sw.' ORDER BY `filial` ASC';
+			}elseif (($datatable == 'journal_groups') && ($type == 'filial')){
+				$q = ' WHERE `filial`='.$sw.' ORDER BY `worker` ASC';
 			}elseif (($datatable == 'spr_kd_img') && ($type == 'img')){
 				$q = ' WHERE `client` = '.$sw.' ORDER BY `uptime` ASC';
 			}elseif (($datatable == 'spr_shed_templs') && ($type == 'group')){
 				$q = ' WHERE `group` = '.$sw.'';
+			}elseif (($datatable == 'journal_replacement') && ($type == 'worker')){
+				$q = ' WHERE `user_id` = '.$sw.'';
 			}else{
 				if ($type == 'filter'){
 					if ($datatable == 'spr_clients'){
@@ -651,6 +655,9 @@
 				}
 				if ($type == 'group'){
 					$q = "  WHERE `id` = '$sw'";
+				}
+				if ($type == 'replacement'){
+					$q = "  WHERE `group_id` = '$sw'";
 				}
 				if ($type == 'client_group'){
 					if ($datatable == 'spr_clients'){

@@ -22,7 +22,7 @@
 				echo '
 					<div id="status">
 						<header>
-							<h2>Редактировать группу</h2>
+							<h2>Редактировать <a href="group.php?id='.$_GET['id'].'" class="ahref">группу</a></h2>
 						</header>';
 				echo '
 						<div id="data">';
@@ -114,7 +114,7 @@
 					if (!$closed){
 						echo '
 										<select name="worker" id="worker">
-											<option value="0">Выберите тренера</option>';
+											<option value="0">Нет тренера</option>';
 						if ($j_workers != 0){
 							for ($i=0;$i<count($j_workers);$i++){
 								echo '<option value="'.$j_workers[$i]['id'].'"', $j_workers[$i]['id'] == $j_group[0]['worker'] ? ' selected ' : '' ,'>'.$j_workers[$i]['name'].'</option>';
@@ -128,7 +128,7 @@
 					}
 					echo '
 									</div>
-								</div>	';
+								</div>';
 								
 
 								

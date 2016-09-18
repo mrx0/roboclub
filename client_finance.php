@@ -1,6 +1,6 @@
 <?php
 
-//user_finance.php
+//client_finance.php
 //
 
 	require_once 'header.php';
@@ -74,18 +74,18 @@
 						}
 					}
 					
-					echo '<span style="font-size: 80%; color: #CCC;">Сегодня: <a href="user_finance.php?client='.$client[0]['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';	
+					echo '<span style="font-size: 80%; color: #CCC;">Сегодня: <a href="client_finance.php?client='.$client[0]['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';	
 					echo '
 						<div id="data">		
 							<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
 								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
-									<a href="user_finance.php?client='.$client[0]['id'].'&m='.$prev.'&y='.$pYear.'" class="cellTime ahref" style="text-align: center;">
+									<a href="client_finance.php?client='.$client[0]['id'].'&m='.$prev.'&y='.$pYear.'" class="cellTime ahref" style="text-align: center;">
 										<span style="font-weight: normal; font-size: 70%;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
 									</a>
 									<div class="cellTime" style="text-align: center;">
 										<span style="color: #2EB703">'.$monthsName[$month].'</span><br>'.$year.'
 									</div>
-									<a href="user_finance.php?client='.$client[0]['id'].'&m='.$next.'&y='.$nYear.'" class="cellTime ahref" style="text-align: center;">
+									<a href="client_finance.php?client='.$client[0]['id'].'&m='.$next.'&y='.$nYear.'" class="cellTime ahref" style="text-align: center;">
 										<span style="font-weight: normal; font-size: 70%;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
 									</a>
 									
@@ -160,7 +160,7 @@
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 					mysql_select_db($dbName) or die(mysql_error()); 
 					mysql_query("SET NAMES 'utf8'");
-					$query = "SELECT * FROM `journal_user` WHERE `user_id` = '".$client[0]['id']."' AND  `month` = '{$month}' AND  `year` = '{$year}' ORDER BY `day` ASC";
+					$query = "SELECT * FROM `journal_user` WHERE `client_id` = '".$client[0]['id']."' AND  `month` = '{$month}' AND  `year` = '{$year}' ORDER BY `day` ASC";
 					$res = mysql_query($query) or die(mysql_error());
 					$number = mysql_num_rows($res);
 					if ($number != 0){
@@ -386,10 +386,40 @@
 					echo '
 						</ul>';
 					
+					//Амортизационный взнос
+					$amortThisYear = '';
+					
+					$query = "SELECT `id`, `create_time`, `summ`, `year` FROM `journal_finance` WHERE `year` = '{$year}' AND `client`='".$client[0]['id']."' AND `type`='2'";
+					$res = mysql_query($query) or die(mysql_error());
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							$amortThisYear .= '
+									<li class="cellsBlock cellsBlockHover" style="width: auto;">	
+										<a href="finance.php?id='.$arr['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $arr['create_time']).'</a>
+										<div class="cellName" style="text-align: center">'.$arr['year'].'</div>
+										<div class="cellTime" style="text-align: center; font-size: 110%; font-weight: bold; background-color: rgba(0, 201, 255, 0.5);">'.$arr['summ'].'</div>
+									</li>';
+						}
+					}else{
+						$amortThisYear = '<h1 style="font-size: 100%;">В '.$year.' году амортизационный взнос не вносился.</h1>';
+					}
+					
+					
 					//Итоговые суммы
 					
 					$thisMonthRazn = $summa - $need_summ;
 					
+					echo '
+						<ul style="margin-left: 6px; margin-bottom: 20px; border: 1px solid #CCC; width: 500px; padding: 7px;">
+							<li class="cellsBlock" style="width: auto; text-align: right; font-size: 80%; color: #777; margin-bottom: 10px;">
+								Амортизационный платёж
+							</li>		
+							<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 0px;">
+								'.$amortThisYear.'
+							</li>
+						</ul>';
+						
 					echo '
 						<ul style="margin-left: 6px; margin-bottom: 20px; border: 1px solid #CCC; width: 500px; padding: 7px;">';
 
@@ -474,7 +504,7 @@
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 					mysql_select_db($dbName) or die(mysql_error()); 
 					mysql_query("SET NAMES 'utf8'");
-					$query = "SELECT * FROM `journal_user` WHERE `user_id` = '".$client[0]['id']."' ORDER BY `day` ASC";
+					$query = "SELECT * FROM `journal_user` WHERE `client_id` = '".$client[0]['id']."' ORDER BY `day` ASC";
 					$res = mysql_query($query) or die(mysql_error());
 					$number = mysql_num_rows($res);
 					if ($number != 0){
@@ -603,6 +633,8 @@
 					$journal_fin = array();
 					
 					//Общая внесённая сумма
+					$AllSumma = 0;
+					//Общая внесённая сумма без амортизации
 					$summa = 0;
 					
 					//mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -619,16 +651,28 @@
 						$journal_fin = 0;
 					}
 					//var_dump($journal_fin);
-
+					
+					$allClientFinance = '';
+					
 					if ($journal_fin != 0){
 									
 						for ($i = 0; $i < count($journal_fin); $i++) { 
+							$AllSumma += $journal_fin[$i]['summ'];
 							if ($journal_fin[$i]['type'] != 2){
 								$summa += $journal_fin[$i]['summ'];
+								$backSummColor = '';
+							}else{
+								$backSummColor = 'background-color: rgba(0, 201, 255, 0.5)';
 							}
+							$allClientFinance .= '
+								<li class="cellsBlock cellsBlockHover" style="width: auto;">	
+									<a href="finance.php?id='.$journal_fin[$i]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal_fin[$i]['create_time']).'</a>
+									<div class="cellName" style="text-align: center">'.$monthsName[$journal_fin[$i]['month']].'/'.$journal_fin[$i]['year'].'</div>
+									<div class="cellTime" style="text-align: center; font-size: 110%; font-weight: bold; '.$backSummColor.'">'.$journal_fin[$i]['summ'].'</div>
+								</li>';
 						}
 					}else{
-						
+						$allClientFinance = '<h1 style="font-size: 100%;">Не зафиксировано ни одного платежа.</h1>';
 					}
 					
 					echo '	
@@ -636,8 +680,8 @@
 						
 					echo '
 						<li class="cellsBlock" style="width: auto; font-size: 90%; color: #777; margin-bottom: 0px; border-bottom: 1px solid #CCC;  ">
-							История за всё время <br>
-							<span style="font-size: 80%;">Если общая разница не сходится с <a href="user_finance.php?client='.$client[0]['id'].'" class="ahref">текущим месяцем ('.$monthsName[date("m")].' '.date("Y").')</a>, перераспределите деньги за прошедшие месяцы.</span>
+							<b>История за всё время</b><br>
+							<span style="font-size: 80%;">Если общая разница не сходится с <a href="client_finance.php?client='.$client[0]['id'].'" class="ahref">текущим месяцем ('.$monthsName[date("m")].' '.date("Y").')</a>, перераспределите деньги за прошедшие месяцы.</span>
 						</li>';
 
 					echo '
@@ -656,10 +700,20 @@
 					}
 					if ($summa - $need_summ > 0){
 						$rezColor = 'rgba(9, 198, 31, 0.92)';
-					}	
+					}
+					if ($month == date("m")){
+						if ($thisMonthRazn != $summa-$need_summ){
+							$backSummColor = ' background-color: rgba(255, 0, 0, 0.15);';
+						}else{
+							$backSummColor = '';
+						}
+					}else{
+						$backSummColor = '';
+					}
+					
 					echo '
-						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 15px; border: 1px solid rgba(255, 0, 0, 0.28); padding: 5px;">
-							Разница: <span style="font-weight: bold; font-size: 90%; color: '.$rezColor.'">'.($summa-$need_summ).'</span>
+						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 15px; border: 1px solid rgba(255, 0, 0, 0.28); padding: 5px;'.$backSummColor.'">
+							Разница: <span style="font-weight: bold; font-size: 90%; color: '.$rezColor.';">'.($summa-$need_summ).'</span>
 						</li>';	
 						
 					echo '
@@ -678,8 +732,24 @@
 						</li>';
 						
 					echo '
-						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 0px;">
+						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 10px;">
 							Пробные: <span style="font-weight: bold; font-size: 110%; color: rgba(0, 201, 255, 0.5);">'.$journal_try.'</span>
+						</li>';	
+						
+						
+					echo '
+						<li class="cellsBlock" style="width: 500px; text-align: left; font-size: 90%; color: #777; margin-bottom: 5px; border-bottom: 1px solid #CCC; ">
+							<b>Платежи клиента за всё время, включая амортизацию</b>
+						</li>';	
+						
+					echo '
+						<li class="cellsBlock" style="width: 500px; text-align: left; font-size: 90%; color: #777; margin-bottom: 5px; border-bottom: 1px solid #CCC; ">
+							'.$allClientFinance.'
+						</li>';	
+						
+					echo '
+						<li class="cellsBlock" style="width: auto; text-align: left; font-size: 90%; color: #777; margin-top: 15px; ">
+							Итого: <span style="font-weight: bold; font-size: 110%; color: #555;">'.$AllSumma.'</span> руб.
 						</li>';	
 						
 					echo '
@@ -698,7 +768,7 @@
 								var iWantThisMonth = document.getElementById("iWantThisMonth").value;
 								var iWantThisYear = document.getElementById("iWantThisYear").value;
 								
-								window.location.replace("user_finance.php?client='.$client[0]['id'].'&m="+iWantThisMonth+"&y="+iWantThisYear);
+								window.location.replace("client_finance.php?client='.$client[0]['id'].'&m="+iWantThisMonth+"&y="+iWantThisYear);
 							}
 						</script>';
 				

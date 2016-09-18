@@ -212,6 +212,10 @@ area {
 	min-width:250px;
 }
 
+.cellComment {
+	width: 400px;
+}
+
 .cellAddress {
 	display: table-cell !important;
 	display: inline; /* для IE */

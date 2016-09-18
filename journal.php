@@ -34,8 +34,24 @@
 				$j_group = SelDataFromDB('journal_groups', $_GET['id'], 'group');
 				//var_dump ($j_group);
 				
+				//Определяем подмены
+				$iReplace = FALSE;
+				
+				require 'config.php';	
+				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+				mysql_select_db($dbName) or die(mysql_error()); 
+				mysql_query("SET NAMES 'utf8'");
+				$query = "SELECT * FROM `journal_replacement` WHERE `group_id`='{$_GET['id']}' AND `user_id`='{$_SESSION['id']}'";
+				$res = mysql_query($query) or die(mysql_error());
+				$number = mysql_num_rows($res);
+				if ($number != 0){
+					$iReplace = TRUE;
+				}else{
+				}
+				mysql_close();	
+				
 				if ($j_group != 0){
-					if (($scheduler['see_all'] == 1) || (($scheduler['see_own'] == 1) && ($j_group[0]['worker'] == $_SESSION['id'])) || $god_mode){
+					if (($scheduler['see_all'] == 1) || (($scheduler['see_own'] == 1) && (($j_group[0]['worker'] == $_SESSION['id']) || ($iReplace))) || $god_mode){
 						echo '
 							<header style="margin-bottom: 5px;">
 								<h1>Журнал посещений< <a href="group.php?id='.$_GET['id'].'" class="ahref">'.$j_group[0]['name'].'</a> ></h1>
@@ -53,6 +69,7 @@
 							
 							if ($spr_shed_times != 0){
 								
+								//Шаблон графика для группы
 								$spr_shed_templs  = SelDataFromDB('spr_shed_templs', $_GET['id'], 'group');
 								//var_dump($spr_shed_templs);
 								$spr_shed_templs_arr = json_decode($spr_shed_templs[0]['template'], true);
@@ -120,8 +137,11 @@
 												$next = strval((int)$month+1);
 											}
 										}
-										
+										if (($scheduler['see_all'] == 1) || ($god_mode)){
+											echo '<span style="font-size: 80%; color: #CCC;">Тренер: <a href="user.php?id='.$j_group[0]['worker'].'" class="ahref">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</a></span><br>';	
+										}										
 										echo '<span style="font-size: 80%; color: #CCC;">Сегодня: <a href="journal.php?id='.$_GET['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';	
+
 										echo '
 											<div id="data">		
 												<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
@@ -154,7 +174,8 @@
 													
 													<li class="cellsBlock" style="font-weight: bold; width: auto;">	
 														<div class="cellPriority" style="text-align: center"></div>
-														<div class="cellFullName" style="text-align: center">ФИО</div>';
+														<div class="cellFullName" style="text-align: center">ФИО</div>
+														<!--<div class="cellCosmAct" style="text-align: center"><i class="fa fa-rub"></i></div>-->';
 										
 										for ($i = 0; $i < count($weekDays); $i++) {
 											$weekDaysArr = explode('.', $weekDays[$i]);
@@ -165,22 +186,23 @@
 													</li>';
 													
 										$uch_arr = SelDataFromDB('spr_clients', $_GET['id'], 'client_group');
-										//var_dump(count($uch_arr));
+										//var_dump($uch_arr);
+										
+										$journal_uch = array();										
 										
 										if ($uch_arr != 0){	
 
 											$arr = array();
-											$journal_uch = array();
 										
 											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 											mysql_select_db($dbName) or die(mysql_error()); 
 											mysql_query("SET NAMES 'utf8'");
-											$query = "SELECT `user_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+											$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 											$res = mysql_query($query) or die(mysql_error());
 											$number = mysql_num_rows($res);
 											if ($number != 0){
 												while ($arr = mysql_fetch_assoc($res)){
-													$journal_uch[$arr['user_id']][$arr['day']] = $arr['status'];
+													$journal_uch[$arr['client_id']][$arr['day']] = $arr['status'];
 												}
 											}
 											//var_dump($journal_uch);
@@ -240,10 +262,27 @@
 											
 										}else{
 											echo '<h3>В этой группе нет участников</h3>';
+											
+											//Но если они когда-то были
+											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+											mysql_select_db($dbName) or die(mysql_error()); 
+											mysql_query("SET NAMES 'utf8'");
+											$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+											$res = mysql_query($query) or die(mysql_error());
+											$number = mysql_num_rows($res);
+											if ($number != 0){
+												while ($arr = mysql_fetch_assoc($res)){
+													$journal_uch[$arr['client_id']][$arr['day']] = $arr['status'];
+												}
+											}
+											//var_dump($journal_uch);
+											
 										}
 													
 										echo '
 												</ul>';
+												
+
 												
 										if (count($journal_uch) > 0){
 											//var_dump($journal_uch);
@@ -255,7 +294,8 @@
 												<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
 													<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto;">	
 														<div class="cellPriority" style="text-align: center"></div>
-														<div class="cellFullName" style="text-align: center">ФИО</div>';
+														<div class="cellFullName" style="text-align: center">ФИО</div>
+														';
 											
 											for ($i = 0; $i < count($weekDays); $i++) {
 												$weekDaysArr = explode('.', $weekDays[$i]);
@@ -270,7 +310,7 @@
 												echo '
 														<li class="cellsBlock" style="font-weight: bold; width: auto;">	
 															<div class="cellPriority" style="text-align: center"></div>
-															<a href="client.php?id='.$us_id.'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $us_id, 'user').'</a>';
+															<a href="client.php?id='.$us_id.'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $us_id, 'user_full').'</a>';
 													
 												$weekDaysArr = array();
 												//var_dump($weekDays);
@@ -323,7 +363,12 @@
 												</div>
 												<br><br>
 												<div id="errror"></div>
-												<input type="button" class="b" value="Сохранить изменения" onclick=Ajax_change_journal()>
+												<input type="button" class="b" value="Сохранить изменения" onclick=Ajax_change_journal()>';
+										if (($scheduler['see_all'] == 1) || $god_mode){
+											echo '
+												<a href="meets.php?group='.$_GET['id'].'" class="b">Дополнительно</a>';
+										}
+										echo '		
 												<br><br>
 												<span style="font-size: 80%; color: #AAA;">Если допустили ошибку, то, чтобы увидеть актуальный журнал, <a href="" class="ahref">обновите страницу</a></span>
 												

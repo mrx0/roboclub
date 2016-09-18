@@ -1,0 +1,46 @@
+<?php 
+
+				require 'config.php';
+				
+				$arr = array();
+				$journal_uch = array();
+				
+				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+				mysql_select_db($dbName) or die(mysql_error()); 
+				mysql_query("SET NAMES 'utf8'");
+				
+				$query = "SELECT * FROM `journal_user`";
+				
+				$res = mysql_query($query) or die(mysql_error());
+				$number = mysql_num_rows($res);
+				if ($number != 0){
+					while ($arr = mysql_fetch_assoc($res)){
+						array_push($journal_uch, $arr);
+					}
+				}else{
+					$journal_uch = 0;
+				}
+				//var_dump($journal_uch);
+				
+				if ($journal_uch != 0){
+					foreach ($journal_uch as $value){
+						echo 'Группа: '.$value['group_id'].'<br>';
+						
+						$query = "SELECT `worker` FROM `journal_groups` WHERE `id` = '{$value['group_id']}'";
+						$res = mysql_query($query) or die(mysql_error());
+						$number = mysql_num_rows($res);
+						if ($number != 0){
+							while ($arr = mysql_fetch_assoc($res)){
+								echo 'У нее тренер: '.$arr['worker'].'<br>';
+								$query = "UPDATE `journal_user` SET `user_id`='{$arr['worker']}'  WHERE `id` = '{$value['id']}'";
+								$rez = mysql_query($query) or die(mysql_error());
+								echo 'Обновлено ОК<br><br>';
+							}
+						}else{
+							echo 'Ошибка тренера<br><br>';
+						}
+					}
+				}
+				
+				mysql_close();	
+?>

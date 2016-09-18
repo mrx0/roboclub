@@ -118,7 +118,7 @@
 				}
 				if (($finance['see_all'] == 1) || $god_mode){
 					echo '
-							<a href="user_finance.php?client='.$_GET['id'].'" class="b">История <i class="fa fa-rub"></i></a>';
+							<a href="client_finance.php?client='.$_GET['id'].'" class="b">История <i class="fa fa-rub"></i></a>';
 				}
 				
 				echo '<br><br>';

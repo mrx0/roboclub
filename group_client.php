@@ -42,7 +42,7 @@
 				$j_filials = SelDataFromDB('spr_office', $j_group[0]['filial'], 'offices');
 				
 				if ($j_filials != 0){
-					echo '<span style="color: rgb(36,36,36); font-weight: bold;">'.$j_filials[0]['name'].'</span>';
+					echo '<span style="color: rgb(36,36,36); font-weight: bold;"><a href="filial.php?id='.$j_group[0]['filial'].'" class="ahref">'.$j_filials[0]['name'].'</a></span>';
 				}else{
 					echo 'unknown';
 				}
@@ -62,7 +62,7 @@
 							</div>
 							
 							<div style="font-size: 90%; color: #999; margin-bottom: 20px;">Тренер: 
-								<span style="color: rgb(36,36,36); font-weight: bold;">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</span>
+								<span style="color: rgb(36,36,36); font-weight: bold;"><a href="user.php?id='.$j_group[0]['worker'].'" class="ahref">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</a></span>
 							</div>';
 				
 				if ($j_group[0]['close'] != '1'){
@@ -104,18 +104,28 @@
 										</div>';
 
 							echo '
-										<div class="cellTime" style="width: 140px; text-align: center">', $uch_arr[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $uch_arr[$i]['birthday']) ,' / <b>'.getyeardiff( $uch_arr[$i]['birthday']).' лет</b></div>
+										<div class="cellTime" style="width: 140px; text-align: center">', $uch_arr[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $uch_arr[$i]['birthday']) ,' / <b>'.getyeardiff( $uch_arr[$i]['birthday']).' лет</b></div>';
+							if (($groups['edit'] == 1) || $god_mode){
+								echo '
 										<div id="delClientFromGroup" clientid="'.$uch_arr[$i]['id'].'" class="cellCosmAct delClientFromGroup" style="text-align: center">
 											<i class="fa fa-minus" style="color: red; cursor: pointer;"></i>
-										</div>
+										</div>';
+							}
+							echo '	
 									</li>';
 						}
 					}
 					echo '
 							</ul>';
-						
+					
 					if (($groups['edit'] == 1) || $god_mode){
-						echo '<br /><br />';
+						echo '
+							<br>
+							<span class="delAllClientFromGroup" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: red; background-color: rgba(252, 252, 0, 0.3); cursor: pointer;">Удалить всех</span>';
+					}
+					
+					if (($groups['edit'] == 1) || $god_mode){
+						echo '<br><br>';
 
 						//Участники, которых нигде нет в группах
 						$free_uch_arr = SelDataFromDB('spr_clients', $_GET['id'], 'free_client_group');			
@@ -245,6 +255,26 @@
 												data:
 												{
 													id: id,
+													group: '.$_GET['id'].',
+													session_id: '.$_SESSION['id'].'
+												},
+												success: function(req){
+													//document.getElementById("request").innerHTML = req;
+													alert(req);
+													location.reload(true);
+												}
+											})
+										}
+									})
+									$(\'.delAllClientFromGroup\').on(\'click\', function(data){
+										var rys = confirm("Это удалит всех из этой группы\n\nВы уверены?");
+										if (rys){
+											ajax({
+												url: "del_ALLClientFromGroup_f.php",
+												method: "POST",
+												
+												data:
+												{
 													group: '.$_GET['id'].',
 													session_id: '.$_SESSION['id'].'
 												},

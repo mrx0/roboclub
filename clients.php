@@ -155,7 +155,7 @@
 								<div class="cellCosmAct" style="text-align: center">Пол</div>
 								<div class="cellTime" style="width: 140px; text-align: center">Дата рождения</div>
 								<div class="cellText" style="text-align: center">Контакты</div>
-								<div class="cellText" style="text-align: center">Комментарий</div>
+								<div class="cellText cellComment" style="text-align: center">Комментарий</div>
 							</li>';
 
 				for ($i = 0; $i < count($clients_j); $i++) { 
@@ -181,7 +181,7 @@
 					echo '
 								<div class="cellTime" style="width: 140px; text-align: center">', $clients_j[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.getyeardiff( $clients_j[$i]['birthday']).' лет</b></div>
 								<div class="cellText">'.$clients_j[$i]['contacts'].'</div>
-								<div class="cellText">'.$clients_j[$i]['comments'].'</div>
+								<div class="cellText cellComment">'.$clients_j[$i]['comments'].'</div>
 							</li>';
 				}
 			}else{
