@@ -413,7 +413,7 @@
 					echo '
 						<ul style="margin-left: 6px; margin-bottom: 20px; border: 1px solid #CCC; width: 500px; padding: 7px;">
 							<li class="cellsBlock" style="width: auto; text-align: right; font-size: 80%; color: #777; margin-bottom: 10px;">
-								Амортизационный платёж
+								Амортизационный взнос
 							</li>		
 							<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 0px;">
 								'.$amortThisYear.'

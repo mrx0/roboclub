@@ -193,7 +193,10 @@
 										if ($uch_arr != 0){	
 
 											$arr = array();
-										
+											//переменная для id участников
+											$journal_clID = array();
+											$journal_clID_q = '';
+											
 											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 											mysql_select_db($dbName) or die(mysql_error()); 
 											mysql_query("SET NAMES 'utf8'");
@@ -203,10 +206,75 @@
 											if ($number != 0){
 												while ($arr = mysql_fetch_assoc($res)){
 													$journal_uch[$arr['client_id']][$arr['day']] = $arr['status'];
+													array_push($journal_clID, $arr['client_id']);
 												}
 											}
 											//var_dump($journal_uch);
+											var_dump($journal_clID);
+											
+											if (!empty($journal_clID)){
+												$journal_clID_q = implode('_', $journal_clID);
+											}
+											var_dump($journal_clID_q);
+											
+											//!!! Тут необходимо собрать данные по оплатам всех учеников этой группы
+												
+											//Смотрим оплаты
+											$arr_fin = array();
+											$journal_fin = array();
+											
+											//Общая внесённая сумма
+											$summa = 0;
+
+											/*$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}' AND `client`='".$client[0]['id']."'";
+											$res = mysql_query($query) or die(mysql_error());
+											$number = mysql_num_rows($res);
+											if ($number != 0){
+												while ($arr_fin = mysql_fetch_assoc($res)){
+													array_push($journal_fin, $arr_fin);
+												}
+											}else{
+												$journal_fin = 0;
+											}
+											//var_dump($journal_fin);
+
+											if ($journal_fin != 0){
+												echo '
+															<li class="cellsBlock" style="font-weight: bold; width: auto;">	
+																<div class="cellName" style="text-align: center">Дата</div>
+																<div class="cellFullName" style="text-align: center">Полное имя</div>
+																<div class="cellName" style="text-align: center">Месяц/Год</div>
+																<div class="cellTime" style="text-align: center">Сумма</div>
+															</li>';
+															
+												for ($i = 0; $i < count($journal_fin); $i++) { 
+													$backSummColor = '';
+													if ($journal_fin[$i]['type'] == 2){
+														$backSummColor = "background-color: rgba(0, 201, 255, 0.5)";
+													}
+												
+													echo '
+															<li class="cellsBlock cellsBlockHover" style="width: auto;">	
+																<a href="finance.php?id='.$journal_fin[$i]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal_fin[$i]['create_time']).'</a>
+																<a href="client.php?id='.$journal_fin[$i]['client'].'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal_fin[$i]['client'], 'user_full').'</a>
+																<div class="cellName" style="text-align: center">'.$monthsName[$journal_fin[$i]['month']].'/'.$journal_fin[$i]['year'].'</div>
+																<div class="cellTime" style="text-align: center; font-size: 110%; font-weight: bold; '.$backSummColor.'">'.$journal_fin[$i]['summ'].'</div>
+															</li>';
+														
+													if ($journal_fin[$i]['type'] != 2){
+														$summa += $journal_fin[$i]['summ'];
+													}
+												}
+												
+
+											}else{
+												echo '<h1>В этом месяце платежей не вносилось.</h1>';
+											}
+											
+											echo '
+												</ul>';
 										
+										*/
 											for ($i = 0; $i < count($uch_arr); $i++) {
 												
 												echo '
