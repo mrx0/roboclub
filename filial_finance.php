@@ -161,6 +161,16 @@
 			echo '
 					</ul>
 				</div>';
+			echo '
+				<script type="text/javascript">
+					function iWantThisDate(){
+						var iWantThisMonth = document.getElementById("iWantThisMonth").value;
+						var iWantThisYear = document.getElementById("iWantThisYear").value;
+						
+						window.location.replace("filial_finance.php?m="+iWantThisMonth+"&y="+iWantThisYear);
+					}
+				</script>';
+				
 		}else{
 				echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

@@ -52,6 +52,7 @@
 					<h1>'.$pageHeader.'</h1>
 					<a href="finances.php'.$link.'" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">'.$pageHeaderAnother.'</a> 
 					<a href="filial_finance.php" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Финансы по филиалам</a>
+					<a href="balance.php" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Остатки</a>
 				</header>';
 				
 			
