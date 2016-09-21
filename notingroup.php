@@ -1,7 +1,11 @@
 <?php
 
-//groups.php
-//Группы
+//notingroup.php
+//!!!Дети не в группах !!!- не сделано
+
+
+//select sku from b where sku not in (select sku from a); 
+
 
     require_once 'header.php';
 	

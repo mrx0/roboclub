@@ -102,12 +102,7 @@
 									</div>
 								</li>
 								<br>';
-								
-											
-					/*echo '
-						<div style="font-size: 90%; margin-bottom: 10px;">
-							<span  style="font-size: 80%; color: rgb(100,100,100);">Чтобы добавить платёж, <br>найдите клиента и нажмите <i class="fa fa-rub" style="font-size: 150%;color: green;"></i><i class="fa fa-plus" style="font-size: 90%;color: green;"></i></span>
-						</div>';*/
+
 					echo '
 						<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
 							<div class="cellRight">
@@ -116,20 +111,6 @@
 								<div id="search_result_fc2"></div>
 							</div>
 						</div>';		
-					/*echo '
-						<div class="cellsBlock2" style="width: 400px; ">
-							<div class="cellRight">
-								<span style="font-size: 70%;">Быстрый поиск клиента</span><br />
-								<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-								<div id="search_result_fc2"></div>
-							</div>
-						</div>
-						<br>';	*/
-					/*echo '
-							<p style="margin: 5px 0; padding: 2px; font-size: 80%;">
-								Быстрый фильтр: 
-								<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-							</p>';*/
 					
 					echo '
 						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 10px;">
@@ -196,6 +177,8 @@
 						echo '<li class="cellsBlock" style="width: auto; text-align: right; margin-bottom: 20px;">';
 						
 						foreach ($journal_uch as $key => $value) {
+							$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
+							
 							if ($value['status'] == 1){
 								$backgroundColor = "background-color: rgba(0, 255, 0, 0.5)";
 								$journal_ico = '<i class="fa fa-check"></i>';
@@ -203,7 +186,7 @@
 								
 								$journal_was++;
 								
-								$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
+								//$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
 								
 								foreach($settings['cena1'] as $key_time => $value_time_arr){
 									$need_cena = 0;
@@ -231,7 +214,7 @@
 								
 								$journal_x++;
 								
-								$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
+								//$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
 								
 								foreach($settings['cena1'] as $key_time => $value_time_arr){
 									$need_cena = 0;
@@ -268,7 +251,7 @@
 								
 								$journal_try++;
 								
-								$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
+								//$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
 								
 								foreach($settings['cena2'] as $key_time => $value_time_arr){
 									$need_cena = 0;

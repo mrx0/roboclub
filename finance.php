@@ -69,6 +69,20 @@
 								<div class="cellRight" style="text-align: right;">'.$finance_j[0]['year'].'</div>
 							</div>
 							
+							
+							<div class="cellsBlock2">
+								<div class="cellLeft">Филиал</div>
+								<div class="cellRight" style="text-align: right;">';
+					$filials = SelDataFromDB('spr_office', $finance_j[0]['filial'], 'offices');
+					if ($filials != 0){
+						echo '<a href="filial.php?id='.$filials[0]['id'].'" class="ahref">'.$filials[0]['name'].'</a>';	
+					}else{
+						echo 'Не указан филиал';
+					}
+					echo '		
+								</div>
+							</div>
+							
 							<div class="cellsBlock2">
 								<div class="cellLeft">Комментарий</div>
 								<div class="cellRight">'.$finance_j[0]['comment'].'</div>

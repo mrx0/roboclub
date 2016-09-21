@@ -169,6 +169,7 @@
 										data:
 										{
 											client:'.$client[0]['id'].',
+											filial:'.$client[0]['filial'].',
 											summ:document.getElementById("summ").value,
 											type:document.getElementById("type").value,
 											

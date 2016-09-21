@@ -3,41 +3,41 @@
 				require 'config.php';
 				
 				$arr = array();
-				$journal_uch = array();
+				$journal = array();
 				
 				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 				mysql_select_db($dbName) or die(mysql_error()); 
 				mysql_query("SET NAMES 'utf8'");
 				
-				$query = "SELECT * FROM `journal_user`";
+				$query = "SELECT * FROM `journal_finance`";
 				
 				$res = mysql_query($query) or die(mysql_error());
 				$number = mysql_num_rows($res);
 				if ($number != 0){
 					while ($arr = mysql_fetch_assoc($res)){
-						array_push($journal_uch, $arr);
+						array_push($journal, $arr);
 					}
 				}else{
-					$journal_uch = 0;
+					$journal = 0;
 				}
-				//var_dump($journal_uch);
+				//var_dump($journal);
 				
-				if ($journal_uch != 0){
-					foreach ($journal_uch as $value){
-						echo 'Группа: '.$value['group_id'].'<br>';
+				if ($journal != 0){
+					foreach ($journal as $value){
+						echo 'Клиент: '.$value['client'].'<br>';
 						
-						$query = "SELECT `worker` FROM `journal_groups` WHERE `id` = '{$value['group_id']}'";
+						$query = "SELECT `filial` FROM `spr_clients` WHERE `id` = '{$value['client']}'";
 						$res = mysql_query($query) or die(mysql_error());
 						$number = mysql_num_rows($res);
 						if ($number != 0){
 							while ($arr = mysql_fetch_assoc($res)){
-								echo 'У нее тренер: '.$arr['worker'].'<br>';
-								$query = "UPDATE `journal_user` SET `user_id`='{$arr['worker']}'  WHERE `id` = '{$value['id']}'";
+								echo 'У него филиал: '.$arr['filial'].'<br>';
+								$query = "UPDATE `journal_finance` SET `filial`='{$arr['filial']}'  WHERE `id` = '{$value['id']}'";
 								$rez = mysql_query($query) or die(mysql_error());
 								echo 'Обновлено ОК<br><br>';
 							}
 						}else{
-							echo 'Ошибка тренера<br><br>';
+							echo 'Ошибка<br><br>';
 						}
 					}
 				}

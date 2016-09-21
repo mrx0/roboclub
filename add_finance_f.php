@@ -21,10 +21,10 @@
 				mysql_query("SET NAMES 'utf8'");
 				
 				$query = "INSERT INTO `journal_finance` (
-						`create_time`, `client`, `month`, `year`, `summ`, `type`, `create_person`, `comment`) 
+						`create_time`, `client`, `month`, `year`, `summ`, `type`, `filial`, `create_person`, `comment`) 
 						VALUES (
 						'{$time}', '{$_POST['client']}', '{$_POST['month']}', '{$_POST['year']}',
-						'{$_POST['summ']}', '{$_POST['type']}', '{$_SESSION['id']}', '{$_POST['comment']}') ";				
+						'{$_POST['summ']}', '{$_POST['type']}', '{$_POST['filial']}', '{$_SESSION['id']}', '{$_POST['comment']}') ";				
 					mysql_query($query) or die(mysql_error());
 					
 					$mysql_insert_id = mysql_insert_id();

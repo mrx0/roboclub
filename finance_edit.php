@@ -98,8 +98,28 @@
 									</select>
 									<label id="age_error" class="error"></label>
 								</div>
-							</div>
+							</div>';
 							
+					$filials = SelDataFromDB('spr_office', '', '');
+					echo '				
+									<div class="cellsBlock2">
+										<div class="cellLeft">
+											Филиал
+										</div>
+										<div class="cellRight">
+											<select name="filial" id="filial">
+												<option value="0" selected>Выберите филиал</option>';
+					if ($filials !=0){
+						for ($i=0;$i<count($filials);$i++){
+							echo "<option value='".$filials[$i]['id']."' ", $finance_j[0]['filial'] == $filials[$i]['id'] ? 'selected' : '' ,">".$filials[$i]['name']."</option>";
+						}
+					}
+					echo '
+											</select>
+										</div>
+									</div>';
+									
+					echo '					
 							<div class="cellsBlock2">
 								<div class="cellLeft">Комментарий</div>
 								<div class="cellRight"><textarea name="comment" id="comment" cols="35" rows="2">'.$finance_j[0]['comment'].'</textarea></div>
@@ -184,6 +204,9 @@
 												data:
 												{
 													id: '.$_GET['id'].',
+													
+													filial:document.getElementById("filial").value,
+													
 													summ: document.getElementById("summ").value,
 													comment: document.getElementById("comment").value,
 													type: document.getElementById("type").value,
