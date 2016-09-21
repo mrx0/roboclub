@@ -13,7 +13,7 @@
 				<h1>Координаты филиалов</h1>
 			</header>';
 			
-		if (($workers['add_new'] == 1) || $god_mode){
+		if (($offices['add_new'] == 1) || $god_mode){
 			echo '
 				<a href="add_filial.php" class="b">Добавить</a>
 			</header>';			

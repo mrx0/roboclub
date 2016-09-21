@@ -251,10 +251,11 @@
 												$weekDaysArr = array();
 												//var_dump($weekDays);
 												
+												//бегаем по дням
 												for ($j = 0; $j < count($weekDays); $j++) {
 													$weekDaysArr = explode('.', $weekDays[$j]);
 													
-													$timeForPay = strtotime($weekDaysArr[2].'.'.$weekDaysArr[1].'.'.$weekDaysArr[0].' 23:59:59');
+													//$timeForPay = strtotime($weekDaysArr[2].'.'.$weekDaysArr[1].'.'.$weekDaysArr[0].' 23:59:59');
 													
 													if (isset($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]])){
 														if ($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 1){
@@ -262,9 +263,9 @@
 															$journal_ico = '<i class="fa fa-check"></i>';
 															$journal_value = 1;
 															
-															$journal_was++;
+															//$journal_was++;
 															
-															foreach($settings['cena1'] as $key_time => $value_time_arr){
+															/*foreach($settings['cena1'] as $key_time => $value_time_arr){
 																$need_cena = 0;
 																
 																//если только одно значение 
@@ -281,16 +282,16 @@
 																		break;
 																	}
 																}
-															}
+															}*/
 
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 2){
 															$backgroundColor = "background-color: rgba(255, 0, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-times"></i>';
 															$journal_value = 2;
 								
-															$journal_x++;
+															//$journal_x++;
 															
-															foreach($settings['cena1'] as $key_time => $value_time_arr){
+															/*foreach($settings['cena1'] as $key_time => $value_time_arr){
 																$need_cena = 0;
 																
 																//если только одно значение 
@@ -307,16 +308,16 @@
 																		break;
 																	}
 																}
-															}
+															}*/
 															
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 3){
 															$backgroundColor = "background-color: rgba(255, 252, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-file-text-o"></i>';
 															$journal_value = 3;
 															
-															$journal_spr++;
+															//$journal_spr++;
 															
-															$need_cena = 0;
+															//$need_cena = 0;
 															
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 4){
 															$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
@@ -325,7 +326,7 @@
 								
 															$journal_try++;
 															
-															foreach($settings['cena2'] as $key_time => $value_time_arr){
+															/*foreach($settings['cena2'] as $key_time => $value_time_arr){
 																$need_cena = 0;
 																
 																//если только одно значение 
@@ -342,7 +343,7 @@
 																		break;
 																	}
 																}
-															}
+															}*/
 															
 														}else{
 															$backgroundColor = '';
@@ -364,31 +365,31 @@
 													echo '<input type="hidden" id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'_value" class="journalItemVal" value="'.$journal_value.'">';
 												}	
 												
-												//!!!Если был в другой группе
-												/*$another_arr = array();
-												$another_journal_uch = array();
 												
-												$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE ``client_id` = '".$uch_arr[$i]['id']."' AND group_id` <> '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+												//!!!Надо посмотреть все занятия во всех группах, вдруг был в другой. Двойная работа... так бывает
+												
+												$journal_uch_all = array();
+												$arr = array();
+												
+												$query = "SELECT * FROM `journal_user` WHERE `client_id` = '".$uch_arr[$i]['id']."' AND  `month` = '{$month}' AND  `year` = '{$year}' ORDER BY `day` ASC";
 												$res = mysql_query($query) or die(mysql_error());
 												$number = mysql_num_rows($res);
 												if ($number != 0){
 													while ($arr = mysql_fetch_assoc($res)){
-														$another_journal_uch[$arr['client_id']][$arr['day']] = $arr['status'];
+														//var_dump($arr);
+														array_push($journal_uch_all, $arr);
 													}
+												}else{
+													$journal_uch_all = 0;
 												}
+												//var_dump($journal_uch_all);
 												
-												
-												for ($j = 0; $j < count($weekDays); $j++) {
-													$weekDaysArr = explode('.', $weekDays[$j]);
-													
-													$timeForPay = strtotime($weekDaysArr[2].'.'.$weekDaysArr[1].'.'.$weekDaysArr[0].' 23:59:59');
-													
-													if (isset($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]])){
-														if ($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 1){
-															$backgroundColor = "background-color: rgba(0, 255, 0, 0.5)";
-															$journal_ico = '<i class="fa fa-check"></i>';
-															$journal_value = 1;
-															
+												if ($journal_uch_all != 0){
+													foreach ($journal_uch_all as $key => $value) {
+														
+														$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
+														
+														if ($value['status'] == 1){
 															$journal_was++;
 															
 															foreach($settings['cena1'] as $key_time => $value_time_arr){
@@ -409,14 +410,11 @@
 																	}
 																}
 															}
-
-														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 2){
-															$backgroundColor = "background-color: rgba(255, 0, 0, 0.5)";
-															$journal_ico = '<i class="fa fa-times"></i>';
-															$journal_value = 2;
-								
-															$journal_x++;
 															
+														}elseif($value['status'] == 2){
+
+															$journal_x++;
+
 															foreach($settings['cena1'] as $key_time => $value_time_arr){
 																$need_cena = 0;
 																
@@ -436,22 +434,16 @@
 																}
 															}
 															
-														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 3){
-															$backgroundColor = "background-color: rgba(255, 252, 0, 0.5)";
-															$journal_ico = '<i class="fa fa-file-text-o"></i>';
-															$journal_value = 3;
-															
+														}elseif($value['status'] == 3){
+
 															$journal_spr++;
 															
 															$need_cena = 0;
 															
-														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 4){
-															$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
-															$journal_ico = '<i class="fa fa-check"></i>';
-															$journal_value = 4;
-								
+														}elseif($value['status'] == 4){
+
 															$journal_try++;
-															
+
 															foreach($settings['cena2'] as $key_time => $value_time_arr){
 																$need_cena = 0;
 																
@@ -476,22 +468,10 @@
 															$journal_ico = '-';
 															$journal_value = 0;
 														}
-														
-														unset($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]]);
-														if (empty($journal_uch[$uch_arr[$i]['id']])){
-															unset($journal_uch[$uch_arr[$i]['id']]);
-														}
-														
-													}else{
-														$backgroundColor = '';
-														$journal_ico = '-';
-														$journal_value = 0;
+
 													}
-													echo '<div id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$uch_arr[$i]['id'].', \''.$weekDays[$j].'\');">'.$journal_ico.'</div>';
-													echo '<input type="hidden" id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'_value" class="journalItemVal" value="'.$journal_value.'">';
-												}*/
-												
-												
+												}else{
+												}
 												
 												//Смотрим оплаты
 												$arr = array();
