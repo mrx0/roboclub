@@ -74,7 +74,7 @@
 						}
 					}
 					
-					echo '<span style="font-size: 80%; color: #CCC;">Сегодня: <a href="client_finance.php?client='.$client[0]['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';	
+					echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Сегодня: <a href="client_finance.php?client='.$client[0]['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';	
 					echo '
 						<div id="data">		
 							<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
@@ -196,15 +196,16 @@
 						echo '<li class="cellsBlock" style="width: auto; text-align: right; margin-bottom: 20px;">';
 						
 						foreach ($journal_uch as $key => $value) {
+							
+							$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
+							
 							if ($value['status'] == 1){
 								$backgroundColor = "background-color: rgba(0, 255, 0, 0.5)";
 								$journal_ico = '<i class="fa fa-check"></i>';
 								$journal_value = 1;
 								
 								$journal_was++;
-								
-								$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
-								
+
 								foreach($settings['cena1'] as $key_time => $value_time_arr){
 									$need_cena = 0;
 									
@@ -230,8 +231,6 @@
 								$journal_value = 2;
 								
 								$journal_x++;
-								
-								$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
 								
 								foreach($settings['cena1'] as $key_time => $value_time_arr){
 									$need_cena = 0;
@@ -267,8 +266,6 @@
 								$journal_value = 4;
 								
 								$journal_try++;
-								
-								$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
 								
 								foreach($settings['cena2'] as $key_time => $value_time_arr){
 									$need_cena = 0;
@@ -411,7 +408,7 @@
 					$thisMonthRazn = $summa - $need_summ;
 					
 					echo '
-						<ul style="margin-left: 6px; margin-bottom: 20px; border: 1px solid #CCC; width: 500px; padding: 7px;">
+						<ul style="margin-left: 6px; margin-bottom: 20px; border: 1px solid rgb(125, 125, 125); width: 500px; padding: 7px;">
 							<li class="cellsBlock" style="width: auto; text-align: right; font-size: 80%; color: #777; margin-bottom: 10px;">
 								Амортизационный взнос
 							</li>		
@@ -421,7 +418,7 @@
 						</ul>';
 						
 					echo '
-						<ul style="margin-left: 6px; margin-bottom: 20px; border: 1px solid #CCC; width: 500px; padding: 7px;">';
+						<ul style="margin-left: 6px; margin-bottom: 20px; border: 1px solid rgb(125, 125, 125); width: 500px; padding: 7px;">';
 
 					echo '
 						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 0px;">
@@ -451,7 +448,7 @@
 						
 					//Статистика занятий
 					echo '	
-						<ul style="font-size: 90%; margin-left: 6px; margin-bottom: 20px; border: 1px solid #CCC; width: 500px; padding: 7px;">';
+						<ul style="font-size: 90%; margin-left: 6px; margin-bottom: 20px; border: 1px solid rgb(125, 125, 125); width: 500px; padding: 7px;">';
 						
 					echo '
 						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 0px;">
@@ -676,10 +673,10 @@
 					}
 					
 					echo '	
-						<ul style="font-size: 90%; margin-left: 6px; margin-bottom: 20px; border: 1px solid #CCC; width: 500px; padding: 7px;">';
+						<ul style="font-size: 90%; margin-left: 6px; margin-bottom: 20px; border: 1px solid rgb(125, 125, 125); width: 500px; padding: 7px;">';
 						
 					echo '
-						<li class="cellsBlock" style="width: auto; font-size: 90%; color: #777; margin-bottom: 0px; border-bottom: 1px solid #CCC;  ">
+						<li class="cellsBlock" style="width: auto; font-size: 90%; color: #777; margin-bottom: 0px; border-bottom: 1px solid rgb(125, 125, 125);  ">
 							<b>История за всё время</b><br>
 							<span style="font-size: 80%;">Если общая разница не сходится с <a href="client_finance.php?client='.$client[0]['id'].'" class="ahref">текущим месяцем ('.$monthsName[date("m")].' '.date("Y").')</a>, перераспределите деньги за прошедшие месяцы.</span>
 						</li>';
@@ -738,12 +735,12 @@
 						
 						
 					echo '
-						<li class="cellsBlock" style="width: 500px; text-align: left; font-size: 90%; color: #777; margin-bottom: 5px; border-bottom: 1px solid #CCC; ">
+						<li class="cellsBlock" style="width: 500px; text-align: left; font-size: 90%; color: #777; margin-bottom: 5px; border-bottom: 1px solid rgb(125, 125, 125); ">
 							<b>Платежи клиента за всё время, включая амортизацию</b>
 						</li>';	
 						
 					echo '
-						<li class="cellsBlock" style="width: 500px; text-align: left; font-size: 90%; color: #777; margin-bottom: 5px; border-bottom: 1px solid #CCC; ">
+						<li class="cellsBlock" style="width: 500px; text-align: left; font-size: 90%; color: #777; margin-bottom: 5px; border-bottom: 1px solid rgb(125, 125, 125); ">
 							'.$allClientFinance.'
 						</li>';	
 						

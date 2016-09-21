@@ -38,9 +38,11 @@
 				$iReplace = FALSE;
 				
 				require 'config.php';	
+				
 				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 				mysql_select_db($dbName) or die(mysql_error()); 
 				mysql_query("SET NAMES 'utf8'");
+				
 				$query = "SELECT * FROM `journal_replacement` WHERE `group_id`='{$_GET['id']}' AND `user_id`='{$_SESSION['id']}'";
 				$res = mysql_query($query) or die(mysql_error());
 				$number = mysql_num_rows($res);
@@ -48,7 +50,7 @@
 					$iReplace = TRUE;
 				}else{
 				}
-				mysql_close();	
+				//mysql_close();	
 				
 				if ($j_group != 0){
 					if (($scheduler['see_all'] == 1) || (($scheduler['see_own'] == 1) && (($j_group[0]['worker'] == $_SESSION['id']) || ($iReplace))) || $god_mode){
@@ -138,9 +140,9 @@
 											}
 										}
 										if (($scheduler['see_all'] == 1) || ($god_mode)){
-											echo '<span style="font-size: 80%; color: #CCC;">Тренер: <a href="user.php?id='.$j_group[0]['worker'].'" class="ahref">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</a></span><br>';	
+											echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Тренер: <a href="user.php?id='.$j_group[0]['worker'].'" class="ahref">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</a></span><br>';	
 										}										
-										echo '<span style="font-size: 80%; color: #CCC;">Сегодня: <a href="journal.php?id='.$_GET['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';	
+										echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Сегодня: <a href="journal.php?id='.$_GET['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';	
 
 										echo '
 											<div id="data">		
@@ -192,90 +194,61 @@
 										
 										if ($uch_arr != 0){	
 
-											$arr = array();
-											//переменная для id участников
-											$journal_clID = array();
-											$journal_clID_q = '';
+											//количество допущенных
+											$dopusk = 0;
 											
-											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+											//!!!Настройки цены, тут надо будет переделать
+											$arr = array();
+											$settings = array();
+											
+											/*mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 											mysql_select_db($dbName) or die(mysql_error()); 
-											mysql_query("SET NAMES 'utf8'");
+											mysql_query("SET NAMES 'utf8'");*/
+											
+											$query = "SELECT * FROM `spr_settings` ORDER BY `time` DESC";
+											$res = mysql_query($query) or die(mysql_error());
+											$number = mysql_num_rows($res);
+											if ($number != 0){
+												while ($arr = mysql_fetch_assoc($res)){
+													$settings[$arr['name']][$arr['time']] = $arr;
+												}
+											}else{
+												$settings = 0;
+											}
+											
+											//var_dump ($settings);
+
+											$arr = array();
+											
+											/*mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+											mysql_select_db($dbName) or die(mysql_error()); 
+											mysql_query("SET NAMES 'utf8'");*/
 											$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 											$res = mysql_query($query) or die(mysql_error());
 											$number = mysql_num_rows($res);
 											if ($number != 0){
 												while ($arr = mysql_fetch_assoc($res)){
 													$journal_uch[$arr['client_id']][$arr['day']] = $arr['status'];
-													array_push($journal_clID, $arr['client_id']);
 												}
 											}
 											//var_dump($journal_uch);
-											var_dump($journal_clID);
-											
-											if (!empty($journal_clID)){
-												$journal_clID_q = implode('_', $journal_clID);
-											}
-											var_dump($journal_clID_q);
-											
-											//!!! Тут необходимо собрать данные по оплатам всех учеников этой группы
-												
-											//Смотрим оплаты
-											$arr_fin = array();
-											$journal_fin = array();
-											
-											//Общая внесённая сумма
-											$summa = 0;
 
-											/*$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}' AND `client`='".$client[0]['id']."'";
-											$res = mysql_query($query) or die(mysql_error());
-											$number = mysql_num_rows($res);
-											if ($number != 0){
-												while ($arr_fin = mysql_fetch_assoc($res)){
-													array_push($journal_fin, $arr_fin);
-												}
-											}else{
-												$journal_fin = 0;
-											}
-											//var_dump($journal_fin);
-
-											if ($journal_fin != 0){
-												echo '
-															<li class="cellsBlock" style="font-weight: bold; width: auto;">	
-																<div class="cellName" style="text-align: center">Дата</div>
-																<div class="cellFullName" style="text-align: center">Полное имя</div>
-																<div class="cellName" style="text-align: center">Месяц/Год</div>
-																<div class="cellTime" style="text-align: center">Сумма</div>
-															</li>';
-															
-												for ($i = 0; $i < count($journal_fin); $i++) { 
-													$backSummColor = '';
-													if ($journal_fin[$i]['type'] == 2){
-														$backSummColor = "background-color: rgba(0, 201, 255, 0.5)";
-													}
-												
-													echo '
-															<li class="cellsBlock cellsBlockHover" style="width: auto;">	
-																<a href="finance.php?id='.$journal_fin[$i]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal_fin[$i]['create_time']).'</a>
-																<a href="client.php?id='.$journal_fin[$i]['client'].'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal_fin[$i]['client'], 'user_full').'</a>
-																<div class="cellName" style="text-align: center">'.$monthsName[$journal_fin[$i]['month']].'/'.$journal_fin[$i]['year'].'</div>
-																<div class="cellTime" style="text-align: center; font-size: 110%; font-weight: bold; '.$backSummColor.'">'.$journal_fin[$i]['summ'].'</div>
-															</li>';
-														
-													if ($journal_fin[$i]['type'] != 2){
-														$summa += $journal_fin[$i]['summ'];
-													}
-												}
-												
-
-											}else{
-												echo '<h1>В этом месяце платежей не вносилось.</h1>';
-											}
-											
-											echo '
-												</ul>';
-										
-										*/
 											for ($i = 0; $i < count($uch_arr); $i++) {
+
+												//Присутствовал
+												$journal_was = 0;
+												//Цена если был
+												$need_cena = 0;
+												//Общий долг
+												$need_summ = 0;
+												//Кол-во отсутствий
+												$journal_x = 0;
+												//Кол-во справок
+												$journal_spr = 0;
+												//Кол-во пробных
+												$journal_try = 0;
+												//
+												$thisMonthRazn = 0;
 												
 												echo '
 													<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto;">	
@@ -287,23 +260,97 @@
 												
 												for ($j = 0; $j < count($weekDays); $j++) {
 													$weekDaysArr = explode('.', $weekDays[$j]);
+													
+													$timeForPay = strtotime($weekDaysArr[2].'.'.$weekDaysArr[1].'.'.$weekDaysArr[0].' 23:59:59');
+													
 													if (isset($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]])){
 														if ($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 1){
 															$backgroundColor = "background-color: rgba(0, 255, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-check"></i>';
 															$journal_value = 1;
+															
+															$journal_was++;
+															
+															foreach($settings['cena1'] as $key_time => $value_time_arr){
+																$need_cena = 0;
+																
+																//если только одно значение 
+																if (count($settings['cena1']) == 1){
+																	$need_cena = $settings['cena1'][$key_time]['value'];
+																	$need_summ += $settings['cena1'][$key_time]['value'];
+																}else{
+																	//Если указанное в посещении время меньше чем текущее в цикле
+																	if ($timeForPay < $key_time){
+																		continue;
+																	}else{
+																		$need_cena = $settings['cena1'][$key_time]['value'];
+																		$need_summ += $settings['cena1'][$key_time]['value'];
+																		break;
+																	}
+																}
+															}
+
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 2){
 															$backgroundColor = "background-color: rgba(255, 0, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-times"></i>';
 															$journal_value = 2;
+								
+															$journal_x++;
+															
+															foreach($settings['cena1'] as $key_time => $value_time_arr){
+																$need_cena = 0;
+																
+																//если только одно значение 
+																if (count($settings['cena1']) == 1){
+																	$need_cena = $settings['cena1'][$key_time]['value'];
+																	$need_summ += $settings['cena1'][$key_time]['value'];
+																}else{
+																	//Если указанное в посещении время меньше чем текущее в цикле
+																	if ($timeForPay < $key_time){
+																		continue;
+																	}else{
+																		$need_cena = $settings['cena1'][$key_time]['value'];
+																		$need_summ += $settings['cena1'][$key_time]['value'];
+																		break;
+																	}
+																}
+															}
+															
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 3){
 															$backgroundColor = "background-color: rgba(255, 252, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-file-text-o"></i>';
 															$journal_value = 3;
+															
+															$journal_spr++;
+															
+															$need_cena = 0;
+															
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 4){
 															$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
 															$journal_ico = '<i class="fa fa-check"></i>';
 															$journal_value = 4;
+								
+															$journal_try++;
+															
+															foreach($settings['cena2'] as $key_time => $value_time_arr){
+																$need_cena = 0;
+																
+																//если только одно значение 
+																if (count($settings['cena2']) == 1){
+																	$need_cena = $settings['cena2'][$key_time]['value'];
+																	$need_summ += $settings['cena2'][$key_time]['value'];
+																}else{
+																	//Если указанное в посещении время меньше чем текущее в цикле
+																	if ($timeForPay < $key_time){
+																		continue;
+																	}else{
+																		$need_cena = $settings['cena2'][$key_time]['value'];
+																		$need_summ += $settings['cena2'][$key_time]['value'];
+																		break;
+																	}
+																}
+															}
+															
 														}else{
 															$backgroundColor = '';
 															$journal_ico = '-';
@@ -322,8 +369,63 @@
 													}
 													echo '<div id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$uch_arr[$i]['id'].', \''.$weekDays[$j].'\');">'.$journal_ico.'</div>';
 													echo '<input type="hidden" id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'_value" class="journalItemVal" value="'.$journal_value.'">';
-												}									
-					
+												}	
+												
+												//Смотрим оплаты
+												$arr = array();
+												$journal_fin = array();
+												
+												//Общая внесённая сумма
+												$summa = 0;
+
+												$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}' AND `client`='".$uch_arr[$i]['id']."'";
+												$res = mysql_query($query) or die(mysql_error());
+												$number = mysql_num_rows($res);
+												if ($number != 0){
+													while ($arr = mysql_fetch_assoc($res)){
+														array_push($journal_fin, $arr);
+													}
+												}else{
+													$journal_fin = 0;
+												}
+												//var_dump($journal_fin);
+
+												if ($journal_fin != 0){
+													for ($k = 0; $k < count($journal_fin); $k++) { 
+														if ($journal_fin[$k]['type'] != 2){
+															$summa += $journal_fin[$k]['summ'];
+														}
+													}
+												}else{
+												}
+												
+												//Разница между потрачено и внесено
+												if ($summa - $need_summ > 0){
+													
+													$dopusk++;
+													
+													echo '
+														<div id="" class="cellTime" style="text-align: center; width: 20px; min-width: 20px; background-color: rgb(143, 243, 0); color: rgb(62, 56, 56);">
+															<i class="fa fa-thumbs-o-up"></i>
+														</div>';
+														
+													$SummColor = '';
+												}else{
+													echo '
+														<div id="" class="cellTime" style="text-align: center; width: 20px; min-width: 20px; background-color: rgb(210, 11, 11); color: #FFF;">
+															<i class="fa fa-thumbs-down"></i>
+														</div>';
+														
+													$SummColor = 'color: rgb(210, 11, 11);';
+												}
+												if (($finance['see_all'] == 1) || $god_mode){
+													echo '
+														<div id="" class="cellTime" style="text-align: right; width: 70px; min-width: 70px; '.$SummColor.'">
+															'.($summa - $need_summ).'
+														</div>
+														<a href="client_finance.php?client='.$uch_arr[$i]['id'].'" class="cellTime ahref" style="text-align: center; width: 20px; min-width: 20px;"><i class="fa fa-rub"></i></a>';
+												}
+
 												echo '				
 													</li>';
 											}
@@ -332,9 +434,10 @@
 											echo '<h3>В этой группе нет участников</h3>';
 											
 											//Но если они когда-то были
-											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+											/*mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 											mysql_select_db($dbName) or die(mysql_error()); 
-											mysql_query("SET NAMES 'utf8'");
+											mysql_query("SET NAMES 'utf8'");*/
+											
 											$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 											$res = mysql_query($query) or die(mysql_error());
 											$number = mysql_num_rows($res);
@@ -356,7 +459,7 @@
 											//var_dump($journal_uch);
 											
 											echo '
-												<span style="font-size: 80%; color: #AAA;">Ниже перечислены участники, которые ранее были в этой группе и отмечались в журнале.<br>Сейчас этих участников в данной группе нет.</span>
+												<span style="font-size: 80%; color: rgb(150, 150, 150);">Ниже перечислены участники, которые ранее были в этой группе и отмечались в журнале.<br>Сейчас этих участников в данной группе нет.</span>
 												<br>
 												<br>
 												<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
@@ -438,7 +541,7 @@
 										}
 										echo '		
 												<br><br>
-												<span style="font-size: 80%; color: #AAA;">Если допустили ошибку, то, чтобы увидеть актуальный журнал, <a href="" class="ahref">обновите страницу</a></span>
+												<span style="font-size: 80%; color: rgb(150, 150, 150);">Если допустили ошибку, то, чтобы увидеть актуальный журнал, <a href="" class="ahref">обновите страницу</a></span>
 												
 											</div>';
 
