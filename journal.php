@@ -201,10 +201,6 @@
 											$arr = array();
 											$settings = array();
 											
-											/*mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-											mysql_select_db($dbName) or die(mysql_error()); 
-											mysql_query("SET NAMES 'utf8'");*/
-											
 											$query = "SELECT * FROM `spr_settings` ORDER BY `time` DESC";
 											$res = mysql_query($query) or die(mysql_error());
 											$number = mysql_num_rows($res);
@@ -220,9 +216,6 @@
 
 											$arr = array();
 											
-											/*mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-											mysql_select_db($dbName) or die(mysql_error()); 
-											mysql_query("SET NAMES 'utf8'");*/
 											$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 											$res = mysql_query($query) or die(mysql_error());
 											$number = mysql_num_rows($res);
@@ -370,6 +363,135 @@
 													echo '<div id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$uch_arr[$i]['id'].', \''.$weekDays[$j].'\');">'.$journal_ico.'</div>';
 													echo '<input type="hidden" id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'_value" class="journalItemVal" value="'.$journal_value.'">';
 												}	
+												
+												//!!!Если был в другой группе
+												/*$another_arr = array();
+												$another_journal_uch = array();
+												
+												$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE ``client_id` = '".$uch_arr[$i]['id']."' AND group_id` <> '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+												$res = mysql_query($query) or die(mysql_error());
+												$number = mysql_num_rows($res);
+												if ($number != 0){
+													while ($arr = mysql_fetch_assoc($res)){
+														$another_journal_uch[$arr['client_id']][$arr['day']] = $arr['status'];
+													}
+												}
+												
+												
+												for ($j = 0; $j < count($weekDays); $j++) {
+													$weekDaysArr = explode('.', $weekDays[$j]);
+													
+													$timeForPay = strtotime($weekDaysArr[2].'.'.$weekDaysArr[1].'.'.$weekDaysArr[0].' 23:59:59');
+													
+													if (isset($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]])){
+														if ($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 1){
+															$backgroundColor = "background-color: rgba(0, 255, 0, 0.5)";
+															$journal_ico = '<i class="fa fa-check"></i>';
+															$journal_value = 1;
+															
+															$journal_was++;
+															
+															foreach($settings['cena1'] as $key_time => $value_time_arr){
+																$need_cena = 0;
+																
+																//если только одно значение 
+																if (count($settings['cena1']) == 1){
+																	$need_cena = $settings['cena1'][$key_time]['value'];
+																	$need_summ += $settings['cena1'][$key_time]['value'];
+																}else{
+																	//Если указанное в посещении время меньше чем текущее в цикле
+																	if ($timeForPay < $key_time){
+																		continue;
+																	}else{
+																		$need_cena = $settings['cena1'][$key_time]['value'];
+																		$need_summ += $settings['cena1'][$key_time]['value'];
+																		break;
+																	}
+																}
+															}
+
+														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 2){
+															$backgroundColor = "background-color: rgba(255, 0, 0, 0.5)";
+															$journal_ico = '<i class="fa fa-times"></i>';
+															$journal_value = 2;
+								
+															$journal_x++;
+															
+															foreach($settings['cena1'] as $key_time => $value_time_arr){
+																$need_cena = 0;
+																
+																//если только одно значение 
+																if (count($settings['cena1']) == 1){
+																	$need_cena = $settings['cena1'][$key_time]['value'];
+																	$need_summ += $settings['cena1'][$key_time]['value'];
+																}else{
+																	//Если указанное в посещении время меньше чем текущее в цикле
+																	if ($timeForPay < $key_time){
+																		continue;
+																	}else{
+																		$need_cena = $settings['cena1'][$key_time]['value'];
+																		$need_summ += $settings['cena1'][$key_time]['value'];
+																		break;
+																	}
+																}
+															}
+															
+														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 3){
+															$backgroundColor = "background-color: rgba(255, 252, 0, 0.5)";
+															$journal_ico = '<i class="fa fa-file-text-o"></i>';
+															$journal_value = 3;
+															
+															$journal_spr++;
+															
+															$need_cena = 0;
+															
+														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 4){
+															$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
+															$journal_ico = '<i class="fa fa-check"></i>';
+															$journal_value = 4;
+								
+															$journal_try++;
+															
+															foreach($settings['cena2'] as $key_time => $value_time_arr){
+																$need_cena = 0;
+																
+																//если только одно значение 
+																if (count($settings['cena2']) == 1){
+																	$need_cena = $settings['cena2'][$key_time]['value'];
+																	$need_summ += $settings['cena2'][$key_time]['value'];
+																}else{
+																	//Если указанное в посещении время меньше чем текущее в цикле
+																	if ($timeForPay < $key_time){
+																		continue;
+																	}else{
+																		$need_cena = $settings['cena2'][$key_time]['value'];
+																		$need_summ += $settings['cena2'][$key_time]['value'];
+																		break;
+																	}
+																}
+															}
+															
+														}else{
+															$backgroundColor = '';
+															$journal_ico = '-';
+															$journal_value = 0;
+														}
+														
+														unset($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]]);
+														if (empty($journal_uch[$uch_arr[$i]['id']])){
+															unset($journal_uch[$uch_arr[$i]['id']]);
+														}
+														
+													}else{
+														$backgroundColor = '';
+														$journal_ico = '-';
+														$journal_value = 0;
+													}
+													echo '<div id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$uch_arr[$i]['id'].', \''.$weekDays[$j].'\');">'.$journal_ico.'</div>';
+													echo '<input type="hidden" id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'_value" class="journalItemVal" value="'.$journal_value.'">';
+												}*/
+												
+												
 												
 												//Смотрим оплаты
 												$arr = array();
