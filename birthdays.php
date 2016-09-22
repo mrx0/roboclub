@@ -120,7 +120,7 @@
 			
 			$time = time();
 			
-			$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}'";
+			$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
 
 			$res = mysql_query($query) or die($query);
 			$number = mysql_num_rows($res);
@@ -141,19 +141,21 @@
 					
 					<div id="data">
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
-							<li class="cellsBlock" style="font-weight:bold;">	
+							<li class="cellsBlock" style="font-weight: bold; width: auto;">
 								<div class="cellFullName" style="text-align: center">Полное имя</div>';
 			
 				echo '
 								<div class="cellCosmAct" style="text-align: center">Пол</div>
 								<div class="cellTime" style="width: 140px; text-align: center">Дата рождения</div>
-								<div class="cellText" style="text-align: center">Контакты</div>
-								<div class="cellText cellComment" style="text-align: center">Комментарий</div>
 							</li>';
 
 				for ($i = 0; $i < count($clients_j); $i++) { 
 					echo '
-							<li class="cellsBlock cellsBlockHover">
+							<li class="cellsBlock cellsBlockHover" style="width: auto;">';
+					if (date("d") == date("d", $clients_j[$i]['birthday'])){
+						echo '<i class="fa fa-arrow-right"></i>';
+					}
+					echo '
 								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
 					echo '
 								<div class="cellCosmAct" style="text-align: center">';
@@ -177,8 +179,6 @@
 					}
 					echo '
 								<div class="cellTime" style="width: 140px; text-align: center">', (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)) ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.$age.'</b></div>
-								<div class="cellText">'.$clients_j[$i]['contacts'].'</div>
-								<div class="cellText cellComment">'.$clients_j[$i]['comments'].'</div>
 							</li>';
 				}
 			}else{
