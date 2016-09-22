@@ -42,22 +42,7 @@
 							<header>
 								<h2>Добавляем платёж</h2>
 								Заполните поля
-							</header>';
-
-					echo '
-					
-						<style>
-						.label_desc{
-							display: block;
-						}
-						.error{
-							display: none;
-						}
-						.error_input{
-							border: 2px solid #FF0000; 
-						}
-						</style>	
-					
+							</header>					
 					
 							<div id="data">';
 
@@ -195,7 +180,7 @@
 										// обводим инпуты красным цветом
 									   // $(\'#\'+errorField).addClass(\'error_input\');                      
 									}
-									document.getElementById("errror").innerHTML=\'<span style="color: red">Ошибка, что-то заполнено не так.</span>\'
+									document.getElementById("errror").innerHTML=\'<span style="color: red font-weight: bold;">Ошибка, что-то заполнено не так.</span>\'
 								}
 							}
 						});						

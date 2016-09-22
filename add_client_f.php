@@ -17,8 +17,7 @@
 			}else{
 				include_once 'DBWork.php';
 				include_once 'functions.php';
-				$echo_therapist = '';
-				$echo_therapist2 = '';
+
 				if ((preg_match( '/[a-zA-Z]/', $_POST['f'] )) || (preg_match( '/[a-zA-Z]/', $_POST['i'] )) || (preg_match( '/[a-zA-Z]/', $_POST['o'] ))){
 					echo 'В ФИО встречаются латинские буквы. Это недопустимо<br /><br />
 						<a href="add_client.php" class="b">Добавить</a>
@@ -36,7 +35,11 @@
 						//echo
 						$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
 						
-						$client_id = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['contacts'],  $_POST['comment'], $birthday, $_POST['sex'], $_POST['filial']);
+						$birth = date('Y-m-d', $birthday);
+						if ($birthday == 0){
+							$birth = '00-00-0000';
+						}
+						$client_id = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['contacts'],  $_POST['comment'], $birthday, $birth, $_POST['sex'], $_POST['filial']);
 					
 						echo '
 							<h1>Добавлен в базу.</h1>

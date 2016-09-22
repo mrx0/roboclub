@@ -46,7 +46,8 @@
 				}else{
 					$bdate = 0;
 				}
-				echo '<select name="sel_date" id="sel_date">';
+				echo '<select name="sel_date" id="sel_date">
+						<option value="00">00</option>';
 				$i = 1;
 				while ($i <= 31) {
 					echo "<option value='" . $i . "'", $bdate['mday'] == $i ? ' selected':'' ,">$i</option>";
@@ -54,7 +55,9 @@
 				}
 				echo "</select>";
 				// Месяц
-				echo "<select name='sel_month' id='sel_month'>";
+				echo '
+					<select name="sel_month" id="sel_month">
+						<option value="00">---</option>';
 				$month = array(
 					"Январь",
 					"Февраль",
@@ -74,13 +77,22 @@
 				}
 				echo '</select>';
 				// Год
-				echo "<select name='sel_year' id='sel_year'>";
-				$j = 1920;
+				echo '
+					<select name="sel_year" id="sel_year">
+						<option value="0000">0000</option>';
+				$j = 2000;
 				while ($j <= 2020) {
 					echo "<option value='" . $j . "'", $bdate['year'] == $j ? ' selected':'' ,">$j</option>";
 					$j++;
 				}
-				echo '</select> <b>'.getyeardiff( $client[0]['birthday']).' лет</b>';
+				echo '</select> ';
+
+				if (($client[0]['birthday'] == "-1577934000") || ($client[0]['birthday'] == 0)){
+					$age = '';
+				}else{
+					$age = getyeardiff($client[0]['birthday']).' лет';
+				}
+				echo '<b>'.$age.'</b>';
 
 				echo '
 									</div>

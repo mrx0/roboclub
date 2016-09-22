@@ -337,7 +337,7 @@
 					<li>';
 		
 		if (($clients['see_all'] == 1) || $god_mode){
-			//echo '<a href="birthdays.php"><i class="fa fa-gift"></i></a>';
+			echo '<a href="birthdays.php"><i class="fa fa-gift"></i></a>';
 		}
 		echo '
 				<a href="user.php?id='.$_SESSION['id'].'" class="href_profile">['.$_SESSION['name'].']<br /></a><a href="exit.php" class="href_exit">Выход</a></li>';

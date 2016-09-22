@@ -42,9 +42,16 @@
 							'
 							><i class='fa fa-plus' style='color: green; border: 1px solid #CCC; padding: 3px; cursor: pointer; '></i></span>";
 						}
+						
+						if (($fast_search[$i]['birthday'] == "-1577934000") || ($fast_search[$i]['birthday'] == 0)){
+							$age = '';
+						}else{
+							$age = getyeardiff($fast_search[$i]['birthday']).' лет';
+						}
+						
 						echo "
 								<br />
-								<span style='font-size: 70%'>Дата рождения: ", $fast_search[$i]['birthday'] == "-1577934000" ? "не указана" : date("d.m.Y", $fast_search[$i]["birthday"]) ," / <b>".getyeardiff($fast_search[$i]["birthday"])." лет</b></span><br />
+								<span style='font-size: 70%'>Дата рождения: ", (($fast_search[$i]['birthday'] == "-1577934000") || ($fast_search[$i]['birthday'] == 0)) ? "не указана" : date("d.m.Y", $fast_search[$i]["birthday"]) ," / <b>".$age."</b></span><br />
 								<span style='font-size: 70%'>Контакты: ".$fast_search[$i]['contacts']."</span>
 							</div>
 						</div>";
@@ -59,19 +66,33 @@
 							<i class='fa fa-rub' style='font-size: 110%;'></i><i class='fa fa-plus' style='font-size: 70%;'></i>
 							</a></span>";
 						}
+						
+						if (($fast_search[$i]['birthday'] == "-1577934000") || ($fast_search[$i]['birthday'] == 0)){
+							$age = '';
+						}else{
+							$age = getyeardiff($fast_search[$i]['birthday']).' лет';
+						}
+						
 						echo "
 								<br />
-								<span style='font-size: 70%'>Дата рождения: ", $fast_search[$i]['birthday'] == "-1577934000" ? "не указана" : date("d.m.Y", $fast_search[$i]["birthday"]) ," / <b>".getyeardiff($fast_search[$i]["birthday"])." лет</b></span><br />
+								<span style='font-size: 70%'>Дата рождения: ", (($fast_search[$i]['birthday'] == "-1577934000") || ($fast_search[$i]['birthday'] == 0)) ? "не указана" : date("d.m.Y", $fast_search[$i]["birthday"]) ," / <b>".$age."</b></span><br />
 								<span style='font-size: 70%'>Контакты: ".$fast_search[$i]['contacts']."</span>
 							</div>
 						</div>";					
 					}else{
+						
+						if (($fast_search[$i]['birthday'] == "-1577934000") || ($fast_search[$i]['birthday'] == 0)){
+							$age = '';
+						}else{
+							$age = getyeardiff($fast_search[$i]['birthday']).' лет';
+						}
+							
 						echo "
 						<div style='border-bottom: 1px #ccc solid; width: 350px;'>
 							<a href='client.php?id=".$fast_search[$i]["id"]."' class='ahref' style='display: block; height: 100%;'>
 								<span style='font-size: 80%; font-weight: bold;'>".$fast_search[$i]["full_name"]."</span>
 								<br />
-								<span style='font-size: 70%'>Дата рождения: ", $fast_search[$i]['birthday'] == "-1577934000" ? "не указана" : date("d.m.Y", $fast_search[$i]["birthday"]) ," / <b>".getyeardiff($fast_search[$i]["birthday"])." лет</b></span><br />
+								<span style='font-size: 70%'>Дата рождения: ", (($fast_search[$i]['birthday'] == "-1577934000") || ($fast_search[$i]['birthday'] == 0)) ? "не указана" : date("d.m.Y", $fast_search[$i]["birthday"]) ," / <b>".$age."</b></span><br />
 								<span style='font-size: 70%'>Контакты: ".$fast_search[$i]['contacts']."</span>
 							</a>
 						</div>";

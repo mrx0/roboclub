@@ -353,16 +353,16 @@
 	}
 	
 	//+++Вставка и обновление списка клиентов из-под Web
-	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $contacts, $comments, $birthday, $sex, $filial){
+	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $contacts, $comments, $birthday, $birth, $sex, $filial){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `spr_clients` (
-			`name`, `full_name`, `f`, `i`, `o`, `contacts`, `sex`, `birthday`, `comments`, `filial`)
+			`name`, `full_name`, `f`, `i`, `o`, `contacts`, `sex`, `birthday`, `birth`, `comments`, `filial`)
 			VALUES (
-			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$contacts}', '{$sex}', '{$birthday}', '{$comments}', '{$filial}') ";
+			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$contacts}', '{$sex}', '{$birthday}', '{$birth}', '{$comments}', '{$filial}') ";
 		mysql_query($query) or die(mysql_error());
 		
 		$mysql_insert_id = mysql_insert_id();

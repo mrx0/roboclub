@@ -23,7 +23,7 @@
 				<header style="margin-bottom: 5px;">
 					<h1>Остатки</h1>';
 			echo '
-					<div id="closedGroups" style="font-size: 70%; color: #999;">Список тех клиентов, у кого за <span style="color: rgba(45, 43, 43, 0.83);">прошлый месяц</span> остались непотраченные деньги</div>
+					<div id="closedGroups" style="font-size: 70%; color: #999;">Список тех клиентов, у кого за <span style="color: rgba(45, 43, 43, 0.83);">прошлый месяц</span> остались непотраченные деньги или долги</div>
 				</header>';
 
 			include_once 'DBWork.php';
@@ -119,7 +119,7 @@
 			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 			mysql_select_db($dbName) or die(mysql_error()); 
 			mysql_query("SET NAMES 'utf8'");
-			$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND `year` = '{$year}'";
+			$query = "SELECT `client`, SUM(`summ`) FROM `journal_finance` WHERE `month` = '{$month}' AND `year` = '{$year}' AND `type` <> 2 GROUP BY `client`";
 			$res = mysql_query($query) or die(mysql_error());
 			$number = mysql_num_rows($res);
 			if ($number != 0){
@@ -156,26 +156,13 @@
 
 				echo '
 							<li class="cellsBlock" style="font-weight:bold; width: auto;"">	
-								<div class="cellName" style="text-align: center">Дата</div>
 								<div class="cellFullName" style="text-align: center">Полное имя</div>
-								<div class="cellName" style="text-align: center">Месяц/Год</div>
-								<div class="cellTime" style="text-align: center">Сумма</div>
+								<div class="cellName" style="text-align: center">Сумма</div>
 							</li>';
 							
 				for ($i = 0; $i < count($journal); $i++) {
 					$backSummColor = '';
-					if ($journal[$i]['type'] == 2){
-						$backSummColor = "background-color: rgba(0, 201, 255, 0.5)";
-					}
-				
-					echo '
-							<li class="cellsBlock cellsBlockHover" style="width: auto;"">	
-								<a href="finance.php?id='.$journal[$i]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal[$i]['create_time']).'</a>
-								<a href="client.php?id='.$journal[$i]['client'].'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal[$i]['client'], 'user_full').'</a>
-								<div class="cellName" style="text-align: center">'.$monthsName[$journal[$i]['month']].'/'.$journal[$i]['year'].'</div>
-								<div class="cellTime" style="text-align: center; font-size: 110%; font-weight: bold; '.$backSummColor.'">'.$journal[$i]['summ'].'</div>
-							</li>';
-							
+
 					//Присутствовал
 					$journal_was = 0;
 					//Цена если был
@@ -214,21 +201,13 @@
 					
 					if ($journal_uch != 0){
 
-						
-						echo '<li class="cellsBlock" style="width: auto; text-align: right; margin-bottom: 20px;">';
-						
 						foreach ($journal_uch as $key => $value) {
 							$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
 							
 							if ($value['status'] == 1){
-								$backgroundColor = "background-color: rgba(0, 255, 0, 0.5)";
-								$journal_ico = '<i class="fa fa-check"></i>';
-								$journal_value = 1;
-								
+
 								$journal_was++;
-								
-								//$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
-								
+
 								foreach($settings['cena1'] as $key_time => $value_time_arr){
 									$need_cena = 0;
 									
@@ -249,13 +228,8 @@
 								}
 								
 							}elseif($value['status'] == 2){
-								$backgroundColor = "background-color: rgba(255, 0, 0, 0.5)";
-								$journal_ico = '<i class="fa fa-times"></i>';
-								$journal_value = 2;
 								
 								$journal_x++;
-								
-								//$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
 								
 								foreach($settings['cena1'] as $key_time => $value_time_arr){
 									$need_cena = 0;
@@ -277,22 +251,14 @@
 								}
 								
 							}elseif($value['status'] == 3){
-								$backgroundColor = "background-color: rgba(255, 252, 0, 0.5)";
-								$journal_ico = '<i class="fa fa-file-text-o"></i>';
-								$journal_value = 3;
 								
 								$journal_spr++;
 								
 								$need_cena = 0;
 								
 							}elseif($value['status'] == 4){
-								$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
-								$journal_ico = '<i class="fa fa-check"></i>';
-								$journal_value = 4;
 								
 								$journal_try++;
-								
-								//$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
 								
 								foreach($settings['cena2'] as $key_time => $value_time_arr){
 									$need_cena = 0;
@@ -312,49 +278,33 @@
 										}
 									}
 								}
-								
 							}else{
-								$backgroundColor = '';
-								$journal_ico = '-';
-								$journal_value = 0;
 							}
-
-							$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
-							
-							echo '
-								<a href="journal.php?id='.$value['group_id'].'&m='.$value['month'].'&y='.$value['year'].'" class="cellName ahref" style="text-align: center; width: 100px; '.$backgroundColor.'">
-									'.$value['day'].'.'.$value['month'].'.'.$value['year'].'<br>
-									<span style="font-size: 70%;">';
-							if ($group != 0){
-								echo $group[0]['name'];	
-							}else{
-								echo 'ошибка группы';
-							}
-							echo '
-								</span>
-								<br>
-								'.$journal_ico.'<br>
-								<span style="font-size: 70%;">'.$need_cena.' руб.</span>
-							</a>';
-							
-							
-							
-							
 						}
-						echo '</li>';
-						
 					}else{
-						echo '<h1>В этом месяце посещений не отмечено.</h1>';
 					}
-							
-							
-							
-							
+					
+					$rezColor = '';
+					$znak = '';
+					
+					if ($journal[$i]['SUM(`summ`)'] - $need_summ < 0){
+						$rezColor = 'rgba(255, 0, 0, 0.86);';
+					}elseif($journal[$i]['SUM(`summ`)'] - $need_summ > 0){
+						$rezColor = 'rgba(9, 198, 31, 0.92);';
+						$znak = '+';
+					}else{
+					}
+					
+					if ($journal[$i]['SUM(`summ`)'] - $need_summ != 0){
+						echo '
+							<li class="cellsBlock cellsBlockHover" style="width: auto;"">	
+								<a href="client.php?id='.$journal[$i]['client'].'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal[$i]['client'], 'user_full').'</a>
+								<a href="client_finance.php?client='.$journal[$i]['client'].'" class="cellName ahref" style="text-align: center; font-size: 110%; font-weight: bold;  color: '.$rezColor.'">'.$znak.''.($journal[$i]['SUM(`summ`)'] - $need_summ).' <i class="fa fa-rub"></i></a>
+							</li>';
+					}
 				}
-				
-
 			}else{
-				echo '<h1>В этом месяце платежей не добавлялось.</a>';
+				echo '<h1>Распределять нечего</h1>';
 			}
 			echo '
 					</ul>';

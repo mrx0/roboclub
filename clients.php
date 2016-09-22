@@ -159,6 +159,7 @@
 							</li>';
 
 				for ($i = 0; $i < count($clients_j); $i++) { 
+
 					echo '
 							<li class="cellsBlock cellsBlockHover">
 								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
@@ -177,9 +178,13 @@
 					
 					echo '
 								</div>';
-
+					if (($clients_j[$i]['birthday'] == "-1577934000") || ($clients_j[$i]['birthday'] == 0)){
+						$age = '';
+					}else{
+						$age = getyeardiff( $clients_j[$i]['birthday']).' лет';
+					}
 					echo '
-								<div class="cellTime" style="width: 140px; text-align: center">', $clients_j[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.getyeardiff( $clients_j[$i]['birthday']).' лет</b></div>
+								<div class="cellTime" style="width: 140px; text-align: center">', (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)) ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.$age.'</b></div>
 								<div class="cellText">'.$clients_j[$i]['contacts'].'</div>
 								<div class="cellText cellComment">'.$clients_j[$i]['comments'].'</div>
 							</li>';

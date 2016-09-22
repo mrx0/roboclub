@@ -119,16 +119,9 @@
 			mysql_query("SET NAMES 'utf8'");
 			
 			$time = time();
-			//$query = "SELECT * FROM `spr_clients` WHERE `birthday` BETWEEN '{$firstday}' AND '{$lastday}' ORDER BY `birthday` ASC";
-			$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(UNIX_TIMESTAMP(`birthday`), '%m') = DATE_FORMAT(now(), '%m');";
-			$query = "SELECT  FROM_UNIXTIME(staffDOB) as dob
- FROM staff
-WHERE CASE
-   WHEN DATE_FORMAT(FROM_UNIXTIME(staffDOB),'%m%d') < DATE_FORMAT(CURDATE(),'%m%d')
-        THEN CONCAT(YEAR(CURDATE())+1, DATE_FORMAT(FROM_UNIXTIME(staffDOB),'-%m-%d'))
-    ELSE CONCAT(YEAR(CURDATE()), DATE_FORMAT(FROM_UNIXTIME(staffDOB),'-%m-%d'))
-    END 
-BETWEEN CURDATE() AND CURDATE()+INTERVAL 14 DAY";";
+			
+			$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}'";
+
 			$res = mysql_query($query) or die($query);
 			$number = mysql_num_rows($res);
 			if ($number != 0){
@@ -177,9 +170,13 @@ BETWEEN CURDATE() AND CURDATE()+INTERVAL 14 DAY";";
 					
 					echo '
 								</div>';
-
+					if (($clients_j[$i]['birthday'] == "-1577934000") || ($clients_j[$i]['birthday'] == 0)){
+						$age = '';
+					}else{
+						$age = getyeardiff( $clients_j[$i]['birthday']).' лет';
+					}
 					echo '
-								<div class="cellTime" style="width: 140px; text-align: center">', $clients_j[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.getyeardiff( $clients_j[$i]['birthday']).' лет</b></div>
+								<div class="cellTime" style="width: 140px; text-align: center">', (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)) ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.$age.'</b></div>
 								<div class="cellText">'.$clients_j[$i]['contacts'].'</div>
 								<div class="cellText cellComment">'.$clients_j[$i]['comments'].'</div>
 							</li>';

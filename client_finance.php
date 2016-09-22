@@ -418,10 +418,10 @@
 					
 					$rezColor = '#555';
 					if ($summa - $need_summ < 0){
-						$rezColor = 'rgba(255, 0, 0, 0.86)';
+						$rezColor = 'rgba(255, 0, 0, 0.86);';
 					}
 					if ($summa - $need_summ > 0){
-						$rezColor = 'rgba(9, 198, 31, 0.92)';
+						$rezColor = 'rgba(9, 198, 31, 0.92);';
 					}	
 
 					echo '

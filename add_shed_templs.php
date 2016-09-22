@@ -16,21 +16,7 @@
 						<h2>Добавляем новый шаблон расписания</h2>
 						Заполните поля
 					</header>';
-//!!!! стиль тут убрать может?
 			echo '
-			
-				<style>
-				.label_desc{
-					display: block;
-				}
-				.error{
-					display: none;
-				}
-				.error_input{
-					border: 2px solid #FF0000; 
-				}
-				</style>	
-			
 			
 					<div id="data">';
 			echo '

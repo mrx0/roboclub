@@ -9,7 +9,7 @@
 				mysql_select_db($dbName) or die(mysql_error()); 
 				mysql_query("SET NAMES 'utf8'");
 				
-				$query = "SELECT * FROM `journal_finance`";
+				$query = "SELECT * FROM `spr_clients`";
 				
 				$res = mysql_query($query) or die(mysql_error());
 				$number = mysql_num_rows($res);
@@ -20,12 +20,31 @@
 				}else{
 					$journal = 0;
 				}
-				//var_dump($journal);
+				var_dump($journal);
 				
 				if ($journal != 0){
+					
+					require 'config.php';
+					
+					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+					mysql_select_db($dbName) or die(mysql_error()); 
+					mysql_query("SET NAMES 'utf8'");
+					
 					foreach ($journal as $value){
-						echo 'Клиент: '.$value['client'].'<br>';
+						echo 'Клиент: '.$value['name'].'<br>';
 						
+						$birth = date('Y-m-d', $value['birthday']);
+					
+						//if ($value['birth'] == '0000-00-00'){
+							//var_dump($birth);
+							$query = "UPDATE `spr_clients` SET `birth`='{$birth}'  WHERE `id` = '{$value['id']}'";
+							mysql_query($query) or die('3->'.mysql_error().'->'.$query);
+							
+						//}
+					
+					
+						
+						/*
 						$query = "SELECT `filial` FROM `spr_clients` WHERE `id` = '{$value['client']}'";
 						$res = mysql_query($query) or die(mysql_error());
 						$number = mysql_num_rows($res);
@@ -38,7 +57,7 @@
 							}
 						}else{
 							echo 'Ошибка<br><br>';
-						}
+						}*/
 					}
 				}
 				

@@ -102,9 +102,15 @@
 							
 							echo '
 										</div>';
-
+										
+							if (($uch_arr[$i]['birthday'] == "-1577934000") || ($uch_arr[$i]['birthday'] == 0)){
+								$age = '';
+							}else{
+								$age = getyeardiff($uch_arr[$i]['birthday']).' лет';
+							}
+							
 							echo '
-										<div class="cellTime" style="width: 140px; text-align: center">', $uch_arr[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $uch_arr[$i]['birthday']) ,' / <b>'.getyeardiff( $uch_arr[$i]['birthday']).' лет</b></div>';
+										<div class="cellTime" style="width: 140px; text-align: center">', (($uch_arr[$i]['birthday'] == "-1577934000") || ($uch_arr[$i]['birthday'] == 0)) ? "не указана" : date("d.m.Y", $uch_arr[$i]["birthday"]) ,' / <b>'.$age.'</b></div>';
 							if (($groups['edit'] == 1) || $god_mode){
 								echo '
 										<div id="delClientFromGroup" clientid="'.$uch_arr[$i]['id'].'" class="cellCosmAct delClientFromGroup" style="text-align: center">
@@ -178,9 +184,14 @@
 									
 									echo '
 												</div>';
+									if (($free_uch_arr[$i]['birthday'] == "-1577934000") || ($free_uch_arr[$i]['birthday'] == 0)){
+										$age = '';
+									}else{
+										$age = getyeardiff( $free_uch_arr[$i]['birthday']).' лет';
+									}
 
 									echo '
-												<div class="cellTime" style="width: 140px; text-align: center">', $free_uch_arr[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $free_uch_arr[$i]['birthday']) ,' / <b>'.getyeardiff( $free_uch_arr[$i]['birthday']).' лет</b></div>
+												<div class="cellTime" style="width: 140px; text-align: center">', (($free_uch_arr[$i]['birthday'] == "-1577934000") || ($free_uch_arr[$i]['birthday'] == 0)) ? "не указана" : date("d.m.Y", $free_uch_arr[$i]["birthday"]) ,' / <b>'.$age.'</b></div>
 												<div id="addClientInGroup" clientid="'.$free_uch_arr[$i]['id'].'" class="cellCosmAct addClientInGroup" style="text-align: center">
 													<i class="fa fa-plus" style="color: green; cursor: pointer;"></i>
 												</div>

@@ -98,7 +98,7 @@
 							if (($scheduler['see_all'] == 1) || $god_mode){
 								$foreverEdit = TRUE;
 							}	
-							if (($scheduler['see_own'] == 1) && ($time - $dateForUpdate < 60*60*36)) {
+							if (($scheduler['see_own'] == 1) && ($time - $dateForUpdate < 60*60*48)) {
 								$foreverEdit = TRUE;
 							}
 							

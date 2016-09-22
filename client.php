@@ -39,11 +39,16 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">ФИО</div>
 								<div class="cellRight">'.$client[0]['full_name'].'</div>
-							</div>
-								
+							</div>';
+							if (($client[0]['birthday'] == "-1577934000") || ($client[0]['birthday'] == 0)){
+								$age = '';
+							}else{
+								$age = getyeardiff( $client[0]['birthday']).' лет';
+							}
+				echo '				
 							<div class="cellsBlock2">
 								<div class="cellLeft">Дата рождения</div>
-								<div class="cellRight">', $client[0]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $client[0]['birthday']) ,' / <b>'.getyeardiff( $client[0]['birthday']).' лет</b></div>
+								<div class="cellRight">', (($client[0]['birthday'] == '-1577934000') || ($client[0]['birthday'] == 0)) ? 'не указана' : date('d.m.Y', $client[0]['birthday']) ,' / <b>'.$age.'</b></div>
 							</div>
 								
 							<div class="cellsBlock2">

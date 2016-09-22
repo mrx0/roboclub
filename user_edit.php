@@ -14,7 +14,7 @@
 				
 			$user = SelDataFromDB('spr_workers', $_GET['id'], 'user');
 			//var_dump($user);
-			$arr_orgs = SelDataFromDB('spr_org', '', '');
+			//$arr_orgs = SelDataFromDB('spr_org', '', '');
 			//var_dump($orgs);
 			$arr_permissions = SelDataFromDB('spr_permissions', '', '');
 			//var_dump($permissions);

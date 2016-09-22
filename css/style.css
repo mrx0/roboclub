@@ -1593,3 +1593,15 @@ input[type="number"].mod{
 #calendar3 tbody td.today {
   outline: 3px solid red;
 }
+
+.label_desc{
+	display: block;
+}
+.error{
+	font-size: 70%;
+	color: red;
+	display: none;
+}
+.error_input{
+	border: 2px solid #FF0000; 
+}
