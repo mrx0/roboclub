@@ -31,18 +31,19 @@
 
 				echo '
 						<div id="data">';
-
+				echo '
+							<div id="errrror"></div>';
 				echo '
 							<form action="user_edit_f.php">
 								<div class="cellsBlock2">
 									<div class="cellLeft">ФИО';
 				// !!!! Костыль для редактирования ФИО
 				if ($god_mode){
-					echo '    <a href="user_edit_fio.php?id='.$_GET['id'].'"><img src="img/change.png" title="Редактировать ФИО"></a>';
+					echo '    <a href="user_edit_fio.php?id='.$_GET['id'].'"><i class="fa fa-cog" title="Редактировать ФИО"></i></a>';
 				}
 				echo '					
 									</div>
-									<div class="cellRight">'.$user[0]['full_name'].'</div>
+									<div class="cellRight"><a href="user.php?id='.$user[0]['id'].'" class="ahref">'.$user[0]['full_name'].'</a></div>
 								</div>
 
 								
@@ -93,7 +94,6 @@
 									</div>
 								</div>
 											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
-											<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
 											<input type=\'button\' class="b" value=\'Редактировать\' onclick=Ajax_user_edit()>
 										</form>';	
 
@@ -111,7 +111,7 @@
 						var fired = $("input[name=fired]:checked").val();
 								ajax({
 									url:"user_edit_f.php",
-									statbox:"status",
+									statbox:"errrror",
 									method:"POST",
 									data:
 									{
@@ -124,7 +124,7 @@
 
 									},
 										success:function(data){
-										document.getElementById("status").innerHTML=data;
+										document.getElementById("errrror").innerHTML=data;
 									}
 								})
 					};  

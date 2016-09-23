@@ -181,7 +181,12 @@
 										
 										for ($i = 0; $i < count($weekDays); $i++) {
 											$weekDaysArr = explode('.', $weekDays[$i]);
-											echo '<div class="cellTime" style="text-align: center; width: 70px; min-width: 70px;">'.$weekDaysArr[2].'</div>';
+											if (($scheduler['see_all'] == 1) || $god_mode){
+												echo '
+													<a class="cellTime ahref cellsBlockHover" href="meets.php?id='.$_GET['id'].'&d='.$weekDaysArr[2].'&m='.$month.'&y='.$year.'" style="text-align: center; width: 70px; min-width: 70px;">'.$weekDaysArr[2].'</a>';
+											}else{
+												echo '<div class="cellTime" style="text-align: center; width: 70px; min-width: 70px;">'.$weekDaysArr[2].'</div>';
+											}
 										}										
 					
 										echo '				
@@ -637,10 +642,6 @@
 												<br><br>
 												<div id="errror"></div>
 												<input type="button" class="b" value="Сохранить изменения" onclick=Ajax_change_journal()>';
-										if (($scheduler['see_all'] == 1) || $god_mode){
-											echo '
-												<a href="meets.php?group='.$_GET['id'].'" class="b">Дополнительно</a>';
-										}
 										echo '		
 												<br><br>
 												<span style="font-size: 80%; color: rgb(150, 150, 150);">Если допустили ошибку, то, чтобы увидеть актуальный журнал, <a href="" class="ahref">обновите страницу</a></span>

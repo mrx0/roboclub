@@ -13,13 +13,19 @@
 		if ($_POST){
 
 			$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
-				
-			WriteClientToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['contacts'], $_POST['comments'], $birthday, $_POST['sex'], $_POST['filial']);
+			
+			$birth = date('Y-m-d', $birthday);
+			
+			if ($birthday == 0){
+				$birth = '00-00-0000';
+			}
+			
+			WriteClientToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['contacts'], $_POST['comments'], $birthday, $birth, $_POST['sex'], $_POST['filial']);
 			
 			echo '
-				<h1>Карточка отредактирована.</h1>
-				<a href="client.php?id='.$_POST['id'].'" class="b">Вернуться в карточку</a>
-			';			
+				<div class="query_ok">
+					<h3>Карточка отредактирована.</h3>
+				</div>';			
 		}
 
 	}

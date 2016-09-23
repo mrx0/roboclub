@@ -21,7 +21,8 @@
 
 			echo '
 					<div id="data">';
-
+			echo '
+						<div id="errrror"></div>';
 			echo '
 						<form action=""add_client_f.php">
 					
@@ -101,9 +102,9 @@
 									</select>';
 
 			echo '
-									<label id="sel_date" class="error"></label>
-									<label id="sel_month" class="error"></label>
-									<label id="sel_year" class="error"></label>
+									<label id="sel_date_error" class="error"></label>
+									<label id="sel_month_error" class="error"></label>
+									<label id="sel_year_error" class="error"></label>
 								</div>
 							</div>
 							
@@ -144,7 +145,7 @@
 							</div>';
 			echo '				
 							<div id="errror"></div>
-							<input type="button" class="b" value="Добавить" onclick="onclick=Ajax_add_client()">
+							<input type="button" class="b" value="Добавить" onclick="Ajax_add_client()">
 						</form>';	
 				
 			echo '
@@ -198,7 +199,7 @@
 									//alert(\'форма корректно заполнена\');
 								ajax({
 									url:"add_client_f.php",
-									statbox:"status",
+									statbox:"errrror",
 									method:"POST",
 									data:
 									{
@@ -219,7 +220,7 @@
 										
 										session_id:'.$_SESSION['id'].',
 									},
-									success:function(data){document.getElementById("status").innerHTML=data;}
+									success:function(data){document.getElementById("errrror").innerHTML=data;}
 								})
 								// в случае ошибок в форме
 								}else{

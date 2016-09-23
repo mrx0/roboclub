@@ -15,10 +15,9 @@
 			WriteWorkerToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['permissions'], $_POST['contacts'], $_POST['fired']);
 			
 			echo '
-				<h1>Карточка отредактирована.</h1>
-				<br />
-				<a href="user.php?id='.$_POST['id'].'" class="b">Вернуться в профиль</a>
-			';			
+				<div class="query_ok">
+					<h3>Карточка отредактирована.</h3>
+				</div>';			
 		}
 
 	}

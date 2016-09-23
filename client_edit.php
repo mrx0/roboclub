@@ -23,7 +23,8 @@
 
 				echo '
 						<div id="data">';
-
+				echo '
+						<div id="errrror"></div>';
 				echo '
 							<form action="client_edit_f.php">
 								<div class="cellsBlock2">
@@ -31,11 +32,11 @@
 										ФИО';
 				// !!!! Костыль для редактирования ФИО
 				if ($god_mode || $clients['edit'] == 1){
-					echo '    <a href="client_edit_fio.php?id='.$_GET['id'].'"><img src="img/change.png" title="Редактировать ФИО"></a>';
+					echo '    <a href="client_edit_fio.php?id='.$_GET['id'].'"><i class="fa fa-cog" title="Редактировать ФИО"></i></a>';
 				}
 				echo '
 									</div>
-									<div class="cellRight">'.$client[0]['full_name'].'</div>
+									<div class="cellRight"><a href="client.php?id='.$client[0]['id'].'" class="ahref">'.$client[0]['full_name'].'</a></div>
 								</div>
 								<div class="cellsBlock2">
 									<div class="cellLeft">Дата рождения</div>
@@ -95,6 +96,9 @@
 				echo '<b>'.$age.'</b>';
 
 				echo '
+										<label id="sel_date_error" class="error"></label>
+										<label id="sel_month_error" class="error"></label>
+										<label id="sel_year_error" class="error"></label>
 									</div>
 								</div>
 
@@ -103,6 +107,7 @@
 									<div class="cellRight">
 										<input id="sex" name="sex" value="1" ', $client[0]['sex'] == 1 ? 'checked': '',' type="radio"> М
 										<input id="sex" name="sex" value="2" ', $client[0]['sex'] == 2 ? 'checked': '',' type="radio"> Ж
+										<label id="sex_error" class="error"></label>
 									</div>
 								</div>';
 								
@@ -147,29 +152,8 @@
 								
 				echo '					
 											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
-											<input type=\'button\' class="b" value=\'Редактировать\' onclick=\'
-												ajax({
-													url:"client_edit_f.php",
-													statbox:"status",
-													method:"POST",
-													data:
-													{
-														id:document.getElementById("id").value,
-														contacts:document.getElementById("contacts").value,
-														comments:document.getElementById("comments").value,
-														sel_date:document.getElementById("sel_date").value,
-														sel_month:document.getElementById("sel_month").value,
-														sel_year:document.getElementById("sel_year").value,
-														
-														filial:document.getElementById("filial").value,
-
-														sex:sex_value,
-														
-														session_id:'.$_SESSION['id'].',
-													},
-													success:function(data){document.getElementById("status").innerHTML=data;}
-												})\'
-											>
+											<div id="errror"></div>
+											<input type="button" class="b" value="Редактировать" onclick="Ajax_edit_client()">
 										</form>';	
 						echo '
 						
@@ -183,6 +167,82 @@
 						sex_value = $("input[name=sex]:checked").val();
 					});
 				</script>';
+				
+			//Фунция JS
+			
+			echo '
+				<script type="text/javascript">  
+				
+				
+					function Ajax_edit_client() {
+						// убираем класс ошибок с инпутов
+						$(\'input\').each(function(){
+							$(this).removeClass(\'error_input\');
+						});
+						// прячем текст ошибок
+						$(\'.error\').hide();
+						 
+						$.ajax({
+							// метод отправки 
+							type: "POST",
+							// путь до скрипта-обработчика
+							url: "ajax_test.php",
+							// какие данные будут переданы
+							data: {
+								
+								sel_date:document.getElementById("sel_date").value,
+								sel_month:document.getElementById("sel_month").value,
+								sel_year:document.getElementById("sel_year").value,
+								
+								sex:sex_value,
+							},
+							// тип передачи данных
+							dataType: "json",
+							// действие, при ответе с сервера
+							success: function(data){
+								// в случае, когда пришло success. Отработало без ошибок
+								if(data.result == \'success\'){   
+									//alert(\'форма корректно заполнена\');
+									ajax({
+										url:"client_edit_f.php",
+										statbox:"errrror",
+										method:"POST",
+										data:
+										{
+											id:document.getElementById("id").value,
+											contacts:document.getElementById("contacts").value,
+											comments:document.getElementById("comments").value,
+											sel_date:document.getElementById("sel_date").value,
+											sel_month:document.getElementById("sel_month").value,
+											sel_year:document.getElementById("sel_year").value,
+												
+											filial:document.getElementById("filial").value,
+
+											sex:sex_value,
+											
+											session_id:'.$_SESSION['id'].',
+										},
+										success:function(data){document.getElementById("errrror").innerHTML=data;}
+									})
+								// в случае ошибок в форме
+								}else{
+									// перебираем массив с ошибками
+									for(var errorField in data.text_error){
+										// выводим текст ошибок 
+										$(\'#\'+errorField+\'_error\').html(data.text_error[errorField]);
+										// показываем текст ошибок
+										$(\'#\'+errorField+\'_error\').show();
+										// обводим инпуты красным цветом
+									   // $(\'#\'+errorField).addClass(\'error_input\');                      
+									}
+									document.getElementById("errror").innerHTML=\'<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>\'
+								}
+							}
+						});						
+					};  
+					  
+				</script> ';
+				
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 				}

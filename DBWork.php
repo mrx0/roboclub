@@ -377,7 +377,7 @@
 	
 	
 	//+++Обновление карточки клиента из-под Web
-	function WriteClientToDB_Update($session_id, $id, $contacts, $comments, $birthday, $sex, $filial){
+	function WriteClientToDB_Update($session_id, $id, $contacts, $comments, $birthday, $birth, $sex, $filial){
 		$old = '';
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -394,7 +394,7 @@
 			$old = 'Не нашли старую запись.';
 		}
 		$time = time();
-		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `comments`='{$comments}', `contacts`='{$contacts}', `filial`='{$filial}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `birth`='{$birth}', `comments`='{$comments}', `contacts`='{$contacts}', `filial`='{$filial}' WHERE `id`='{$id}'";
 		mysql_query($query) or die(mysql_error());
 		mysql_close();
 		

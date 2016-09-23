@@ -1605,3 +1605,21 @@ input[type="number"].mod{
 .error_input{
 	border: 2px solid #FF0000; 
 }
+
+.query_ok{
+	border: 1px dotted green;
+	margin-bottom: 10px;
+	padding-left: 16px;
+	background-color: #7df67d66;
+	width: 329px;
+}
+
+.query_neok{
+	border: 1px dotted red;
+	margin-bottom: 10px;
+	padding-top: 5px;
+	padding-left: 16px;
+	color: red;
+	background-color: #f9abab66;
+	width: 329px;
+}

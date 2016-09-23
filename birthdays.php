@@ -213,11 +213,12 @@
 					}
 					echo '
 								<div class="cellTime" style="width: 140px; text-align: center">', (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)) ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.$age.'</b></div>
-								<div class="cellCosmAct" style="text-align: center; font-size: 110%; cursor: pointer; '.$presentColor.'" onclick="giftPresent('.$clients_j[$i]['id'].')">
+								<div class="cellCosmAct" style="text-align: center; font-size: 110%; cursor: pointer; '.$presentColor.'" onclick="Ajax_giftPresent('.$clients_j[$i]['id'].')">
 									<i class="fa fa-gift"></i>
 								</div>
 							</li>';
 				}
+				//echo '<div id="errror"></div>';
 			}else{
 				echo '<h3>В этом месяце нет дней рождений</h3>';
 			}
@@ -239,8 +240,23 @@
 			
 			echo '
 				<script type="text/javascript">
-					function giftPresent(client){
-						alert(client);
+					function Ajax_giftPresent(client){
+						ajax({
+							url: "add_birthday.php",
+							method: "POST",
+							
+							data:
+							{
+								client: client,
+								month: '.$month.',
+								year: '.$year.',
+								session_id: '.$_SESSION['id'].'
+							},
+							success: function(req){
+								//document.getElementById("errror").innerHTML = req;
+								location.reload(true);
+							}
+						});
 					}
 				</script>';
 		}else{
