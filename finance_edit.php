@@ -40,12 +40,13 @@
 					<div id="status">
 						<header>
 							<h2>Редактировать платёж <a href="finance.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
+							<a href="finance_edit_date.php?id='.$_GET['id'].'" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Изменить дату внесения</a>
 						</header>';
 
 					echo '
 						<div id="data">';
 					echo '
-						<form action="add_finance_f.php">
+						<form action="finance_edit_f.php">
 							
 							<div class="cellsBlock2">
 								<div class="cellLeft">ФИО</div>
