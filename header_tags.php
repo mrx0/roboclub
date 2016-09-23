@@ -336,7 +336,7 @@
 		echo '
 					<li>';
 		
-		if (($clients['see_all'] == 1) || $god_mode){
+		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
 			echo '<a href="birthdays.php"><i class="fa fa-gift"></i></a>';
 		}
 		echo '

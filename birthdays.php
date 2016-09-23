@@ -7,7 +7,7 @@
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		if (($clients['see_all'] == 1) || $god_mode){
+		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'filter.php';
@@ -115,14 +115,18 @@
 			$clients_j = array();
 			
 			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
+			mysql_select_db($dbName) or die(mysql_error().'->'.$query); 
 			mysql_query("SET NAMES 'utf8'");
 			
-			$time = time();
+			//$time = time();
 			
-			$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
+			if (($clients['see_all'] == 1) || $god_mode){
+				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
+			}elseif ($clients['see_own'] == 1){
+				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' AND `id` IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` IN (SELECT `id` FROM `journal_groups` WHERE `worker`='{$_SESSION['id']}')) ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
+			}
 
-			$res = mysql_query($query) or die($query);
+			$res = mysql_query($query) or die(mysql_error().'->'.$query);
 			$number = mysql_num_rows($res);
 			if ($number != 0){
 				while ($arr = mysql_fetch_assoc($res)){
@@ -133,6 +137,21 @@
 			}
 			
 			if ($clients_j != 0){
+				
+				$birth_j = array();
+				
+				$query = "SELECT `client_id`, `status` FROM `journal_birth` WHERE `month` = '{$month}' AND `year` = '{$year}' AND `status` = 1";
+
+				$res = mysql_query($query) or die($query);
+				$number = mysql_num_rows($res);
+				if ($number != 0){
+					while ($arr = mysql_fetch_assoc($res)){
+						$birth_j[$arr['client_id']] = $arr['status'];
+					}
+				}else{
+				}
+				//var_dump($birth_j);
+				
 				echo '
 					<p style="margin: 5px 0; padding: 2px;">
 						Быстрый фильтр: 
@@ -142,6 +161,7 @@
 					<div id="data">
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 							<li class="cellsBlock" style="font-weight: bold; width: auto;">
+								<div class="cellCosmAct" style="text-align: center; border: medium none;"></div>
 								<div class="cellFullName" style="text-align: center">Полное имя</div>';
 			
 				echo '
@@ -150,11 +170,25 @@
 							</li>';
 
 				for ($i = 0; $i < count($clients_j); $i++) { 
+					if (isset($birth_j[$clients_j[$i]['id']])){
+						//if ($birth_j[$clients_j[$i]['id']] == 1){
+							$birthColor = ' background-color: rgba(46, 183, 3, 0.48);';
+							$presentColor = ' background-color: rgba(46, 183, 3, 0.48);';
+						//}
+					}else{
+						$birthColor = '';
+						$presentColor = ' background-color: rgba(255, 83, 83, 0.23);';						
+					}
 					echo '
 							<li class="cellsBlock cellsBlockHover" style="width: auto;">';
-					if (date("d") == date("d", $clients_j[$i]['birthday'])){
-						echo '<i class="fa fa-arrow-right"></i>';
+					echo '
+								<div class="cellCosmAct" style="text-align: center; '.$birthColor.' border: medium none;">';
+					if (date("d.m") == date("d.m", $clients_j[$i]['birthday'])){
+						echo '
+									<i class="fa fa-arrow-right"></i>';
 					}
+					echo '
+								</div>';
 					echo '
 								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
 					echo '
@@ -179,6 +213,9 @@
 					}
 					echo '
 								<div class="cellTime" style="width: 140px; text-align: center">', (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)) ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.$age.'</b></div>
+								<div class="cellCosmAct" style="text-align: center; font-size: 110%; cursor: pointer; '.$presentColor.'" onclick="giftPresent('.$clients_j[$i]['id'].')">
+									<i class="fa fa-gift"></i>
+								</div>
 							</li>';
 				}
 			}else{
@@ -187,6 +224,25 @@
 			echo '
 					</ul>
 				</div>';
+			
+			mysql_close();	
+			
+			echo '
+				<script type="text/javascript">
+					function iWantThisDate(){
+						var iWantThisMonth = document.getElementById("iWantThisMonth").value;
+						var iWantThisYear = document.getElementById("iWantThisYear").value;
+						
+						window.location.replace("birthdays.php?m="+iWantThisMonth+"&y="+iWantThisYear);
+					}
+				</script>';
+			
+			echo '
+				<script type="text/javascript">
+					function giftPresent(client){
+						alert(client);
+					}
+				</script>';
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
