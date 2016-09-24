@@ -118,8 +118,7 @@
 					
 					//echo $firstday.'<br>';
 					//echo $lastday;
-					
-					
+
 					//Смотрим внесенный оплаты
 					$arr = array();
 					$journal_fin = array();
