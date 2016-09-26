@@ -215,6 +215,10 @@
 					</form>
 				</div>
 			</section>';
+			
+		echo '
+		</body>
+		</html>';
 
 	
 ?>
