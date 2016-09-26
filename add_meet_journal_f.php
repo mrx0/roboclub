@@ -97,7 +97,9 @@
 							
 							if (($scheduler['see_all'] == 1) || $god_mode){
 								$foreverEdit = TRUE;
-							}	
+							}
+							
+							//!!! время на изменение журнала
 							if (($scheduler['see_own'] == 1) && ($time - $dateForUpdate < 60*60*48)) {
 								$foreverEdit = TRUE;
 							}

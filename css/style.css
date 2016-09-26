@@ -1610,7 +1610,7 @@ input[type="number"].mod{
 	border: 1px dotted green;
 	margin-bottom: 10px;
 	padding-left: 16px;
-	background-color: #7df67d66;
+	background-color: rgba(125, 246, 125, 0.56);
 	width: 329px;
 }
 
@@ -1620,6 +1620,6 @@ input[type="number"].mod{
 	padding-top: 5px;
 	padding-left: 16px;
 	color: red;
-	background-color: #f9abab66;
+	background-color: rgba(249, 171, 171, 0.56);
 	width: 329px;
 }

@@ -112,14 +112,21 @@
 					//хочу получить все платежи этого филиала за указанный месяц
 					require 'config.php';	
 					
-					//Смотрим посещения
+					//нулевой день следующего месяца - это последний день предыдущего
+					$firstday = strtotime('01.'.$month.'.'.$year.' 00:00:00');
+					$lastday = mktime(23, 59, 59, $month+1, 0, $year);
+					
+					//echo $firstday.'<br>';
+					//echo $lastday;
+
+					//Смотрим внесенный оплаты
 					$arr = array();
 					$journal_fin = array();
 										
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 					mysql_select_db($dbName) or die(mysql_error()); 
 					mysql_query("SET NAMES 'utf8'");
-					$query = "SELECT `summ` FROM `journal_finance` WHERE `filial` = '{$filials[$i]['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+					$query = "SELECT `summ` FROM `journal_finance` WHERE `filial` = '{$filials[$i]['id']}' AND `create_time` BETWEEN '{$firstday}' AND '{$lastday}'";
 					$res = mysql_query($query) or die(mysql_error());
 					$number = mysql_num_rows($res);
 					if ($number != 0){
