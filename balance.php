@@ -254,7 +254,9 @@
 								
 								$journal_spr++;
 								
-								$need_cena = 0;
+								//$need_cena = 0;
+								$need_cena = $settings['cena1'][$key_time]['value']/2;
+								$need_summ += $settings['cena1'][$key_time]['value']/2;
 								
 							}elseif($value['status'] == 4){
 								

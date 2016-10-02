@@ -19,6 +19,7 @@
 					<div id="status">
 						<header>
 							<h2>Платёж #'.$finance_j[0]['id'].'</h2>
+							<a href="finance_remove.php?id='.$_GET['id'].'" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Перенести средства</a>
 						</header>';
 				if (($finance['see_all'] == 1) || $god_mode){
 					

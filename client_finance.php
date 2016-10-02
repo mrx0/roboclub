@@ -242,7 +242,9 @@
 								
 								$journal_spr++;
 								
-								$need_cena = 0;
+								//$need_cena = 0;
+								$need_cena = $settings['cena1'][$key_time]['value']/2;
+								$need_summ += $settings['cena1'][$key_time]['value']/2;
 								
 							}elseif($value['status'] == 4){
 								$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
@@ -413,7 +415,7 @@
 						
 					echo '
 						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 5px;">
-							Общая стоимость посещенных занятий: <span style="font-weight: bold; font-size: 110%; color: #555">'.$need_summ.'</span> руб.
+							Общая стоимость занятий: <span style="font-weight: bold; font-size: 110%; color: #555">'.$need_summ.'</span> руб.
 						</li>';
 					
 					$rezColor = '#555';
@@ -424,6 +426,9 @@
 						$rezColor = 'rgba(9, 198, 31, 0.92);';
 					}	
 
+					//остаток
+					$summ4Remove = $summa-$need_summ;
+					
 					echo '
 						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 10px;">
 							Разница денег за месяц: <span style="font-weight: bold; font-size: 110%; color: '.$rezColor.'">'.($summa-$need_summ).'</span> руб.
@@ -576,7 +581,9 @@
 								
 								$journal_spr++;
 								
-								$need_cena = 0;
+								//$need_cena = 0;
+								$need_cena = $settings['cena1'][$key_time]['value']/2;
+								$need_summ += $settings['cena1'][$key_time]['value']/2;
 								
 							}elseif($value['status'] == 4){
 								
@@ -695,8 +702,13 @@
 					}
 					
 					echo '
-						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 15px; border: 1px solid rgba(255, 0, 0, 0.28); padding: 5px;'.$backSummColor.'">
-							Разница: <span style="font-weight: bold; font-size: 90%; color: '.$rezColor.';">'.($summa-$need_summ).'</span>
+						<li class="cellsBlock" style="width: auto; text-align: left; font-size: 90%; color: #777; margin-bottom: 15px; border: 1px solid rgba(255, 0, 0, 0.28); padding: 5px;'.$backSummColor.'">
+							Разница: <span style="font-weight: bold; font-size: 90%; color: '.$rezColor.';">'.($summa-$need_summ).'</span><br>';
+					/*if (($summa-$need_summ-$summ4Remove != 0) && ($summ4Remove != 0)){
+						echo '
+							Расхождение: <span style="font-weight: bold; font-size: 90%; color: rgba(255, 0, 0, 0.86);">'.$summ4Remove.'</span>';
+					}*/
+					echo '
 						</li>';	
 						
 					echo '

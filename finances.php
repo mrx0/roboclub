@@ -31,18 +31,18 @@
 					$pageHeaderAnother = 'Все платежи, внесённые за этот месяц';
 					$link = '?m='.$month.'&y='.$year;
 					//$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}'";
-					$query = "SELECT * FROM `journal_finance` WHERE `create_time` BETWEEN '{$firstday}' AND '{$lastday}' ";
+					$query = "SELECT * FROM `journal_finance` WHERE `create_time` BETWEEN '{$firstday}' AND '{$lastday}' ORDER BY `filial`, `create_time`";
 				}else{
 					$pageHeader = 'Все платежи, внесённые за этот месяц';
 					$pageHeaderAnother = 'Все платежи, внесённые в этом месяце';
 					$link = '?in=1&m='.$month.'&y='.$year;
-					$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}'";
+					$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}' AND `type`<>'2' ORDER BY `filial`, `create_time`";
 				}
 			}else{
 				$pageHeader = 'Все платежи, внесённые за этот месяц';
 				$pageHeaderAnother = 'Все платежи, внесённые в этом месяце';
 				$link = '?in=1&m='.$month.'&y='.$year;
-				$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}'";
+				$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}' AND `type`<>'2' ORDER BY `filial`, `create_time`";
 			}
 
 			
@@ -172,27 +172,59 @@
 			//var_dump($journal);
 
 			if ($journal != 0){
+				
+				$currentFilial = 0;
+				$bgFilialColor = '';
+				
 				echo '
-							<li class="cellsBlock" style="font-weight:bold; width: auto;"">	
+							<li class="cellsBlock" style="font-weight:bold; width: auto;">	
+								<div class="cellPriority" style="text-align: center"></div>
 								<div class="cellName" style="text-align: center">Дата</div>
 								<div class="cellFullName" style="text-align: center">Полное имя</div>
 								<div class="cellName" style="text-align: center">Месяц/Год</div>
 								<div class="cellTime" style="text-align: center">Сумма</div>
 							</li>';
-							
-				for ($i = 0; $i < count($journal); $i++) { 
+				
+				$filialSumm = 0;
+					
+				for ($i = 0; $i < count($journal); $i++) {
+					if ($currentFilial != $journal[$i]['filial']){
+						$currentFilial = $journal[$i]['filial'];
+						$filial = SelDataFromDB('spr_office', $currentFilial, 'id');
+						$bgFilialColor = 'background-color: '.$filial[0]['color'];
+						//var_dump($filial);
+
+						echo '
+							<li class="cellsBlock" style="font-weight: bold; width: auto;">	
+								<div class="cellName" style=" width: 630px; text-align: left; background-color: '.$filial[0]['color'].';">'.$filial[0]['name'].'</div>
+							</li>';
+					}
+					
 					$backSummColor = '';
 					if ($journal[$i]['type'] == 2){
 						$backSummColor = "background-color: rgba(0, 201, 255, 0.5)";
 					}
 				
 					echo '
-							<li class="cellsBlock cellsBlockHover" style="width: auto;"">	
+							<li class="cellsBlock cellsBlockHover" style="width: auto;">
+								<div class="cellPriority" style="text-align: center; '.$bgFilialColor.'"></div>
 								<a href="finance.php?id='.$journal[$i]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal[$i]['create_time']).'</a>
 								<a href="client.php?id='.$journal[$i]['client'].'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal[$i]['client'], 'user_full').'</a>
 								<div class="cellName" style="text-align: center">'.$monthsName[$journal[$i]['month']].'/'.$journal[$i]['year'].'</div>
 								<div class="cellTime" style="text-align: center; font-size: 110%; font-weight: bold; '.$backSummColor.'">'.$journal[$i]['summ'].'</div>
 							</li>';
+							
+					if (!isset($journal[$i+1]['filial']) || ($currentFilial != $journal[$i+1]['filial'])){
+						$filialSumm += $journal[$i]['summ'];
+						echo '
+							<li class="cellsBlock" style="font-weight: bold; width: auto;">	
+								<div class="cellName" style=" width: 630px; text-align: right;">Итого: <span style="font-size: 130%; color: red;"><i>'.$filialSumm.'</i></span> руб.</div>
+							</li>';
+						$filialSumm = 0;
+					}else{
+						$filialSumm += $journal[$i]['summ'];
+					}
+							
 				}
 				
 

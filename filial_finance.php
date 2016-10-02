@@ -95,7 +95,9 @@
 					<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
 						<div class="cellPriority" style="text-align: center"></div>
 						<div class="cellOffice" style="width: 180px; text-align: center">Филиал</div>
-						<div class="cellText" style="text-align: center">Остаток</div>
+						<div class="cellText" style="text-align: center; width: 140px; min-width: 140px;">Остаток</div>
+						<div class="cellText" style="text-align: center; width: 140px; min-width: 140px;">За этот месяц</div>
+						<div class="cellText" style="text-align: center; width: 140px; min-width: 140px;">Ам. взносы</div>
 					</li>';
 		
 			include_once 'DBWork.php';
@@ -107,7 +109,9 @@
 			if ($filials !=0){
 				for ($i = 0; $i < count($filials); $i++) {
 					
-					$summa = 0;
+					$summaIn = 0;
+					$summaFor = 0;
+					$summaAmort = 0;
 					
 					//хочу получить все платежи этого филиала за указанный месяц
 					require 'config.php';	
@@ -132,12 +136,46 @@
 					if ($number != 0){
 						while ($arr = mysql_fetch_assoc($res)){
 							array_push($journal_fin, $arr);
-							$summa = $summa + $arr['summ'];
+							$summaIn = $summaIn + $arr['summ'];
 						}
 					}else{
 						//$journal_fin = 0;
 					}
-					//var_dump($summa);
+					//var_dump($summaIn);
+
+					//Оплаты за этот месяц
+					$arr = array();
+					$journal_fin = array();
+					
+					$query = "SELECT `summ` FROM `journal_finance` WHERE `filial` = '{$filials[$i]['id']}' AND `month`= '{$month}' AND `year`='{$year}' AND `type`<>'2'";
+					$res = mysql_query($query) or die(mysql_error());
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							array_push($journal_fin, $arr);
+							$summaFor = $summaFor + $arr['summ'];
+						}
+					}else{
+						//$journal_fin = 0;
+					}
+					//var_dump($summaFor);
+
+					//Амотризационные в этом месяце
+					$arr = array();
+					$journal_fin = array();
+					
+					$query = "SELECT `summ` FROM `journal_finance` WHERE `filial` = '{$filials[$i]['id']}' AND `month`= '{$month}' AND `year`='{$year}' AND `type`='2'";
+					$res = mysql_query($query) or die(mysql_error());
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							array_push($journal_fin, $arr);
+							$summaAmort = $summaAmort + $arr['summ'];
+						}
+					}else{
+						//$journal_fin = 0;
+					}
+					//var_dump($summaAmort);
 
 					$result_html = '';
 					
@@ -153,7 +191,9 @@
 								<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto; text-align: right;">
 									<div class="cellPriority" style="text-align: center; background-color: '.$filials[$i]['color'].';"></div>
 									<div class="cellOffice" style="width: 180px; text-align: center;'.$bg_color.'" id="4filter"><a href="filial.php?id='.$filials[$i]['id'].'" class="ahref">'.$filials[$i]['name'].'</a></div>
-									<div class="cellText" style="text-align: right;'.$bg_color.'">'.$summa.' руб.</div>
+									<div class="cellText" style="text-align: right;'.$bg_color.'; width: 140px; min-width: 140px;">'.$summaIn.' руб.</div>
+									<div class="cellText" style="text-align: right;'.$bg_color.'; width: 140px; min-width: 140px;">'.$summaFor.' руб.</div>
+									<div class="cellText" style="text-align: right;'.$bg_color.'; width: 140px; min-width: 140px;">'.$summaAmort.' руб.</div>
 								</li>';
 								
 					if ($filials[$i]['close'] == 0){
