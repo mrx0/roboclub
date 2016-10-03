@@ -302,6 +302,7 @@
 							<li class="cellsBlock cellsBlockHover" style="width: auto;"">	
 								<a href="client.php?id='.$journal[$i]['client'].'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal[$i]['client'], 'user_full').'</a>
 								<a href="client_finance.php?client='.$journal[$i]['client'].'" class="cellName ahref" style="text-align: center; font-size: 110%; font-weight: bold;  color: '.$rezColor.'">'.$znak.''.($journal[$i]['SUM(`summ`)'] - $need_summ).' <i class="fa fa-rub"></i></a>
+								<a href="finance_remove2.php?client='.$journal[$i]['client'].'&m='.$month.'&y='.$year.'&summ='.($journal[$i]['SUM(`summ`)'] - $need_summ).'" class="cellCosmAct ahref" style="color: #999; font-size: 100%; font-weight: bold; width: 30px; min-width: 30px;"><i class="fa fa-arrow-right"></i> <i class="fa fa-rub"></i></a>
 							</li>';
 					}
 				}
