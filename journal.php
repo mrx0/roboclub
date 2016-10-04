@@ -506,14 +506,42 @@
 												}else{
 												}
 												
-												//!!!Смотрим переносы
+												//Смотрим переносы ИЗ ЭТОГО месяца
+												$arr = array();
+												$journal_rem_last = array();
+												
+												//Общая внесённая сумма
+												$summaRemLast = 0;
+
+												$query = "SELECT * FROM `journal_finance_rem` WHERE `last_month` = '{$month}' AND `last_year` = '{$year}' AND `client`='".$uch_arr[$i]['id']."'";
+												$res = mysql_query($query) or die(mysql_error());
+												$number = mysql_num_rows($res);
+												if ($number != 0){
+													while ($arr = mysql_fetch_assoc($res)){
+														array_push($journal_rem_last, $arr);
+													}
+												}else{
+													$journal_rem = 0;
+												}
+												var_dump($journal_rem_last);
+
+												if ($journal_rem_last != 0){
+													for ($k = 0; $k < count($journal_rem_last); $k++) { 
+														if ($journal_rem_last[$k]['type'] != 2){
+															$summaRemLast += $journal_rem_last[$k]['summ'];
+														}
+													}
+												}else{
+												}
+												
+												//Смотрим переносы В ЭТОТ месяца
 												$arr = array();
 												$journal_rem = array();
 												
 												//Общая внесённая сумма
 												$summaRem = 0;
 
-												$query = "SELECT * FROM `journal_finance_rem` WHERE ((`last_month` = '{$month}' AND  `last_year` = '{$year}') OR (`month` = '{$month}' AND  `year` = '{$year}')) AND `client`='".$uch_arr[$i]['id']."'";
+												$query = "SELECT * FROM `journal_finance_rem` WHERE `month` = '{$month}' AND `year` = '{$year}' AND `client`='".$uch_arr[$i]['id']."'";
 												$res = mysql_query($query) or die(mysql_error());
 												$number = mysql_num_rows($res);
 												if ($number != 0){
@@ -523,7 +551,7 @@
 												}else{
 													$journal_rem = 0;
 												}
-												//var_dump($journal_rem);
+												var_dump($journal_rem);
 
 												if ($journal_rem != 0){
 													for ($k = 0; $k < count($journal_rem); $k++) { 
@@ -533,6 +561,7 @@
 													}
 												}else{
 												}
+												
 												
 												//Разница между потрачено и внесено
 												if ($summa - $need_summ > 0){

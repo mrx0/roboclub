@@ -17,6 +17,8 @@ if (isset($_POST['age']))
     $arrayFields['age'] = $_POST['age'];
 if (isset($_POST['summ']))
     $arrayFields['summ'] = $_POST['summ'];
+if (isset($_POST['summrem']))
+    $arrayFields['summrem'] = $_POST['summrem'];
 if (isset($_POST['admSettings'])){
 	//var_dump($_POST);
 	foreach($_POST['admSettings'] as $key => $value){
@@ -52,6 +54,12 @@ foreach($arrayFields as $fieldName => $oneField){
 			$errorContainer[$fieldName] = 'В этом поле ошибка';
 		}
 		if ($oneField <= 0){
+			$errorContainer[$fieldName] = 'В этом поле ошибка';
+		}
+	}
+	
+	if (isset($_POST['summrem'])){
+		if (!is_numeric($oneField)) {
 			$errorContainer[$fieldName] = 'В этом поле ошибка';
 		}
 	}

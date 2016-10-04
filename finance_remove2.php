@@ -59,8 +59,8 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft" style="font-size: 80%">Сумма переноса <i class="fa fa-rub"></i></div>
 									<div class="cellRight">
-										<input type="text" size="50" name="summ" id="summ" placeholder="0" value="'.$_GET['summ'].'" autocomplete="off">
-										<label id="summ_error" class="error"></label>
+										<input type="text" size="50" name="summrem" id="summrem" placeholder="0" value="'.$_GET['summ'].'" autocomplete="off">
+										<label id="summrem_error" class="error"></label>
 									</div>
 								</div>
 								
@@ -152,7 +152,7 @@
 										url: "ajax_test.php",
 										// какие данные будут переданы
 										data: {
-											summ:document.getElementById("summ").value,
+											summrem:document.getElementById("summrem").value,
 										},
 										// тип передачи данных
 										dataType: "json",
@@ -171,12 +171,12 @@
 														
 														filial:document.getElementById("filial").value,
 														
-														summ: document.getElementById("summ").value,
+														summrem: document.getElementById("summrem").value,
 														
 														comment: document.getElementById("comment").value,
-														last_month: '.$month.',
+														last_month: "'.$month.'",
 														month: document.getElementById("month").value,
-														last_year: '.$year.',
+														last_year: "'.$year.'",
 														year: document.getElementById("year").value,
 														
 														session_id:'.$_SESSION['id'].',
