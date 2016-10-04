@@ -506,6 +506,34 @@
 												}else{
 												}
 												
+												//!!!Смотрим переносы
+												$arr = array();
+												$journal_rem = array();
+												
+												//Общая внесённая сумма
+												$summaRem = 0;
+
+												$query = "SELECT * FROM `journal_finance_rem` WHERE ((`last_month` = '{$month}' AND  `last_year` = '{$year}') OR (`month` = '{$month}' AND  `year` = '{$year}')) AND `client`='".$uch_arr[$i]['id']."'";
+												$res = mysql_query($query) or die(mysql_error());
+												$number = mysql_num_rows($res);
+												if ($number != 0){
+													while ($arr = mysql_fetch_assoc($res)){
+														array_push($journal_rem, $arr);
+													}
+												}else{
+													$journal_rem = 0;
+												}
+												//var_dump($journal_rem);
+
+												if ($journal_rem != 0){
+													for ($k = 0; $k < count($journal_rem); $k++) { 
+														if ($journal_rem[$k]['type'] != 2){
+															$summaRem += $journal_rem[$k]['summ'];
+														}
+													}
+												}else{
+												}
+												
 												//Разница между потрачено и внесено
 												if ($summa - $need_summ > 0){
 													
