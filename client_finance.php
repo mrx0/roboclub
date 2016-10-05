@@ -551,7 +551,7 @@
 					}	
 
 					//остаток
-					$summ4Remove = $summa-$need_summ;
+					$summ4Remove = $thisMonthRazn;
 					
 					echo '
 						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 10px;">

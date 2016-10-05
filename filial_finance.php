@@ -95,7 +95,7 @@
 					<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
 						<div class="cellPriority" style="text-align: center"></div>
 						<div class="cellOffice" style="width: 180px; text-align: center">Филиал</div>
-						<div class="cellText" style="text-align: center; width: 140px; min-width: 140px;">Остаток</div>
+						<!--<div class="cellText" style="text-align: center; width: 140px; min-width: 140px;">Остаток</div>-->
 						<div class="cellText" style="text-align: center; width: 140px; min-width: 140px;">За этот месяц</div>
 						<div class="cellText" style="text-align: center; width: 140px; min-width: 140px;">Ам. взносы</div>
 					</li>';
@@ -191,7 +191,7 @@
 								<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto; text-align: right;">
 									<div class="cellPriority" style="text-align: center; background-color: '.$filials[$i]['color'].';"></div>
 									<div class="cellOffice" style="width: 180px; text-align: center;'.$bg_color.'" id="4filter"><a href="filial.php?id='.$filials[$i]['id'].'" class="ahref">'.$filials[$i]['name'].'</a></div>
-									<div class="cellText" style="text-align: right;'.$bg_color.'; width: 140px; min-width: 140px;">'.$summaIn.' руб.</div>
+									<!--<div class="cellText" style="text-align: right;'.$bg_color.'; width: 140px; min-width: 140px;">'.$summaIn.' руб.</div>-->
 									<div class="cellText" style="text-align: right;'.$bg_color.'; width: 140px; min-width: 140px;">'.$summaFor.' руб.</div>
 									<div class="cellText" style="text-align: right;'.$bg_color.'; width: 140px; min-width: 140px;">'.$summaAmort.' руб.</div>
 								</li>';
