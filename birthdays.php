@@ -123,7 +123,13 @@
 			if (($clients['see_all'] == 1) || $god_mode){
 				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
 			}elseif ($clients['see_own'] == 1){
-				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' AND `id` IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` IN (SELECT `id` FROM `journal_groups` WHERE `worker`='{$_SESSION['id']}')) ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
+				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' AND 
+				(
+				`id` IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` IN (SELECT `id` FROM `journal_groups` WHERE `worker`='{$_SESSION['id']}'))
+				OR
+				`id` IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` IN (SELECT `group_id` FROM `journal_replacement` WHERE `user_id`='{$_SESSION['id']}'))
+				)
+				ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
 			}
 
 			$res = mysql_query($query) or die(mysql_error().'->'.$query);
@@ -170,6 +176,8 @@
 							</li>';
 
 				for ($i = 0; $i < count($clients_j); $i++) { 
+					$BgColorTodayBirth = '';
+				
 					if (isset($birth_j[$clients_j[$i]['id']])){
 						//if ($birth_j[$clients_j[$i]['id']] == 1){
 							$birthColor = ' background-color: rgba(46, 183, 3, 0.48);';
@@ -184,13 +192,14 @@
 					echo '
 								<div class="cellCosmAct" style="text-align: center; '.$birthColor.' border: medium none;">';
 					if (date("d.m") == date("d.m", $clients_j[$i]['birthday'])){
+						$BgColorTodayBirth = 'background-color: #ffa200';
 						echo '
 									<i class="fa fa-arrow-right"></i>';
 					}
 					echo '
 								</div>';
 					echo '
-								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
+								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter" style="'.$BgColorTodayBirth.'">'.$clients_j[$i]['full_name'].'</a>';
 					echo '
 								<div class="cellCosmAct" style="text-align: center">';
 					if ($clients_j[$i]['sex'] != 0){

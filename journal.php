@@ -638,22 +638,22 @@
 												$thisMonthRazn = $summa - $need_summ;
 												
 												//!!!!!Если есть какие-то перерасчеты
-												if ($summaRemLast + $summaRem != 0){
+												/*if ($summaRemLast + $summaRem != 0){
 													$rezColor = '#555';
 	
-													if ($summa - $need_summ - ($summaRemLast + $summaRem) < 0){
+													if ($thisMonthRazn  - ($summaRemLast + $summaRem) < 0){
 														$rezColor = 'rgba(255, 0, 0, 0.86);';
 													}
-													if ($summa - $need_summ - ($summaRemLast + $summaRem) > 0){
+													if ($thisMonthRazn  - ($summaRemLast + $summaRem) > 0){
 														$rezColor = 'rgba(9, 198, 31, 0.92);';
 													}	
 													echo '
 													<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 10px;">
 														Разница с учетом перерасчетов: <span style="font-weight: bold; font-size: 110%; color: '.$rezColor.'">'.($summa - $need_summ - ($summaRemLast + $summaRem)).'</span> руб.
 													</li>';
-												}
+												}*/
 												
-												if ($thisMonthRazn > 0){
+												if ($thisMonthRazn  - ($summaRemLast + $summaRem) > 0){
 													
 													$dopusk++;
 													
@@ -674,9 +674,9 @@
 												if (($finance['see_all'] == 1) || $god_mode){
 													echo '
 														<div id="" class="cellTime" style="text-align: right; width: 70px; min-width: 70px; '.$SummColor.'">
-															'.($thisMonthRazn).'
+															'.($thisMonthRazn  - ($summaRemLast + $summaRem)).'
 														</div>
-														<a href="client_finance.php?client='.$uch_arr[$i]['id'].'" class="cellTime ahref" style="text-align: center; width: 20px; min-width: 20px;"><i class="fa fa-rub"></i></a>';
+														<a href="client_finance.php?client='.$uch_arr[$i]['id'].'" class="cellTime ahref" style="text-align: center; width: 20px; min-width: 20px;" title="История"><i class="fa fa-rub"></i></a>';
 												}
 
 												echo '				
