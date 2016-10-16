@@ -250,8 +250,22 @@
 												
 												echo '
 													<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto;">	
-														<div class="cellPriority" style="text-align: center"></div>
-														<a href="client.php?id='.$uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$uch_arr[$i]['full_name'].'</a>';
+														<div class="cellPriority" style="text-align: center;"></div>
+														<a href="client.php?id='.$uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter" style="position: relative;">'.$uch_arr[$i]['full_name'];
+														
+												$query = "SELECT * FROM `comments` WHERE `dtable`='spr_clients' AND `parent`='{$uch_arr[$i]['id']}'";
+												$res = mysql_query($query) or die(mysql_error());
+												$number = mysql_num_rows($res);
+												if ($number != 0){
+													echo '
+															<div style="position: absolute; top: 0; right: 3px; color: rgb(247, 188, 50);">
+																<i class="fa fa-commenting" title="Есть комментарии"></i>
+															</div>';
+												}else{
+												}
+
+												echo '
+														</a>';
 												
 												$weekDaysArr = array();
 												//var_dump($weekDays);
@@ -683,6 +697,38 @@
 													</li>';
 											}
 											
+											//Номера упражнений
+											echo '
+													<li class="cellsBlock" style="font-weight: bold; width: auto; margin-top: 20px;">	
+														<div class="cellPriority" style="text-align: center;"></div>
+														<div class="cellFullName" style="text-align: center; color: #FF9900; font-weight: normal;">Упражнения</div>';
+											for ($i = 0; $i < count($weekDays); $i++) {
+												//echo $weekDaysArr[2];
+												
+												$weekDaysArr = explode('.', $weekDays[$i]);
+												
+												$query = "SELECT `descr` FROM `journal_exercize` WHERE `group_id` = '{$_GET['id']}' AND `day`= '{$weekDaysArr[2]}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+											
+												$res = mysql_query($query) or die(mysql_error());
+												$number = mysql_num_rows($res);
+												if ($number != 0){
+													$arr = mysql_fetch_assoc($res);
+													if (($arr['descr'] == '') || ($arr['descr'] == null)){
+														echo '<div id="'.$weekDaysArr[2].'" class="cellTime doExercize" style="text-align: center; width: 70px; min-width: 70px; color: #FF9900; cursor: pointer">';
+														echo '<i class="fa fa-dot-circle-o"></i>';
+													}else{
+														echo '<div id="'.$weekDaysArr[2].'" class="cellTime doExercize" style="text-align: center; width: 70px; min-width: 70px; color: #FF9900; cursor: pointer">';													
+														echo '<span style="font-weight: normal; color: #666; font-size: 80%;">'.$arr['descr'].'</span>';
+													}
+												}else{
+													echo '<div id="'.$weekDaysArr[2].'" class="cellTime doExercize" style="text-align: center; width: 70px; min-width: 70px; color: #FF9900; cursor: pointer">';
+													echo '<i class="fa fa-dot-circle-o"></i>';
+												}
+
+												echo '</div>';
+											}	
+											
+											
 										}else{
 											echo '<h3>В этой группе нет участников</h3>';
 											
@@ -733,8 +779,22 @@
 												
 												echo '
 														<li class="cellsBlock" style="font-weight: bold; width: auto;">	
-															<div class="cellPriority" style="text-align: center"></div>
-															<a href="client.php?id='.$us_id.'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $us_id, 'user_full').'</a>';
+															<div class="cellPriority" style="text-align: center;"></div>
+															<a href="client.php?id='.$us_id.'" class="cellFullName ahref" id="4filter" style="position: relative;">'.WriteSearchUser('spr_clients', $us_id, 'user_full');
+															
+												$query = "SELECT * FROM `comments` WHERE `dtable`='spr_clients' AND `parent`='{$us_id}'";
+												//var_dump ($query);
+												$res = mysql_query($query) or die(mysql_error());
+												$number = mysql_num_rows($res);
+												if ($number != 0){
+													echo '
+																<div style="position: absolute; top: 0; right: 3px; color: rgb(247, 188, 50);">
+																	<i class="fa fa-commenting" title="Есть комментарии"></i>
+																</div>';
+												}else{
+												}
+												echo '
+															</a>';
 													
 												$weekDaysArr = array();
 												//var_dump($weekDays);
@@ -771,7 +831,8 @@
 														$journal_ico = '-';
 														$journal_value = 0;
 													}
-													echo '<div id="'.$us_id.'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$us_id.', \''.$weekDays[$j].'\');">'.$journal_ico.'</div>';
+													//echo '<div id="'.$us_id.'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$us_id.', \''.$weekDays[$j].'\');">'.$journal_ico.'</div>';
+													echo '<div id="'.$us_id.'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'">'.$journal_ico.'</div>';
 													echo '<input type="hidden" id="'.$us_id.'_'.$weekDays[$j].'_value" class="journalItemVal" value="'.$journal_value.'">';
 												}									
 												
@@ -782,6 +843,8 @@
 											echo '
 													</ul>';
 										}
+										
+										mysql_close();
 										
 										echo '
 												</div>
@@ -905,6 +968,58 @@
 														}
 													});
 												}
+												
+												
+												var elems = document.getElementsByClassName("doExercize"), newInput;
+												for (var i=0; i<elems.length; i++) {
+													var el = elems[i];
+													el.addEventListener("click", function() {
+														var thisID = this.id;
+														
+														var  inputs = this.getElementsByTagName("input");
+														if (inputs.length > 0) return;
+														if (!newInput) {
+															newInput = document.createElement("input");
+															newInput.type = "text";
+															newInput.maxLength = 7;
+															newInput.setAttribute("size", 20);
+															newInput.style.width = "40px";
+															newInput.addEventListener("blur", function() {
+																if (newInput.value == ""){
+																	newInput.parentNode.innerHTML = "<i class=\"fa fa-dot-circle-o\"></i>";
+																}else{
+																	newInput.parentNode.innerHTML = "<span style=\"font-weight: normal; color: #666; font-size: 80%;\">"+newInput.value+"</span>";
+																}
+																ajax({
+																	url: "add_exercize_f.php",
+																	method: "POST",
+																	
+																	data:
+																	{
+																		group_id: '.$_GET['id'].',
+																		data: newInput.value,
+																		day: thisID,
+																		month: '.$month.',
+																		year: '.$year.',
+																		session_id: '.$_SESSION['id'].'
+																	},
+																	success: function(req){
+																		//document.getElementById("errror").innerHTML = req;
+																		//alert(req);
+																		//document.getElementById("errror").innerHTML = "";
+																		location.reload(true);
+																	}
+																});
+															}, false)
+														}
+
+														newInput.value = this.firstChild.innerHTML;
+														this.innerHTML = "";
+														this.appendChild(newInput);
+														newInput.focus();
+														newInput.select()
+													}.bind(el), false);
+												};
 												
 											</script>
 										';

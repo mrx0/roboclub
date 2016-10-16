@@ -138,7 +138,7 @@
 					
 				echo '
 					<div style="margin-top: 20px; border: 1px dotted green; padding: 10px; width: 400px; background-color: rgba(113, 226, 209, 0.2);">
-						<div style="font-size: 90%; color: #999; margin-bottom: 10px;">Комментарии</div>';
+						<div style="font-size: 90%; color: #999; margin-bottom: 10px;">Примечания</div>';
 
 				//отобразить комментарии
 				
@@ -147,16 +147,20 @@
 				//var_dump ($comments);	
 				
 				if ($comments != 0){
+					echo '
+						<div style="max-height: 300px; overflow-y: scroll;" id="commentsLog">';
 					foreach ($comments as $value){
 						echo '
-						<div style="border: 1px solid #CCC; border-radius: 5px; background-color: #EEE; padding: 10px; margin-bottom: 5px;">
-							<div style="font-size: 70%; border-bottom: 1px dotted #CCC; text-align: right;">
-								<a href="user.php?id='.$value['create_person'].'" class="ahref">'.WriteSearchUser('spr_workers',$value['create_person'], 'user').'</a><br>
-								<span style="font-size:80%;">'.date('d.m.y H:i', $value['create_time']).'</span>
-							</div>
-							<div style="margin-top: 5px;">'.nl2br($value['description']).'</div>
-						</div>';
+							<div style="border: 1px solid #CCC; border-radius: 5px; background-color: #EEE; padding: 10px; margin-bottom: 5px; width: 350px;">
+								<div style="font-size: 70%; border-bottom: 1px dotted #CCC; text-align: right;">
+									<a href="user.php?id='.$value['create_person'].'" class="ahref">'.WriteSearchUser('spr_workers',$value['create_person'], 'user').'</a><br>
+									<span style="font-size:80%;">'.date('d.m.y H:i', $value['create_time']).'</span>
+								</div>
+								<div style="margin-top: 5px;">'.nl2br($value['description']).'</div>
+							</div>';
 					}
+					echo '
+						</div>';
 				}				
 					
 				//оставить комментарий
@@ -164,7 +168,7 @@
 						<div style="margin-top: 20px;">
 							<form>
 								<div id="reqCom"></div>
-								<div><textarea name="t_s_comment" id="t_s_comment" cols="50" rows="3"></textarea></div>
+								<div><textarea name="t_s_comment" id="t_s_comment" cols="40" rows="3"></textarea></div>
 								<input type="button" class="b" value="Добавить" onclick="addComment()">
 							</form>
 						</div>
@@ -189,6 +193,9 @@
 								}
 							});
 						}
+						//Прокручиваем лог в конец
+						document.querySelector("#commentsLog").scrollTop = document.querySelector("#commentsLog").scrollHeight;
+						
 					</script>';
 			}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
