@@ -67,11 +67,13 @@
 				echo 
 								'</div>
 							</div>';
-				echo '					
+				if (($clients['see_all'] == 1) || $god_mode){
+					echo '					
 								<div class="cellsBlock2">
 									<div class="cellLeft">Контакты</div>
 									<div class="cellRight">'.$client[0]['contacts'].'</div>
 								</div>';
+				}
 				if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
 					echo '
 								<div class="cellsBlock2">
