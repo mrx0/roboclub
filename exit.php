@@ -13,7 +13,6 @@
 	//удаляем ему логин и id из кукисов
 	unset($_SESSION['login']);
 	unset($_SESSION['id']);
-	unset($_SESSION['journal_tooth_status_temp']);
 	unset($_SESSION['permissions']);
 	unset($_SESSION['filial']);
 	 
