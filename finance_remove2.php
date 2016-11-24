@@ -181,7 +181,7 @@
 														
 														session_id:'.$_SESSION['id'].',
 													},
-													success:function(data){document.getElementById("errrror").innerHTML=data;}
+													success:function(data){document.getElementById("status").innerHTML=data;}
 												})
 											// в случае ошибок в форме
 											}else{

@@ -67,11 +67,13 @@
 				echo 
 								'</div>
 							</div>';
-				echo '					
+				if (($clients['see_all'] == 1) || $god_mode){
+					echo '					
 								<div class="cellsBlock2">
 									<div class="cellLeft">Контакты</div>
 									<div class="cellRight">'.$client[0]['contacts'].'</div>
 								</div>';
+				}
 				if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
 					echo '
 								<div class="cellsBlock2">
@@ -134,7 +136,69 @@
 				}
 				echo '
 					</div>';
+					
+					
+				echo '
+					<div style="margin-top: 20px; border: 1px dotted green; padding: 10px; width: 400px; background-color: rgba(113, 226, 209, 0.2);">
+						<div style="font-size: 90%; color: #999; margin-bottom: 10px;">Примечания</div>';
 
+				//отобразить комментарии
+				
+				
+				$comments = SelDataFromDB('comments', 'spr_clients'.':'.$_GET['id'], 'parrent');
+				//var_dump ($comments);	
+				
+				if ($comments != 0){
+					echo '
+						<div style="max-height: 300px; overflow-y: scroll;" id="commentsLog">';
+					foreach ($comments as $value){
+						echo '
+							<div style="border: 1px solid #CCC; border-radius: 5px; background-color: #EEE; padding: 10px; margin-bottom: 5px; width: 350px;">
+								<div style="font-size: 70%; border-bottom: 1px dotted #CCC; text-align: right;">
+									<a href="user.php?id='.$value['create_person'].'" class="ahref">'.WriteSearchUser('spr_workers',$value['create_person'], 'user').'</a><br>
+									<span style="font-size:80%;">'.date('d.m.y H:i', $value['create_time']).'</span>
+								</div>
+								<div style="margin-top: 5px;">'.nl2br($value['description']).'</div>
+							</div>';
+					}
+					echo '
+						</div>';
+				}				
+					
+				//оставить комментарий
+				echo '
+						<div style="margin-top: 20px;">
+							<form>
+								<div id="reqCom"></div>
+								<div><textarea name="t_s_comment" id="t_s_comment" cols="40" rows="3"></textarea></div>
+								<input type="button" class="b" value="Добавить" onclick="addComment()">
+							</form>
+						</div>
+					</div>';
+				
+				echo '
+					<script type="text/javascript">
+						function addComment(){
+							ajax({
+								url:"add_comment_f.php",
+								method:"POST",
+								data:
+								{
+									id:'.$_GET['id'].',
+									t_s_comment:encodeURIComponent(document.getElementById("t_s_comment").value)
+								},
+								success: function(request){
+									document.getElementById("reqCom").innerHTML=request;
+									setTimeout(function () {
+										location.reload()
+									}, 500);
+								}
+							});
+						}
+						//Прокручиваем лог в конец
+						document.querySelector("#commentsLog").scrollTop = document.querySelector("#commentsLog").scrollHeight;
+						
+					</script>';
 			}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 			}

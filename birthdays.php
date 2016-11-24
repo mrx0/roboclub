@@ -123,7 +123,13 @@
 			if (($clients['see_all'] == 1) || $god_mode){
 				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
 			}elseif ($clients['see_own'] == 1){
-				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' AND `id` IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` IN (SELECT `id` FROM `journal_groups` WHERE `worker`='{$_SESSION['id']}')) ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
+				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' AND 
+				(
+				`id` IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` IN (SELECT `id` FROM `journal_groups` WHERE `worker`='{$_SESSION['id']}'))
+				OR
+				`id` IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` IN (SELECT `group_id` FROM `journal_replacement` WHERE `user_id`='{$_SESSION['id']}'))
+				)
+				ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
 			}
 
 			$res = mysql_query($query) or die(mysql_error().'->'.$query);
@@ -135,6 +141,7 @@
 			}else{
 				$clients_j = 0;
 			}
+			//var_dump($clients_j);
 			
 			if ($clients_j != 0){
 				
@@ -162,14 +169,16 @@
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 							<li class="cellsBlock" style="font-weight: bold; width: auto;">
 								<div class="cellCosmAct" style="text-align: center; border: medium none;"></div>
-								<div class="cellFullName" style="text-align: center">Полное имя</div>';
-			
-				echo '
+								<div class="cellName" style="text-align: center">Филиал</div>
+								<div class="cellName" style="text-align: center">Группа</div>
+								<div class="cellFullName" style="text-align: center">Полное имя</div>
 								<div class="cellCosmAct" style="text-align: center">Пол</div>
 								<div class="cellTime" style="width: 140px; text-align: center">Дата рождения</div>
 							</li>';
 
 				for ($i = 0; $i < count($clients_j); $i++) { 
+					$BgColorTodayBirth = '';
+				
 					if (isset($birth_j[$clients_j[$i]['id']])){
 						//if ($birth_j[$clients_j[$i]['id']] == 1){
 							$birthColor = ' background-color: rgba(46, 183, 3, 0.48);';
@@ -184,13 +193,51 @@
 					echo '
 								<div class="cellCosmAct" style="text-align: center; '.$birthColor.' border: medium none;">';
 					if (date("d.m") == date("d.m", $clients_j[$i]['birthday'])){
+						$BgColorTodayBirth = 'background-color: #ffa200';
 						echo '
 									<i class="fa fa-arrow-right"></i>';
 					}
 					echo '
 								</div>';
+					
 					echo '
-								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
+								<div class="cellName" style="text-align: center">';
+					$filials = SelDataFromDB('spr_office', $clients_j[$i]['filial'], 'offices');
+					if ($filials != 0){
+						echo '<a href="filial.php?id='.$filials[0]['id'].'" class="ahref">'.$filials[0]['name'].'</a>';	
+					}else{
+						echo 'Не указан филиал';
+					}
+					echo '
+								</div>';
+					
+					$group_val = '';
+					$group_color = '';
+					
+					$groups = SelDataFromDB('journal_groups_clients', $clients_j[$i]['id'], 'client');
+					if ($groups != 0){
+						//var_dump ($groups);
+						foreach($groups as $key => $value){
+							$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
+							if ($group != 0){
+								$group_val .= '<a href="group.php?id='.$value['group_id'].'" class="ahref" style="padding: 0 4px;">'.$group[0]['name'].'</a>';	
+								$group_color .= 'background-color: '.$group[0]['color'];
+							}else{
+								$group_val .= 'ошибка группы';
+							}
+						}
+					}else{
+						$group_val .= 'Не в группе';
+					}
+					
+					echo '
+								<div class="cellName" style="text-align: center; '.$group_color.'">';
+					echo $group_val;
+					echo '
+								</div>';
+								
+					echo '
+								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter" style="'.$BgColorTodayBirth.'">'.$clients_j[$i]['full_name'].'</a>';
 					echo '
 								<div class="cellCosmAct" style="text-align: center">';
 					if ($clients_j[$i]['sex'] != 0){
@@ -206,6 +253,7 @@
 					
 					echo '
 								</div>';
+								
 					if (($clients_j[$i]['birthday'] == "-1577934000") || ($clients_j[$i]['birthday'] == 0)){
 						$age = '';
 					}else{

@@ -15,7 +15,8 @@
 			if ((($_POST['last_year'] == $_POST['year']) && ($_POST['month'] <= $_POST['last_month'])) || ($_POST['year'] < $_POST['last_year'])){
 				echo '
 					<div class="query_neok">
-						Вы пытаетесь перенести средства в тот же месяц либо месяцами ранее.
+						Вы пытаетесь перенести средства в тот же месяц либо месяцами ранее.<br>
+						<a href="" class="b">Вернуться</a>
 					</div>';
 			}else{
 				$time = time();
@@ -45,6 +46,7 @@
 					<div class="query_ok">
 						<h3>Средства перенесены</h3>
 						<a href="remove.php?id='.$mysql_insert_id.'" class="b">Перенос</a>
+						<a href="client_finance.php?client='.$_POST['client'].'" class="b">История <i class="fa fa-rub"></i></a>
 					</div>';
 			}
 		}

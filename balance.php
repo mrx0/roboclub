@@ -255,8 +255,26 @@
 								$journal_spr++;
 								
 								//$need_cena = 0;
-								$need_cena = $settings['cena1'][$key_time]['value']/2;
-								$need_summ += $settings['cena1'][$key_time]['value']/2;
+								//$need_cena = $settings['cena1'][$key_time]['value']/2;
+								//$need_summ += $settings['cena1'][$key_time]['value']/2;
+								foreach($settings['cena1'] as $key_time => $value_time_arr){
+									//$need_cena = 0;
+									
+									//если только одно значение 
+									if (count($settings['cena1']) == 1){
+										$need_cena = $settings['cena1'][$key_time]['value']/2;
+										$need_summ += $settings['cena1'][$key_time]['value']/2;
+									}else{
+										//Если указанное в посещении время меньше чем текущее в цикле
+										if ($timeForPay < $key_time){
+											continue;
+										}else{
+											$need_cena = $settings['cena1'][$key_time]['value']/2;
+											$need_summ += $settings['cena1'][$key_time]['value']/2;
+											break;
+										}
+									}
+								}
 								
 							}elseif($value['status'] == 4){
 								
@@ -286,23 +304,151 @@
 					}else{
 					}
 					
+					//Смотрим переносы ИЗ ЭТОГО месяца
+					$arr = array();
+					$journal_rem_last = array();
+					
+					//Общая внесённая сумма
+					$summaRemLast = 0;
+
+					$query = "SELECT * FROM `journal_finance_rem` WHERE `last_month` = '{$month}' AND `last_year` = '{$year}' AND `client`='".$journal[$i]['client']."'";
+					$res = mysql_query($query) or die(mysql_error());
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							array_push($journal_rem_last, $arr);
+						}
+					}else{
+						$journal_rem_last = 0;
+					}
+					//var_dump($journal_rem_last);
+
+					if ($journal_rem_last != 0){
+						/*echo '
+							<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 10px; margin-top: 10px;">
+								Перерасчет <b>из</b> этого месяца в другой
+							</li>';
+						echo '
+							<li class="cellsBlock" style="font-weight: bold; width: auto;">	
+								<div class="cellName" style="text-align: center">Дата</div>
+								<div class="cellName" style="text-align: center">Имя</div>
+								<div class="cellName" style="text-align: center">Из месяц/год</div>
+								<div class="cellName" style="text-align: center">В месяц/год</div>
+								<div class="cellTime" style="text-align: center">Сумма</div>
+							</li>';*/
+						for ($k = 0; $k < count($journal_rem_last); $k++) {
+							
+							if ($journal_rem_last[$k]['summ'] < 0){
+								/*$SummColor = 'color: rgba(255, 0, 0, 0.86);';
+								$znak = 'долг:<br>';
+								$znak2 = '';*/
+							}elseif($journal_rem_last[$k]['summ'] > 0){
+								/*$SummColor = 'color: rgba(9, 198, 31, 0.92);';
+								$znak = 'избыток:<br>';
+								$znak2 = '+';*/
+							}else{
+							}
+							
+							/*echo '
+								<li class="cellsBlock cellsBlockHover" style="width: auto;">	
+									<a href="remove.php?id='.$journal_rem_last[$k]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal_rem_last[$k]['create_time']).'</a>
+									<a href="client.php?id='.$journal_rem_last[$k]['client'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal_rem_last[$k]['client'], 'user').'</a>
+									<div class="cellName" style="text-align: center">'.$monthsName[$journal_rem_last[$k]['last_month']].'/'.$journal_rem_last[$k]['last_year'].'</div>
+									<div class="cellName" style="text-align: center">'.$monthsName[$journal_rem_last[$k]['month']].'/'.$journal_rem_last[$k]['year'].'</div>
+									<div class="cellTime" style="text-align: center; font-size: 110%;">'.$znak.' <span style="'.$SummColor.' font-weight: bold;">'.$znak2.$journal_rem_last[$k]['summ'].'</span></div>
+								</li>';*/
+						
+							//Если перерасчет сделан ИЗ этого месяца
+							if ($month == $journal_rem_last[$k]['month']){				
+								$summaRemLast -= $journal_rem_last[$k]['summ'];
+							}else{
+								$summaRemLast += $journal_rem_last[$k]['summ'];
+							}
+						}
+					}else{
+					}
+											
+					//Смотрим переносы В ЭТОТ месяца
+					$arr = array();
+					$journal_rem = array();
+					
+					//Общая внесённая сумма
+					$summaRem = 0;
+
+					$query = "SELECT * FROM `journal_finance_rem` WHERE `month` = '{$month}' AND `year` = '{$year}' AND `client`='".$journal[$i]['client']."'";
+					$res = mysql_query($query) or die(mysql_error());
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							array_push($journal_rem, $arr);
+						}
+					}else{
+						$journal_rem = 0;
+					}
+					//var_dump($journal_rem);
+
+					if ($journal_rem != 0){
+						/*echo '
+							<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 10px; margin-top: 10px;">
+								Перерасчет <b>в</b> этот месяца из другого
+							</li>';
+						echo '
+							<li class="cellsBlock" style="font-weight: bold; width: auto;">	
+								<div class="cellName" style="text-align: center">Дата</div>
+								<div class="cellName" style="text-align: center">Имя</div>
+								<div class="cellName" style="text-align: center">Из месяц/год</div>
+								<div class="cellName" style="text-align: center">В месяц/год</div>
+								<div class="cellTime" style="text-align: center">Сумма</div>
+							</li>';*/
+						for ($k = 0; $k < count($journal_rem); $k++) { 
+						
+							if ($journal_rem[$k]['summ'] < 0){
+								/*$SummColor = 'color: rgba(255, 0, 0, 0.86);';
+								$znak = 'долг:<br>';
+								$znak2 = '';*/
+							}elseif($journal_rem[$k]['summ'] > 0){
+								/*$SummColor = 'color: rgba(9, 198, 31, 0.92);';
+								$znak = 'избыток:<br>';
+								$znak2 = '+';*/
+							}else{
+							}
+						
+							/*echo '
+								<li class="cellsBlock cellsBlockHover" style="width: auto;">	
+									<a href="remove.php?id='.$journal_rem[$k]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal_rem[$k]['create_time']).'</a>
+									<a href="client.php?id='.$journal_rem[$k]['client'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal_rem[$k]['client'], 'user').'</a>
+									<div class="cellName" style="text-align: center">'.$monthsName[$journal_rem[$k]['last_month']].'/'.$journal_rem[$k]['last_year'].'</div>
+									<div class="cellName" style="text-align: center">'.$monthsName[$journal_rem[$k]['month']].'/'.$journal_rem[$k]['year'].'</div>
+									<div class="cellTime" style="text-align: center; font-size: 110%;">'.$znak.' <span style="'.$SummColor.' font-weight: bold;">'.$znak2.$journal_rem[$k]['summ'].'</span></div>
+								</li>';*/
+							//Если перерасчет сделан В этот месяц
+							if ($month == $journal_rem[$k]['month']){				
+								$summaRem -= $journal_rem[$k]['summ'];
+							}else{
+								$summaRem += $journal_rem[$k]['summ'];
+							}
+						}
+					}else{
+					}
+					
 					$rezColor = '';
 					$znak = '';
 					
-					if ($journal[$i]['SUM(`summ`)'] - $need_summ < 0){
+					if ($journal[$i]['SUM(`summ`)'] - $need_summ - ($summaRemLast + $summaRem) < 0){
 						$rezColor = 'rgba(255, 0, 0, 0.86);';
-					}elseif($journal[$i]['SUM(`summ`)'] - $need_summ > 0){
+					}elseif($journal[$i]['SUM(`summ`)'] - $need_summ - ($summaRemLast + $summaRem) > 0){
 						$rezColor = 'rgba(9, 198, 31, 0.92);';
 						$znak = '+';
 					}else{
 					}
 					
-					if ($journal[$i]['SUM(`summ`)'] - $need_summ != 0){
+					if ($journal[$i]['SUM(`summ`)'] - $need_summ - ($summaRemLast + $summaRem) != 0){
 						echo '
 							<li class="cellsBlock cellsBlockHover" style="width: auto;"">	
 								<a href="client.php?id='.$journal[$i]['client'].'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal[$i]['client'], 'user_full').'</a>
 								<a href="client_finance.php?client='.$journal[$i]['client'].'" class="cellName ahref" style="text-align: center; font-size: 110%; font-weight: bold;  color: '.$rezColor.'">'.$znak.''.($journal[$i]['SUM(`summ`)'] - $need_summ).' <i class="fa fa-rub"></i></a>
-								<a href="finance_remove2.php?client='.$journal[$i]['client'].'&m='.$month.'&y='.$year.'&summ='.($journal[$i]['SUM(`summ`)'] - $need_summ).'" class="cellCosmAct ahref" style="color: #999; font-size: 100%; font-weight: bold; width: 30px; min-width: 30px;"><i class="fa fa-arrow-right"></i> <i class="fa fa-rub"></i></a>
+								<a href="client_finance.php?client='.$journal[$i]['client'].'" class="cellCosmAct ahref" style="text-align: center; width: 20px; min-width: 20px; font-size: 110%;" title="История"><i class="fa fa-rub"></i></a>
+								<a href="finance_remove2.php?client='.$journal[$i]['client'].'&m='.$month.'&y='.$year.'&summ='.($journal[$i]['SUM(`summ`)'] - $need_summ).'" class="cellCosmAct ahref" style="color: #999; font-size: 100%; font-weight: bold; width: 30px; min-width: 30px;" title="Перерасчет"><i class="fa fa-arrow-right"></i></a>
 							</li>';
 					}
 				}

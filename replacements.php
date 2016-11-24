@@ -53,7 +53,7 @@
 					
 					if (($groups['edit'] == 1) || $god_mode){
 						echo '
-									<div id="delReplacementFromGroup" replacementid="'.$j_replacements[0]['id'].'" class="cellCosmAct delReplacementFromGroup" style="text-align: center">
+									<div id="delReplacementFromGroup" replacementid="'.$j_replacements[$i]['id'].'" class="cellCosmAct delReplacementFromGroup" style="text-align: center">
 										<i class="fa fa-minus" style="color: red; cursor: pointer;"></i>
 									</div>';
 					}

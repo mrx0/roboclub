@@ -181,6 +181,7 @@
 				echo '
 							<li class="cellsBlock" style="font-weight:bold; width: auto;">	
 								<div class="cellPriority" style="text-align: center"></div>
+								<div class="cellCosmAct" style="text-align: center;"></div>
 								<div class="cellName" style="text-align: center">Дата</div>
 								<div class="cellFullName" style="text-align: center">Полное имя</div>
 								<div class="cellName" style="text-align: center">Месяц/Год</div>
@@ -200,16 +201,32 @@
 
 						echo '
 							<li class="cellsBlock" style="font-weight: bold; width: auto;">	
-								<div class="cellName" style=" width: 630px; text-align: left; background-color: '.$filial[0]['color'].';">'.$filial[0]['name'].'</div>
+								<div class="cellName" style=" width: 660px; text-align: left; background-color: '.$filial[0]['color'].';">'.$filial[0]['name'].'</div>
 							</li>';
 					}
 					
 					$backSummColor = '';
+					$mark = '';
+					$markClass = '';
+					$markColor = '';
+					
+					if ($journal[$i]['mark'] == 1){
+						$mark .= '<i class="fa fa-check"></i>';
+						$markClass .= ' markChecked';
+						$markColor .= ' background-color: rgba(46, 183, 3, 0.48);';
+					}else{
+						$mark .= '<i class="fa fa-dot-circle-o"></i>';
+					}
+					
+					
 					if ($journal[$i]['type'] == 2){
 						$backSummColor = "background-color: rgba(0, 201, 255, 0.5)";
 						$filialAmortStr .= '
-							<li class="cellsBlock cellsBlockHover" style="width: auto;">
+							<li class="cellsBlock cellsBlockHover'.$markClass.'" style="width: auto;">
 								<div class="cellPriority" style="text-align: center; '.$bgFilialColor.'"></div>
+								<div class="cellCosmAct" style="text-align: center; font-size: 110%; cursor: pointer;'.$markColor.'" onclick="Ajax_markFinance('.$journal[$i]['id'].')">
+									'.$mark.'
+								</div>
 								<a href="finance.php?id='.$journal[$i]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal[$i]['create_time']).'</a>
 								<a href="client.php?id='.$journal[$i]['client'].'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal[$i]['client'], 'user_full').'</a>
 								<div class="cellName" style="text-align: center">'.$monthsName[$journal[$i]['month']].'/'.$journal[$i]['year'].'</div>
@@ -218,8 +235,11 @@
 					}else{
 					
 						echo '
-								<li class="cellsBlock cellsBlockHover" style="width: auto;">
+								<li class="cellsBlock cellsBlockHover'.$markClass.'" style="width: auto;">
 									<div class="cellPriority" style="text-align: center; '.$bgFilialColor.'"></div>
+									<div class="cellCosmAct" style="text-align: center; font-size: 110%; cursor: pointer;'.$markColor.'" onclick="Ajax_markFinance('.$journal[$i]['id'].')">
+										'.$mark.'
+									</div>
 									<a href="finance.php?id='.$journal[$i]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal[$i]['create_time']).'</a>
 									<a href="client.php?id='.$journal[$i]['client'].'" class="cellFullName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal[$i]['client'], 'user_full').'</a>
 									<div class="cellName" style="text-align: center">'.$monthsName[$journal[$i]['month']].'/'.$journal[$i]['year'].'</div>
@@ -274,7 +294,23 @@
 						window.location.replace("finances.php?m="+iWantThisMonth+"&y="+iWantThisYear);
 					}
 				</script>';
-			
+			echo '
+				<script type="text/javascript">
+					function Ajax_markFinance(finance){
+						ajax({
+							url: "add_finance_mark.php",
+							method: "POST",
+							
+							data:
+							{
+								finance: finance,
+							},
+							success: function(req){
+								location.reload(true);
+							}
+						});
+					}
+				</script>';
 			
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

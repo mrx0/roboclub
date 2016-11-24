@@ -243,8 +243,26 @@
 								$journal_spr++;
 								
 								//$need_cena = 0;
-								$need_cena = $settings['cena1'][$key_time]['value']/2;
-								$need_summ += $settings['cena1'][$key_time]['value']/2;
+								//$need_cena = $settings['cena1'][$key_time]['value']/2;
+								//$need_summ += $settings['cena1'][$key_time]['value']/2;
+								foreach($settings['cena1'] as $key_time => $value_time_arr){
+									//$need_cena = 0;
+									
+									//если только одно значение 
+									if (count($settings['cena1']) == 1){
+										$need_cena = $settings['cena1'][$key_time]['value']/2;
+										$need_summ += $settings['cena1'][$key_time]['value']/2;
+									}else{
+										//Если указанное в посещении время меньше чем текущее в цикле
+										if ($timeForPay < $key_time){
+											continue;
+										}else{
+											$need_cena = $settings['cena1'][$key_time]['value']/2;
+											$need_summ += $settings['cena1'][$key_time]['value']/2;
+											break;
+										}
+									}
+								}
 								
 							}elseif($value['status'] == 4){
 								$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
