@@ -79,7 +79,7 @@
 								<div class="cellRight">
 									<select name="month" id="month">';
 										foreach ($monthsName as $key => $value){
-											echo '<option value="'.$key.'" ', ($month === $key) ? 'selected' : '' ,'>'.$value.'</option>';
+											echo '<option value="'.$key.'" ', ($month == $key) ? 'selected' : '' ,'>'.$value.'</option>';
 										}
 					echo '
 									</select>
