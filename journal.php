@@ -706,9 +706,12 @@
 												//echo $weekDaysArr[2];
 												
 												$weekDaysArr = explode('.', $weekDays[$i]);
+
+												$month = (int)$month;
 												
 												$query = "SELECT `descr` FROM `journal_exercize` WHERE `group_id` = '{$_GET['id']}' AND `day`= '{$weekDaysArr[2]}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
-											
+												//var_dump($query);
+												
 												$res = mysql_query($query) or die(mysql_error());
 												$number = mysql_num_rows($res);
 												if ($number != 0){
