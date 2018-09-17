@@ -17,6 +17,8 @@ if (isset($_POST['age']))
     $arrayFields['age'] = $_POST['age'];
 if (isset($_POST['summ']))
     $arrayFields['summ'] = $_POST['summ'];
+if (isset($_POST['cost']))
+    $arrayFields['cost'] = $_POST['cost'];
 if (isset($_POST['summrem']))
     $arrayFields['summrem'] = $_POST['summrem'];
 if (isset($_POST['admSettings'])){
@@ -46,31 +48,48 @@ if (isset($_POST['sex']))
 foreach($arrayFields as $fieldName => $oneField){
 	
     if($oneField == '' || !isset($oneField) || ($oneField == '0')){
-        $errorContainer[$fieldName] = 'В этом поле ошибка';
+        $errorContainer[$fieldName] = 'В этом поле ошибка #1';
     }
 	
 	if (isset($_POST['summ'])){
-		if (!is_numeric($oneField)) {
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
-		if ($oneField <= 0){
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
+        if ($fieldName == 'summ') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка #2';
+            }
+            if ($oneField <= 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка #3';
+            }
+        }
 	}
 	
+	if (isset($_POST['cost'])){
+        if ($fieldName == 'cost') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка #4';
+            }
+            if ($oneField <= 0){
+                $errorContainer[$fieldName] = 'В этом поле ошибка #5';
+            }
+        }
+	}
+
 	if (isset($_POST['summrem'])){
-		if (!is_numeric($oneField)) {
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
+        if ($fieldName == 'summrem') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка #6';
+            }
+        }
 	}
 	
 	if (isset($_POST['admSettings'])){
-		if (!is_numeric($oneField)) {
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
-		if ($oneField <= 0){
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
+        if ($fieldName == 'admSettings') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка #7';
+            }
+            if ($oneField <= 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка #8';
+            }
+        }
 	}
 }
  /*

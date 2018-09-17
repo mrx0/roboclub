@@ -145,7 +145,7 @@
                         beforeSend: function () {
                         },
                         success: function (res) {
-                            console.log (res);
+                            //console.log (res);
 
                             if(res.result == "success") {
                                 $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
@@ -162,9 +162,9 @@
                     })
                 } else {
                     // перебираем массив с ошибками
-                    for (var errorField in data.text_error) {
+                    for (var errorField in res.text_error) {
                         // выводим текст ошибок
-                        $('#' + errorField + '_error').html(data.text_error[errorField]);
+                        $('#' + errorField + '_error').html(res.text_error[errorField]);
                         // показываем текст ошибок
                         $('#' + errorField + '_error').show();
                         // обводим инпуты красным цветом
@@ -176,3 +176,86 @@
             }
         })
     }
+
+    //Добавить тариф
+    function Ajax_add_tarif() {
+
+        var type = document.querySelector('input[name="type"]:checked').value;
+        //console.log(type);
+
+        hideAllErrors();
+
+        var link = "ajax_test.php";
+
+        var reqData = {
+            name: $("#name").val(),
+            cost: $("#cost").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+            },
+            success: function (res) {
+                //console.log (res);
+                console.log (reqData);
+
+                if (res.result == "success") {
+                    //console.log (res.data);
+
+                    link = "add_tarif_f.php";
+
+                    reqData = {
+                        name: $("#name").val(),
+                        descr: $("#descr").val(),
+                        cost: $("#cost").val(),
+                        type: type
+                    };
+
+                    $.ajax({
+                        url: link,
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: reqData,
+                        cache: false,
+                        beforeSend: function () {
+                        },
+                        success: function (res) {
+                            //console.log (res);
+
+                            if(res.result == "success") {
+                                $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                                    '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Новый тариф добавлен</li>' +
+                                    '</ul>');
+                                setTimeout(function () {
+                                    window.location.replace('tarifs.php');
+                                }, 1000);
+                            }
+                            if(res.result == "error"){
+                                console.log(res);
+                            }
+                        }
+                    })
+                } else {
+                    // перебираем массив с ошибками
+                    for (var errorField in res.text_error) {
+                        // выводим текст ошибок
+                        $('#' + errorField + '_error').html(res.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#' + errorField + '_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+
+                }
+            }
+        })
+    }
+

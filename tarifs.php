@@ -1,153 +1,124 @@
 <?php
 
 //tarifs.php
-//Тариф
+//Тарифы
 
-	require_once 'header.php';
-	
-	if ($enter_ok){
-		require_once 'header_tags.php';
-		if ($god_mode){
-			
-			//Получим все тарифы
-            $tarifs_j = array();
+require_once 'header.php';
 
-            $msql_cnnct = ConnectToDB ();
+if ($enter_ok){
+    require_once 'header_tags.php';
+    if ($god_mode){
 
-            $query = "SELECT * FROM `tarifs`;";
+        //Получим все тарифы
+        $tarifs_j = array();
 
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $msql_cnnct = ConnectToDB ();
 
-            $number = mysqli_num_rows($res);
-            if ($number != 0){
-                while ($arr = mysqli_fetch_assoc($res)){
-                    array_push($tarifs_j, $arr);
-                }
+        //$query = "SELECT * FROM `spr_tarifs`;";
+
+        $query = "SELECT st.*, stt.name AS type_name FROM `spr_tarifs` st
+                            LEFT JOIN `spr_tarif_types` stt
+                            ON stt.id = st.type;";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($tarifs_j, $arr);
             }
-            var_dump ($tarifs_j);
+        }
+        //var_dump ($tarifs_j);
 
-            if (!empty($tarifs_j)){
 
-			
-			/*if ($settings !=0){
-				echo '
+        echo '
 					<div id="status">
 						<header>
-							<h2>Некоторые общие настройки</h2>
-							<span style="color: red; font-size: 90%;">Меняйте эти настройки очень внимательно.</span>
+                            <div class="nav">
+                                <a href="options.php" class="b">Настройки</a>
+                            </div>
+							<h2>Тарифы и сборы</h2>
+							<a href="add_tarif.php" class="b">Добавить</a>
 						</header>';
 
-				echo '
-						<div id="data">
-							<form action="settins_edit_f.php">';
+        echo '
+						<div id="data">';
 
-				for ($i = count($settings)-1; $i >= 0; $i--){
-					echo '
-								<div class="cellsBlock2">
-									<div class="cellLeft" style="font-size: 77%; font-weight:bold;">
-										'.$settings[$i]['name_ru'].'
-										<input type="hidden" class="settValRuName" name="'.$settings[$i]['name'].'" id="'.$settings[$i]['name'].'" value="'.$settings[$i]['name_ru'].'">
-									</div>
-									<div class="cellRight">
-										<input type="text" size="20" class="settVal" name="'.$settings[$i]['name'].'" id="'.$settings[$i]['name'].'" placeholder="0" value="'.$settings[$i]['value'].'" autocomplete="off">
-										<label id="'.$settings[$i]['name'].'_error" class="error"></label><br>
-										<span style="font-size: 70%;">Действие с <b style="color: rgba(0, 72, 245, 0.78)">'.date('d.m.y H:i', $settings[$i]['time']).'</b></span>
-									</div>
-								</div>';
-				}
+        if (!empty($tarifs_j)){
 
+            $archiv_tarifs = '';
 
-								
-				echo '
-								<div id="errror"></div>				
-								<input type="button" class="b" value="Добавить" onclick="Ajax_edit_settings ()">
-							</form>';	
-						echo '
+            echo '
+                            <ul style="margin-left:6px;">
+							    <li class="cellsBlock" style="font-weight:bold; background-color:#FEFEFE;">
+								    <div class="cellName" style="width: 300px; text-align: center; background-color: rgba(113, 255, 255, 0.4);">Название</div>
+								    <div class="cellText" style="text-align: center; background-color: rgba(113, 255, 255, 0.4);">Описание</div>
+								    <div class="cellName" style="text-align: center; background-color: rgba(113, 255, 255, 0.4);">Цена, руб.</div>
+								    <div class="cellName" style="width: 300px; text-align: center; background-color: rgba(113, 255, 255, 0.4);">Тип</div>
+								    <div class="cellName" style="text-align: center; background-color: rgba(113, 255, 255, 0.4);">Управление</div>
+								</li>';
+
+            foreach ($tarifs_j as $tarifs_item){
+                if ($tarifs_item['status'] != 9) {
+                    echo '
+                            <li class="cellsBlock cellsBlockHover">
+                                <div class="cellName" style="width: 300px; text-align: center; background-color:#FEFEFE;">
+                                    <b>'.$tarifs_item['name'].'</b>
+                                </div>
+                                <div class="cellText" style="text-align: left; background-color:#FEFEFE;">
+                                   '.$tarifs_item['descr'].'
+                                </div>
+                                <div class="cellName" style="text-align: center; background-color:#FEFEFE;">
+                                    '.$tarifs_item['cost'].'
+                                </div>
+								<div class="cellName" style="width: 300px; text-align: center; background-color:#FEFEFE;">
+								    <i>'.$tarifs_item['type_name'].'</i>
+								</div>
+								<div class="cellName" style="text-align: center; background-color:#FEFEFE;">
+								    ***
+								</div>
+                            </li>';
+                }else{
+                    $archiv_tarifs .= '
+                            <div class="cellsBlock2" style="margin: 5px;">
+                                <div class="cellLeft" style="font-size: 90%;">
+                                    '.$tarifs_item['name'] . '
+                                </div>
+                                <div class="cellRight">
+                                   '.$tarifs_item['descr'] . '
+                                </div>
+                                <div class="cellLeft" style="font-size: 90%; color: red;">
+                                    <i>Тариф в архиве</i>
+                                </div>
+                            </div>';
+                }
+
+            }
+
+            //var_dump(!empty($archiv_tarif_types));
+
+            if (!empty($archiv_tarifs)){
+
+                echo '<div style="font-size: 80%; margin: 15px 0 2px;">Типы, находящиеся в архиве</div>';
+
+                echo $archiv_tarifs;
+            }
+
+            echo '
 						
 						</div>
 					</div>';
-							
-					echo '
-						<script type="text/javascript">  
-							function Ajax_edit_settings() {
-								// убираем класс ошибок с инпутов
-								$(\'input\').each(function(){
-									$(this).removeClass(\'error_input\');
-								});
-								// прячем текст ошибок
-								$(\'.error\').hide();
-								 
-								var items = $(".settVal");
-								var items2 = $(".settValRuName");
-								var resJournalItems = {};
-								var resJournalItemsRuName = {};
-													
-								$.each(items, function(){
-									resJournalItems[this.id] = this.value;
-								});
-								
-								$.each(items2, function(){
-									resJournalItemsRuName[this.id] = this.value;
-								});
-								 
-								$.ajax({
-									// метод отправки 
-									type: "POST",
-									// путь до скрипта-обработчика
-									url: "ajax_test.php",
-									// какие данные будут переданы
-									data: {
-										admSettings: resJournalItems,
-									},
-									// тип передачи данных
-									dataType: "json",
-									// действие, при ответе с сервера
-									success: function(data){
-										// в случае, когда пришло success. Отработало без ошибок
-										if(data.result == \'success\'){   
-											//alert(\'форма корректно заполнена\');
-											ajax({
-												url:"settings_edit_f.php",
-												statbox:"status",
-												method:"POST",
-												data:
-												{
-													admSettings: JSON.stringify(resJournalItems),
-													admSettings2: JSON.stringify(resJournalItemsRuName)
-												},
-												success:function(data){
-													document.getElementById("status").innerHTML=data;
-												}
-											})
-										// в случае ошибок в форме
-										}else{
-											// перебираем массив с ошибками
-											for(var errorField in data.text_error){
-												// выводим текст ошибок 
-												$(\'#\'+errorField+\'_error\').html(data.text_error[errorField]);
-												// показываем текст ошибок
-												$(\'#\'+errorField+\'_error\').show();
-												// обводим инпуты красным цветом
-											   // $(\'#\'+errorField).addClass(\'error_input\');                      
-											}
-											document.getElementById("errror").innerHTML=\'<span style="color: red">Ошибка, что-то заполнено не так.</span>\'
-										}
-									}
-								});
-							};  
-							  
-						</script> ';*/
-							
-			}else{
-				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-			}
-		}else{
-			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
-		}
-	}else{
-		header("location: enter.php");
-	}	
-		
-	require_once 'footer.php';
+
+        }else{
+            echo '<h1>В базе ничего нет</h1>';
+        }
+    }else{
+        echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+    }
+}else{
+    header("location: enter.php");
+}
+
+require_once 'footer.php';
 
 ?>

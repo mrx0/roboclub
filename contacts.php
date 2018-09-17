@@ -28,6 +28,8 @@
 			}
 			if ($contacts != 0){
 
+                $fired_contacts = '';
+
 				echo '
 					<p style="margin: 5px 0; padding: 2px;">
 						Фильтр: 
@@ -43,7 +45,10 @@
 								<div class="cellName" style="text-align: center">Пароль</div>
 							</li>';
 
-				for ($i = 0; $i < count($contacts); $i++) { 
+				for ($i = 0; $i < count($contacts); $i++) {
+
+				    $item = '';
+
 					if ($contacts[$i]['permissions'] != '777'){
 						$permissions = SearchInArray($arr_permissions, $contacts[$i]['permissions'], 'name');
 						//var_dump($permissions);
@@ -53,23 +58,45 @@
 						}else{
 							$cl_color = '';
 						}
-						
-						echo '
+
+                        $item .= '
 								<li class="cellsBlock cellsBlockHover">
-									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref" id="4filter" style="'.$cl_color.'">'.$contacts[$i]['full_name'].'</a>
-									<div class="cellOffice" style="'.$cl_color.'">', $permissions != '0' ? $permissions : '-' ,'</div>
-									<div class="cellText" style="'.$cl_color.'">'.$contacts[$i]['contacts'].'</div>
-									<div class="cellName" style="text-align: center; '.$cl_color.'">'.$contacts[$i]['login'].'</div>';
-						if ($god_mode){			
-							echo '
-									<div class="cellName" style="text-align: center; '.$cl_color.'">'.$contacts[$i]['password'].'</div>';
-						}else{
-							echo '<div class="cellName" style="text-align: center; '.$cl_color.'">****</div>';
-						}
-						echo '
+									<a href="user.php?id=' . $contacts[$i]['id'] . '" class="cellFullName ahref" id="4filter" style="' . $cl_color . '">' . $contacts[$i]['full_name'] . '</a>
+									<div class="cellOffice" style="' . $cl_color . '">';
+
+						if ($permissions != '0'){
+                            $item .= $permissions;
+                        }else{
+                            $item .= '-';
+                        }
+
+                         $item .=             '
+                                    </div>
+									<div class="cellText" style="' . $cl_color . '">' . $contacts[$i]['contacts'] . '</div>
+                                    <div class="cellName" style="text-align: center; ' . $cl_color . '">' . $contacts[$i]['login'] . '</div>';
+                        if ($god_mode) {
+                            $item .= '
+                                        <div class="cellName" style="text-align: center; ' . $cl_color . '">' . $contacts[$i]['password'] . '</div>';
+                        } else {
+                            $item .= '<div class="cellName" style="text-align: center; ' . $cl_color . '">****</div>';
+                        }
+						$item .= '
 								</li>';
+
+                        if ($contacts[$i]['fired'] != '1') {
+                            echo $item;
+                        }else{
+                            $fired_contacts .= $item;
+                        }
+
 					}
 				}
+
+                //отдельно рисуем уволенных
+                if (!empty($fired_contacts)){
+                    echo $fired_contacts;
+                }
+
 			}else{
 				echo '<h1>Нечего показывать.</h1><a href="index.php">На главную</a>';
 			}

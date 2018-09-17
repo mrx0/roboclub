@@ -1,7 +1,7 @@
 <?php
 
 //add_tarif.php
-//Добавить тариф
+//Добавить тип тарифов и сборов
 
 	require_once 'header.php';
 	
@@ -13,6 +13,9 @@
 			echo '
 				<div id="status">
 					<header>
+                        <div class="nav">
+                            <a href="tarif_types.php" class="b">Все типы тарифов и сборов</a>
+                        </div>
 						<h2>Добавить тип тарифа</h2>
 						Заполните поля
 					</header>';
