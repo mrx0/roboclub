@@ -1,7 +1,7 @@
 <?php
 
-//client_edit.php
-//Редактирование карточки клиента
+//settins.php
+//
 
 	require_once 'header.php';
 	

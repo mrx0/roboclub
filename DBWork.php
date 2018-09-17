@@ -3,6 +3,23 @@
 ///include_once 'writen.php';
 ///WriteToFile('1.TXT', $query);
 
+    //Подключение к БД MySQl
+    function ConnectToDB () {
+        require 'config.php';
+
+        $msql_cnnct = mysqli_connect($hostname, $username, $db_pass, $dbName) or die("Не возможно создать соединение ");
+        mysqli_query($msql_cnnct, "SET NAMES 'utf8'");
+
+        return $msql_cnnct;
+    }
+
+    //Отключение от БД MySQl
+    function CloseDB ($msql_cnnct) {
+
+        mysqli_close($msql_cnnct);
+
+    }
+
 	//Логирование.
 	function AddLog ($ip, $creator, $description_old, $description_new){
 		require 'config.php';

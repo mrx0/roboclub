@@ -1,7 +1,7 @@
 <?php
 
-//client_edit.php
-//Редактирование карточки клиента
+//tarifs.php
+//Тариф
 
 	require_once 'header.php';
 	
@@ -9,10 +9,27 @@
 		require_once 'header_tags.php';
 		if ($god_mode){
 			
-			$settings = SelDataFromDB('spr_settings', '', '');
-			//var_dump($settings);
+			//Получим все тарифы
+            $tarifs_j = array();
+
+            $msql_cnnct = ConnectToDB ();
+
+            $query = "SELECT * FROM `tarifs`;";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($tarifs_j, $arr);
+                }
+            }
+            var_dump ($tarifs_j);
+
+            if (!empty($tarifs_j)){
+
 			
-			if ($settings !=0){
+			/*if ($settings !=0){
 				echo '
 					<div id="status">
 						<header>
@@ -119,7 +136,7 @@
 								});
 							};  
 							  
-						</script> ';	
+						</script> ';*/
 							
 			}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

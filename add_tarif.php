@@ -1,21 +1,22 @@
 <?php
 
-//+++add_client.php
-//Добавить клиента
+//add_tarif.php
+//Добавить тариф
 
 	require_once 'header.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		if (($clients['add_new'] == 1) || $god_mode){
+		if (($finance['add_new'] == 1) || $god_mode){
 			include_once 'DBWork.php';
-			
-			$permissions = SelDataFromDB('spr_permissions', '', '');
-			
+
+            $tarif_types_j = SelDataFromDB('spr_tarif_types', '', '');
+            var_dump($tarif_types_j);
+
 			echo '
 				<div id="status">
 					<header>
-						<h2>Добавить клиента</h2>
+						<h2>Добавить тариф</h2>
 						Заполните поля
 					</header>';
 
@@ -24,129 +25,71 @@
 			echo '
 						<div id="errrror"></div>';
 			echo '
-						<form action=""add_client_f.php">
-					
-							<div class="cellsBlock2">
-								<div class="cellLeft">Фамилия</div>
-								<div class="cellRight">
-									<input type="text" name="f" id="f" value="">
-									<label id="fname_error" class="error"></label>
-								</div>
-							</div>
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Имя</div>
-								<div class="cellRight">
-									<input type="text" name="i" id="i" value="">
-									<label id="iname_error" class="error"></label>
-								</div>
-							</div>
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Отчество</div>
-								<div class="cellRight">
-									<input type="text" name="o" id="o" value="">
-									<label id="oname_error" class="error"></label>
-								</div>
-							</div>
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Дата рождения</div>
-								<div class="cellRight">';
-			echo '
-									<select name="sel_date" id="sel_date">
-										<option value="00">00</option>';
-			$i = 1;
-			while ($i <= 31) {
-				echo '
-										<option value="'.$i.'">'.$i.'</option>';
-				$i++;
-			}
-			echo '
-									</select>';
-			// Месяц
-			echo '
-									<select name="sel_month" id="sel_month">
-										<option value="00">---</option>';
-			$month = array(
-				"Январь",
-				"Февраль",
-				"Март",
-				"Апрель",
-				"Май",
-				"Июнь",
-				"Июль",
-				"Август",
-				"Сентябрь",
-				"Октябрь",
-				"Ноябрь",
-				"Декабрь"
-			);
-			foreach ($month as $m => $n) {
-				echo '
-										<option value="'.($m + 1).'">'.$n.'</option>';
-			}
-			echo '
-									</select>';
-			// Год
-			echo '
-									<select name="sel_year" id="sel_year">
-										<option value="0000">0000</option>';
-			$j = 2000;
-			while ($j <= 2020) {
-				echo '
-										<option value="'.$j.'">'.$j.'</option>';
-				$j++;
-			}
-			echo '	
-									</select>';
+			
+                        <div class="cellsBlock2">
+                            <div class="cellLeft">Название</div>
+                            <div class="cellRight">
+                                <input type="text" name="name" id="name" value="">
+                                <label id="fname_error" class="error"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="cellsBlock2">
+                            <div class="cellLeft">Описание</div>
+                            <div class="cellRight">
+                                <textarea name="descr" id="descr" cols="35" rows="5"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="cellsBlock2">
+                            <div class="cellLeft">Тип</div>
+                            <div class="cellRight">
+                                <input id="type" name="type" value="1" type="radio" checked> Одно занятие (по умолчанию)<br>
+                                <!--<span style="font-size: 75%; color: #555;">Применяется, когда цена каждого занятия фиксированная</span><br><br>
+                                <input id="type" name="type" value="2" type="radio"> Абонемент <br>
+                                <span style="font-size: 75%; color: #555;">Применяется, когда общая сумма и кол-во занятий фиксированны</span>-->
+                                <label id="type_error" class="error"></label>
+                            </div>
+                        </div>
+                        
 
-			echo '
-									<label id="sel_date_error" class="error"></label>
-									<label id="sel_month_error" class="error"></label>
-									<label id="sel_year_error" class="error"></label>
-								</div>
-							</div>
 							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Пол</div>
-								<div class="cellRight">
-									<input id="sex" name="sex" value="1" type="radio"> М
-									<input id="sex" name="sex" value="2" type="radio"> Ж
-									<label id="sex_error" class="error"></label>
-								</div>
-							</div>
+                        <div id="cost_descr" class="cellsBlock2">
+                        
+                        </div>
+                        
+                            
+                        <div id="cost_descr_tarif_type1" style="display: none;">
+                            <div class="cellsBlock2">
+                                <div class="cellLeft">Цена за 1 занятие</div>
+                                <div class="cellRight">
+                                    <input type="text" id="cost" name="cost" value="">
+                                    <label id="cost_error" class="error"></label>
+                                </div>
+                            </div>
+                        </div>
 
-							<div class="cellsBlock2">
-								<div class="cellLeft">Контакты</div>
-								<div class="cellRight"><textarea name="contacts" id="contacts" cols="35" rows="5"></textarea></div>
-							</div>
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Комментарий</div>
-								<div class="cellRight"><textarea name="comment" id="comment" cols="35" rows="5"></textarea></div>
-							</div>';
-			$filials = SelDataFromDB('spr_office', '', '');
-			echo '
-							<div class="cellsBlock2">
-								<div class="cellLeft">Филиал</div>
-								<div class="cellRight">
-									<select name="filial" id="filial">
-										<option value="0" selected>Выберите филиал</option>';
-									if ($filials != 0){
-										for ($i=0;$i<count($filials);$i++){
-											echo "<option value='".$filials[$i]['id']."'>".$filials[$i]['name']."</option>";
-										}
-									}
-									echo '
-									</select>
-									<label id="filial_error" class="error"></label>
-								</div>
-							</div>';
+                        <div id="cost_descr_tarif_type2" style="display: none;">    
+                            <div class="cellsBlock2">
+                                <div class="cellLeft">Общая стоимость</div>
+                                <div class="cellRight">
+                                    <input type="text" id="cost" name="cost" value="">
+                                    <label id="cost_error" class="error"></label>
+                                </div>
+                            </div>
+                            
+                            <div class="cellsBlock2">
+                                <div class="cellLeft">Кол-во занятий</div>
+                                <div class="cellRight">
+                                    <input type="text" id="exercise_count" name="exercise_count" value="">
+                                    <label id="exercise_count_error" class="error"></label>
+                                </div>
+                            </div>
+                        </div>';
+
 			echo '				
-							<div id="errror"></div>
-							<input type="button" class="b" value="Добавить" onclick="Ajax_add_client()">
-						</form>';	
+                        <div id="errror"></div>
+                        <input type="button" class="b" value="Добавить" onclick="Ajax_add_tarif()">';
 				
 			echo '
 					</div>
