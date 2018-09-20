@@ -3,6 +3,7 @@
 //
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -222,15 +223,14 @@
 								Добавление "в лоб": <br>
 								<span  style="font-size: 70%; color: rgb(100,100,100);">Поиск и добавление участников,<br>в обход критериев (район, возраст...)</span>
 							</div>';
-									
-						echo '
-							<div class="cellsBlock2" style="width: 400px; ">
-								<div class="cellRight">
-									<span style="font-size: 70%;">Быстрый поиск ребёнка</span><br />
-									<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-									<div id="search_result_fc2"></div>
-								</div>
-							</div>';	
+
+                        echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
+
+                        echo $block_fast_search_client;
+
+                        echo '
+					</div>';
 									
 						echo '
 							<script type="text/javascript">

@@ -9,6 +9,7 @@
 //ALTER TABLE  `spr_clients` ADD  `status` INT( 1 ) UNSIGNED NOT NULL DEFAULT  '0';
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -39,14 +40,13 @@
 				            </h2>
 						</header>';
 				if (($clients['see_all'] == 1) || $god_mode){
-					echo '
-						<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
-							<div class="cellRight">
-								<span style="font-size: 70%;">Быстрый поиск ребёнка</span><br />
-								<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-								<div id="search_result_fc2"></div>
-							</div>
-						</div>';
+                    echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
+
+                    echo $block_fast_search_client;
+
+                    echo '
+					</div>';
 				}
 				echo '
 						<div id="data">';
@@ -141,13 +141,24 @@
 									
 				if (($finance['add_new'] == 1) || $god_mode){
 					echo '
-							<a href="add_finance.php?client='.$_GET['id'].'" class="b">Добавить платёж <i class="fa fa-rub"></i></a>';
+							<a href="add_order.php?client='.$_GET['id'].'" class="b">Добавить платёж <i class="fa fa-rub"></i></a>';
 				}
 				if (($finance['see_all'] == 1) || $god_mode){
 					echo '
-							<a href="client_finance.php?client='.$_GET['id'].'" class="b">История <i class="fa fa-rub"></i></a>';
+							<a href="client_finance_tabel.php?client='.$_GET['id'].'" class="b">История <i class="fa fa-rub"></i></a>';
 				}
+
+                echo '<br>';
 				
+				if (($finance['add_new'] == 1) || $god_mode){
+					echo '
+							<a href="add_finance.php?client='.$_GET['id'].'" class="b" style="background-color: #CCC;">Добавить платёж (старое) <i class="fa fa-rub"></i></a>';
+				}
+				if (($finance['see_all'] == 1) || $god_mode){
+					echo '
+							<a href="client_finance.php?client='.$_GET['id'].'" class="b" style="background-color: #CCC;">История (старое) <i class="fa fa-rub"></i></a>';
+				}
+
 				echo '<br><br>';
 
 				echo '

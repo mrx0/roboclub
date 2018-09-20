@@ -4,6 +4,7 @@
 //
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -137,15 +138,16 @@
 				<div style="font-size: 90%; margin-bottom: 10px;">
 					<span  style="font-size: 80%; color: rgb(100,100,100);">Чтобы добавить платёж, <br>найдите ребёнка и нажмите <i class="fa fa-rub" style="font-size: 150%;color: green;"></i><i class="fa fa-plus" style="font-size: 90%;color: green;"></i></span>
 				</div>';
-						
-			echo '
-				<div class="cellsBlock2" style="width: 400px; ">
-					<div class="cellRight">
-						<span style="font-size: 70%;">Быстрый поиск ребёнка</span><br />
-						<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-						<div id="search_result_fc2"></div>
-					</div>
-				</div>
+
+            echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
+
+            echo $block_fast_search_client;
+
+            echo '
+					</div>';
+
+            echo '
 				<br>';	
 			/*echo '
 					<p style="margin: 5px 0; padding: 2px; font-size: 80%;">

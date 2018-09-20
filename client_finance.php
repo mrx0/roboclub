@@ -4,6 +4,7 @@
 //
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -103,14 +104,13 @@
 								</li>
 								<br>';
 
-					echo '
-						<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
-							<div class="cellRight">
-								<span style="font-size: 70%;">Быстрый поиск ребёнка</span><br />
-								<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-								<div id="search_result_fc2"></div>
-							</div>
-						</div>';		
+                    echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
+
+                    echo $block_fast_search_client;
+
+                    echo '
+					</div>';
 					
 					echo '
 						<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 10px;">
@@ -626,7 +626,7 @@
 						
 					if (($finance['add_new'] == 1) || $god_mode){
 						echo '
-								<a href="add_finance.php?client='.$client[0]['id'].'" class="b">Добавить платёж <i class="fa fa-rub"></i></a><br><br>';
+								<a href="add_finance.php?client='.$client[0]['id'].'" class="b">Добавить платёж (старое) <i class="fa fa-rub"></i></a><br><br>';
 					}
 					
 					
