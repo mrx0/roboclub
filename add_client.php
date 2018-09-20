@@ -1,6 +1,6 @@
 <?php
 
-//+++add_client.php
+//add_client.php
 //Добавить клиента
 
 	require_once 'header.php';
@@ -24,8 +24,6 @@
 			echo '
 						<div id="errrror"></div>';
 			echo '
-						<form action=""add_client_f.php">
-					
 							<div class="cellsBlock2">
 								<div class="cellLeft">Фамилия</div>
 								<div class="cellRight">
@@ -147,7 +145,7 @@
                 }
             }
 
-
+/*
             echo '
 							<div class="cellsBlock2">
 								<div class="cellLeft">Тариф</div>
@@ -163,31 +161,13 @@
 									</select>
 									<label id="filial_error" class="error"></label>
 								</div>
-							</div>';
+							</div>';*/
 
 
 
-			$filials = SelDataFromDB('spr_office', '', '');
-			echo '
-							<div class="cellsBlock2">
-								<div class="cellLeft">Филиал</div>
-								<div class="cellRight">
-									<select name="filial" id="filial">
-										<option value="0" selected>Выберите филиал</option>';
-									if ($filials != 0){
-										for ($i=0;$i<count($filials);$i++){
-											echo "<option value='".$filials[$i]['id']."'>".$filials[$i]['name']."</option>";
-										}
-									}
-									echo '
-									</select>
-									<label id="filial_error" class="error"></label>
-								</div>
-							</div>';
 			echo '				
 							<div id="errror"></div>
-							<input type="button" class="b" value="Добавить" onclick="Ajax_add_client()">
-						</form>';	
+							<br><input type="button" class="b" value="Добавить и перейти к следующему шагу" onclick="Ajax_add_client();">';
 				
 			echo '
 					</div>
@@ -199,89 +179,7 @@
 						sex_value = $("input[name=sex]:checked").val();
 					});
 				</script>';
-				
-			//Фунция JS
-			
-			echo '
-				<script type="text/javascript">  
-				
-				
-					function Ajax_add_client() {
-						// убираем класс ошибок с инпутов
-						$(\'input\').each(function(){
-							$(this).removeClass(\'error_input\');
-						});
-						// прячем текст ошибок
-						$(\'.error\').hide();
-						 
-						$.ajax({
-							// метод отправки 
-							type: "POST",
-							// путь до скрипта-обработчика
-							url: "ajax_test.php",
-							// какие данные будут переданы
-							data: {
-								fname:document.getElementById("f").value,
-								iname:document.getElementById("i").value,
-								oname:document.getElementById("o").value,
-								
-								sel_date:document.getElementById("sel_date").value,
-								sel_month:document.getElementById("sel_month").value,
-								sel_year:document.getElementById("sel_year").value,
-								
-								sex:sex_value,
-							},
-							// тип передачи данных
-							dataType: "json",
-							// действие, при ответе с сервера
-							success: function(data){
-								// в случае, когда пришло success. Отработало без ошибок
-								if(data.result == \'success\'){   
-									//alert(\'форма корректно заполнена\');
-								ajax({
-									url:"add_client_f.php",
-									statbox:"errrror",
-									method:"POST",
-									data:
-									{
-										f:document.getElementById("f").value,
-										i:document.getElementById("i").value,
-										o:document.getElementById("o").value,
-										
-										contacts:document.getElementById("contacts").value,
-										comment:document.getElementById("comment").value,
 
-										sel_date:document.getElementById("sel_date").value,
-										sel_month:document.getElementById("sel_month").value,
-										sel_year:document.getElementById("sel_year").value,
-										
-										filial:document.getElementById("filial").value,
-										
-										sex:sex_value,
-										
-										session_id:'.$_SESSION['id'].',
-									},
-									success:function(data){document.getElementById("errrror").innerHTML=data;}
-								})
-								// в случае ошибок в форме
-								}else{
-									// перебираем массив с ошибками
-									for(var errorField in data.text_error){
-										// выводим текст ошибок 
-										$(\'#\'+errorField+\'_error\').html(data.text_error[errorField]);
-										// показываем текст ошибок
-										$(\'#\'+errorField+\'_error\').show();
-										// обводим инпуты красным цветом
-									   // $(\'#\'+errorField).addClass(\'error_input\');                      
-									}
-									document.getElementById("errror").innerHTML=\'<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>\'
-								}
-							}
-						});						
-					};  
-					  
-				</script> ';	
-				
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

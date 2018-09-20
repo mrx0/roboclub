@@ -23,7 +23,7 @@
 				<header style="margin-bottom: 5px;">
 					<h1>Остатки</h1>';
 			echo '
-					<div id="closedGroups" style="font-size: 70%; color: #999;">Список тех детей, у кого за <span style="color: rgba(45, 43, 43, 0.83);">прошлый месяц</span> остались непотраченные деньги или долги</div>
+					<div id="closedGroups" style="color: #999;">Список тех детей, у кого за <span style="color: rgba(45, 43, 43, 0.83);">прошлый месяц</span> остались непотраченные деньги или долги</div>
 				</header>';
 
 			include_once 'DBWork.php';
@@ -77,13 +77,13 @@
 					<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
 						<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
 							<a href="balance.php?m='.$prev.'&y='.$pYear.'" class="cellTime ahref" style="text-align: center;">
-								<span style="font-weight: normal; font-size: 70%;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
+								<span style="font-weight: normal;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
 							</a>
 							<div class="cellTime" style="text-align: center;">
 								<span style="color: #2EB703">'.$monthsName[$month].'</span><br>'.$year.'
 							</div>
 							<a href="balance.php?m='.$next.'&y='.$nYear.'" class="cellTime ahref" style="text-align: center;">
-								<span style="font-weight: normal; font-size: 70%;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
+								<span style="font-weight: normal;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
 							</a>
 							
 							<div class="cellTime" style="text-align: center; width: auto;">

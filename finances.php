@@ -54,8 +54,8 @@
 				<header style="margin-bottom: 5px;">
 					<h1>'.$pageHeader.'</h1>
 					<!--<a href="finances.php'.$link.'" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">'.$pageHeaderAnother.'</a> -->
-					<a href="filial_finance.php" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Финансы по филиалам</a>
-					<a href="balance.php" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Остатки</a>
+					<a href="filial_finance.php" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; color: #999; background-color: rgba(252, 252, 0, 0.3);">Финансы по филиалам</a>
+					<a href="balance.php" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; color: #999; background-color: rgba(252, 252, 0, 0.3);">Остатки</a>
 				</header>';
 				
 			
@@ -110,13 +110,13 @@
 					<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
 						<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
 							<a href="finances.php?m='.$prev.'&y='.$pYear.'" class="cellTime ahref" style="text-align: center;">
-								<span style="font-weight: normal; font-size: 70%;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
+								<span style="font-weight: normal; "><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
 							</a>
 							<div class="cellTime" style="text-align: center;">
 								<span style="color: #2EB703">'.$monthsName[$month].'</span><br>'.$year.'
 							</div>
 							<a href="finances.php?m='.$next.'&y='.$nYear.'" class="cellTime ahref" style="text-align: center;">
-								<span style="font-weight: normal; font-size: 70%;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
+								<span style="font-weight: normal;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
 							</a>
 							
 							<div class="cellTime" style="text-align: center; width: auto;">

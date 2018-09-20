@@ -19,7 +19,7 @@
 				
 			//echo '<a href="shed_temlates.php" class="b">Шаблоны графиков</a>';
 			echo '<a href="options.php" class="b">Настройки</a>';
-			echo '<a href="settins.php" class="b">Настройки (старые)</a>';
+			echo '<a href="settins.php" class="b" style="background-color: #CCC">Настройки (старые)</a>';
 			echo '<a href="logs.php" class="b">LOGS</a>';
 			echo '<a href="wrights.php" class="b">Права</a>';
 			echo '<a href="/sxd" class="b">SXD</a>';			

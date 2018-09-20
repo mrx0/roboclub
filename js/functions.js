@@ -299,6 +299,85 @@
         }
     }
 
+    function Ajax_add_client() {
+
+        hideAllErrors();
+
+        var link = "ajax_test.php";
+
+        var reqData = {
+            fname: $("#f").val(),
+            iname: $("#i").val(),
+
+            sel_date: $("#sel_date").val(),
+            sel_month: $("#sel_month").val(),
+            sel_year: $("#sel_year").val(),
+
+            sex: sex_value
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    //console.log (res.data);
+
+                    link = "add_client_f.php";
+
+                    //Дополняем объект
+                    reqData.oname = $("#o").val();
+                    reqData.contacts = $("#contacts").val();
+                    reqData.comment = $("#comment").val();
+                    //reqData.filial =$("#filial").val();
+
+                    $.ajax({
+                        url: link,
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: reqData,
+                        cache: false,
+                        beforeSend: function () {
+                        },
+                        success: function (res) {
+                            //console.log (res);
+                            //$("#errror").html(res.data);
+
+                            if(res.result == "success") {
+
+                                $("#status").html(res.data);
+
+                            }
+                            if(res.result == "error"){
+                                $("#errror").html(res.data);
+                            }
+                        }
+                    })
+                } else {
+                    // перебираем массив с ошибками
+                    for (var errorField in res.text_error) {
+                        // выводим текст ошибок
+                        $('#' + errorField + '_error').html(res.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#' + errorField + '_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
     function Ajax_del_client(session_id) {
         var id =  $("#id").val();
 

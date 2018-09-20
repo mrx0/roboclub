@@ -33,8 +33,8 @@ if (isset($_POST['fname']))
     $arrayFields['fname'] = $_POST['fname'];
 if (isset($_POST['iname']))
     $arrayFields['iname'] = $_POST['iname'];
-if (isset($_POST['oname']))
-    $arrayFields['oname'] = $_POST['oname'];
+/*if (isset($_POST['oname']))
+    $arrayFields['oname'] = $_POST['oname'];*/
 if (isset($_POST['sel_date']))
     $arrayFields['sel_date'] = $_POST['sel_date'];
 if (isset($_POST['sel_month']))

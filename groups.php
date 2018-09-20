@@ -20,9 +20,9 @@
 					
 			if (($groups['edit'] == 1) || $god_mode){	
 				echo '
-						<div id="closedGroups" style="display: none; font-size: 70%; color: #999;"></div>';
+						<div id="closedGroups" style="display: none; color: #999;"></div>';
 				echo '						
-						<div style="margin-bottom: 15px;"><a href="replacements.php" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Подмены</a></div>';
+						<div style="margin-bottom: 15px;"><a href="replacements.php" style="border-bottom: 1px dashed #000080; text-decoration: none; color: #999; background-color: rgba(252, 252, 0, 0.3);">Подмены</a></div>';
 				/*echo '						
 						<div style="margin-bottom: 15px;"><a href="notingroup.php" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Кто не в группе</a></div>';*/
 			}		
