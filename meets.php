@@ -59,7 +59,7 @@
 										<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
 											<li class="cellsBlock" style="font-weight: bold; width: auto;">	
 												<div class="cellPriority" style="text-align: center"></div>
-												<div class="cellFullName" style="text-align: center">ФИО клиента</div>
+												<div class="cellFullName" style="text-align: center">ФИО ребёнка</div>
 												<div class="cellTime" style="text-align: center; width: 70px; min-width: 70px;">
 													<a href="journal.php?id='.$_GET['id'].'" class="ahref" style="text-align: center; font-size: 120%; color: green" title="Журнал группы"><i class="fa fa-calendar"></i></a>
 												</div>

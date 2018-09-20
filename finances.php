@@ -135,13 +135,13 @@
 									
 			echo '
 				<div style="font-size: 90%; margin-bottom: 10px;">
-					<span  style="font-size: 80%; color: rgb(100,100,100);">Чтобы добавить платёж, <br>найдите клиента и нажмите <i class="fa fa-rub" style="font-size: 150%;color: green;"></i><i class="fa fa-plus" style="font-size: 90%;color: green;"></i></span>
+					<span  style="font-size: 80%; color: rgb(100,100,100);">Чтобы добавить платёж, <br>найдите ребёнка и нажмите <i class="fa fa-rub" style="font-size: 150%;color: green;"></i><i class="fa fa-plus" style="font-size: 90%;color: green;"></i></span>
 				</div>';
 						
 			echo '
 				<div class="cellsBlock2" style="width: 400px; ">
 					<div class="cellRight">
-						<span style="font-size: 70%;">Быстрый поиск клиента</span><br />
+						<span style="font-size: 70%;">Быстрый поиск ребёнка</span><br />
 						<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
 						<div id="search_result_fc2"></div>
 					</div>

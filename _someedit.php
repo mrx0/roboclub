@@ -31,7 +31,7 @@
 					mysql_query("SET NAMES 'utf8'");
 					
 					foreach ($journal as $value){
-						echo 'Клиент: '.$value['name'].'<br>';
+						echo 'Ребёнок: '.$value['name'].'<br>';
 						
 						$birth = date('Y-m-d', $value['birthday']);
 					

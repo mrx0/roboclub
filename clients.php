@@ -21,7 +21,7 @@
 			
 			echo '
 				<header style="margin-bottom: 5px;">
-					<h1>Список клиентов</h1>';
+					<h1>Список детей</h1>';
 			if ($_GET){
 				//var_dump($_GET);
 				$filter_rez = array();
@@ -81,7 +81,7 @@
 				echo '
 					<div class="cellsBlock2" style="width: 400px; ">
 						<div class="cellRight">
-							<span style="font-size: 70%;">Быстрый поиск клиента</span><br />
+							<span style="font-size: 70%;">Быстрый поиск ребёнка</span><br />
 							<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
 							<!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
 							<div id="search_result_fc2"></div>

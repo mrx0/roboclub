@@ -1662,5 +1662,11 @@ input[type="number"].mod{
 .paginator_btn:hover{
 	color: rgba(255,255,100, 1);
 	background: #97D7FF;
+}
 
+.msg_container_time {
+	font-size: 60%;
+	float: right;
+	color: #959595;
+	text-shadow: rgba(255, 255, 255, .5) 0 1px 0;
 }

@@ -129,7 +129,7 @@
 											$query = "DELETE FROM `journal_user` WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 											mysql_query($query) or die('2->'.mysql_error().'->'.$query);
 											mysql_close();
-											AddLog ('0', $_POST['session_id'], '', 'Из журнала удалена запись о посещении. Группа ['.$_POST['group_id'].']. Клиент ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$res['status'].']');	
+											AddLog ('0', $_POST['session_id'], '', 'Из журнала удалена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$res['status'].']');
 										}
 									}else{
 										$editError = TRUE;
@@ -152,7 +152,7 @@
 												$query = "UPDATE `journal_user` SET `status`='{$newStatus}'  WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 												mysql_query($query) or die('3->'.mysql_error().'->'.$query);
 												mysql_close();
-												AddLog ('0', $_POST['session_id'], '', 'В журнале изменена запись о посещении. Группа ['.$_POST['group_id'].']. Клиент ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');	
+												AddLog ('0', $_POST['session_id'], '', 'В журнале изменена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');
 											}
 										}else{
 											$editError = TRUE;
@@ -177,7 +177,7 @@
 											$query = "INSERT INTO `journal_user` (`client_id`, `group_id`, `user_id`, `day`, `month`, `year`, `status`) VALUES ('{$client_id}', '{$_POST['group_id']}', '{$user_id}', '{$day}', '{$month}', '{$year}', '{$newStatus}')";
 											mysql_query($query) or die('4->'.mysql_error().'->'.$query);
 											mysql_close();
-											AddLog ('0', $_POST['session_id'], '', 'В журнал добавлена запись о посещении. Группа ['.$_POST['group_id'].']. Клиент ['.$client_id.']. Добавил ['.$user_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');	
+											AddLog ('0', $_POST['session_id'], '', 'В журнал добавлена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. Добавил ['.$user_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');
 										}
 									}else{
 										$editError = TRUE;

@@ -23,7 +23,7 @@
 				<header style="margin-bottom: 5px;">
 					<h1>Остатки</h1>';
 			echo '
-					<div id="closedGroups" style="font-size: 70%; color: #999;">Список тех клиентов, у кого за <span style="color: rgba(45, 43, 43, 0.83);">прошлый месяц</span> остались непотраченные деньги или долги</div>
+					<div id="closedGroups" style="font-size: 70%; color: #999;">Список тех детей, у кого за <span style="color: rgba(45, 43, 43, 0.83);">прошлый месяц</span> остались непотраченные деньги или долги</div>
 				</header>';
 
 			include_once 'DBWork.php';

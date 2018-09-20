@@ -45,7 +45,7 @@
 					echo '
 
 							<div class="cellsBlock2">
-								<div class="cellLeft">Клиент</div>
+								<div class="cellLeft">Ребёнок</div>
 								<div class="cellRight">
 									<a href="client.php?id='.$remove_j[0]['client'].'" class="ahref">'.WriteSearchUser('spr_clients', $remove_j[0]['client'], 'user_full').'</a>
 								</div>

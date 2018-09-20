@@ -106,7 +106,7 @@
 					echo '
 						<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
 							<div class="cellRight">
-								<span style="font-size: 70%;">Быстрый поиск клиента</span><br />
+								<span style="font-size: 70%;">Быстрый поиск ребёнка</span><br />
 								<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
 								<div id="search_result_fc2"></div>
 							</div>
@@ -894,7 +894,7 @@
 						
 					echo '
 						<li class="cellsBlock" style="width: 500px; text-align: left; font-size: 90%; color: #777; margin-bottom: 5px; border-bottom: 1px solid #CCC; ">
-							<b>Платежи клиента за всё время, включая амортизацию</b>
+							<b>Платежи ребёнка за всё время, включая амортизацию</b>
 						</li>';	
 						
 					echo '

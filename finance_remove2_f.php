@@ -40,7 +40,7 @@
 				mysql_close();
 						
 				//логирование
-				AddLog ('0', $_SESSION['id'], '', 'Перенесены средства. Сумма ['.$_POST['summrem'].']. Клиент ['.$_POST['client'].']. Из месяца/года ['.$_POST['last_month'].'/'.$_POST['last_year'].']. В месяц/год  ['.$_POST['month'].'/'.$_POST['year'].']. Филиал ['.$_POST['filial'].']. Комментарий ['.$_POST['comment'].'].');
+				AddLog ('0', $_SESSION['id'], '', 'Перенесены средства. Сумма ['.$_POST['summrem'].']. Ребёнок ['.$_POST['client'].']. Из месяца/года ['.$_POST['last_month'].'/'.$_POST['last_year'].']. В месяц/год  ['.$_POST['month'].'/'.$_POST['year'].']. Филиал ['.$_POST['filial'].']. Комментарий ['.$_POST['comment'].'].');
 						
 				echo '
 					<div class="query_ok">

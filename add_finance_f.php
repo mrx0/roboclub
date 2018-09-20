@@ -32,7 +32,7 @@
 					mysql_close();
 					
 					//логирование
-					AddLog ('0', $_POST['session_id'], '', 'Добавлен платёж #'.$mysql_insert_id.'. Клиент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Месяц ['.$_POST['month'].']. Год ['.$_POST['year'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');	
+					AddLog ('0', $_POST['session_id'], '', 'Добавлен платёж #'.$mysql_insert_id.'. Ребёнок ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Месяц ['.$_POST['month'].']. Год ['.$_POST['year'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');
 				
 					echo '
 						Платёж <a href="finance.php?id='.$mysql_insert_id.'">#'.$mysql_insert_id.'</a> добавлен.

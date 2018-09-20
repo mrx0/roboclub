@@ -141,7 +141,7 @@
 							echo '
 								<div style="font-size: 90%; margin-bottom: 10px;">
 									В эту группу можно добавить: <br>
-									<span  style="font-size: 70%; color: rgb(100,100,100);">Отображаются только клиенты,<br>у которых отмечен район текущей группы</span>
+									<span  style="font-size: 70%; color: rgb(100,100,100);">Отображаются только дети,<br>у которых отмечен район текущей группы</span>
 								</div>';
 								
 							echo '
@@ -226,7 +226,7 @@
 						echo '
 							<div class="cellsBlock2" style="width: 400px; ">
 								<div class="cellRight">
-									<span style="font-size: 70%;">Быстрый поиск клиента</span><br />
+									<span style="font-size: 70%;">Быстрый поиск ребёнка</span><br />
 									<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
 									<div id="search_result_fc2"></div>
 								</div>

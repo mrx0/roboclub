@@ -11,6 +11,7 @@
 
             echo '<a href="tarifs.php" class="b">Тарифы</a>';
             echo '<a href="tarif_types.php" class="b">Типы тарифов и сборов</a>';
+            echo '<a href="age_types.php" class="b">Возрастные группы</a>';
 
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

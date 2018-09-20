@@ -49,7 +49,7 @@
 				
 				include_once 'DBWork.php';
 				//логирование
-				AddLog ('0', $_POST['session_id'], '', 'Отметка дня рождения. Клиент ['.$_POST['client'].']. Год ['.$_POST['year'].']. Месяц ['.$_POST['month'].']. Status ['.$status.'].');	
+				AddLog ('0', $_POST['session_id'], '', 'Отметка дня рождения. Ребёнок ['.$_POST['client'].']. Год ['.$_POST['year'].']. Месяц ['.$_POST['month'].']. Status ['.$status.'].');
 				
 				/*echo '
 					Ok типа.

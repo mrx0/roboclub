@@ -15,7 +15,7 @@
 			echo '
 				<div id="status">
 					<header>
-						<h2>Добавить клиента</h2>
+						<h2>Добавить ребёнка</h2>
 						Заполните поля
 					</header>';
 
@@ -126,6 +126,47 @@
 								<div class="cellLeft">Комментарий</div>
 								<div class="cellRight"><textarea name="comment" id="comment" cols="35" rows="5"></textarea></div>
 							</div>';
+
+			//Тариф
+
+            //!!! Переделай на следующее окно
+
+            //Получим все тарифы
+            $tarifs_j = array();
+
+            $msql_cnnct = ConnectToDB ();
+
+            $query = "SELECT * FROM `spr_tarifs` WHERE `status` <> '9';";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($tarifs_j, $arr);
+                }
+            }
+
+
+            echo '
+							<div class="cellsBlock2">
+								<div class="cellLeft">Тариф</div>
+								<div class="cellRight">
+									<select name="filial" id="filial">
+										<option value="0" selected>Выберите тариф</option>';
+            if (!empty($tarifs_j)){
+                for ($i=0;$i<count($tarifs_j);$i++){
+                    echo "<option value='".$tarifs_j[$i]['id']."'>".$tarifs_j[$i]['name']."</option>";
+                }
+            }
+            echo '
+									</select>
+									<label id="filial_error" class="error"></label>
+								</div>
+							</div>';
+
+
+
 			$filials = SelDataFromDB('spr_office', '', '');
 			echo '
 							<div class="cellsBlock2">

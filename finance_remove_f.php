@@ -23,7 +23,7 @@
 			$number = mysql_num_rows($res);
 			if ($number != 0){
 				$arr = mysql_fetch_assoc($res);
-				$old = 'Клиент ['.$arr['client'].']. Сумма ['.$arr['summ'].']. Месяц ['.$arr['month'].']. Год ['.$arr['year'].']. Тип ['.$arr['type'].']. . Филиал ['.$arr['filial'].']. Комментарий ['.$arr['comment'].'].';
+				$old = 'Ребёнок['.$arr['client'].']. Сумма ['.$arr['summ'].']. Месяц ['.$arr['month'].']. Год ['.$arr['year'].']. Тип ['.$arr['type'].']. . Филиал ['.$arr['filial'].']. Комментарий ['.$arr['comment'].'].';
 			}else{
 				$old = 'Не нашли старую запись.';
 			}

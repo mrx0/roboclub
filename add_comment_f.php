@@ -32,7 +32,7 @@
 				//логирование
 				include_once 'DBWork.php';
 				
-				AddLog ('0', $_SESSION['id'], '', 'Добавлен комментарий #'.$mysql_insert_id.' к клиенту ['.$_POST['id'].']. Текст ['.$_POST['t_s_comment'].'].');	
+				AddLog ('0', $_SESSION['id'], '', 'Добавлен комментарий #'.$mysql_insert_id.' к ребёнку ['.$_POST['id'].']. Текст ['.$_POST['t_s_comment'].'].');
 				
 			}
 		}

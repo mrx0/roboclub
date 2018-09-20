@@ -366,7 +366,7 @@ dict.fields = {
 , "ext": {
 "table": "files", "name": "ext", "type": "varchar(5)", "ru": "Тип", "list": "1", "default": "NOT NULL default 'jpg'", "mtime": "2012-08-09 12:20:05", "order": "60", "key": "", "link": "", "metka": "", "php": "", "extra": "", "html": "", "source": "", "js": "", "section": ""}
 , "group2": {
-"table": "files", "name": "group2", "type": "varchar(30)", "ru": "Клиент", "default": "NOT NULL", "mtime": "2012-08-09 12:39:06", "order": "70", "key": "", "list": "", "link": "", "metka": "", "php": "", "extra": "", "html": "", "source": "", "js": "", "section": ""}
+"table": "files", "name": "group2", "type": "varchar(30)", "ru": "Ребёнок", "default": "NOT NULL", "mtime": "2012-08-09 12:39:06", "order": "70", "key": "", "list": "", "link": "", "metka": "", "php": "", "extra": "", "html": "", "source": "", "js": "", "section": ""}
 , "group1": {
 "table": "files", "name": "group1", "type": "varchar(30)", "ru": "Рубрика", "list": "", "default": "NOT NULL", "mtime": "2012-08-09 12:38:58", "order": "80", "key": "", "link": "", "metka": "", "php": "", "extra": "", "html": "", "source": "", "js": "", "section": ""}
 , "topic_index": {

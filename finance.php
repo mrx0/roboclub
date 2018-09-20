@@ -49,7 +49,7 @@
 					echo '
 
 							<div class="cellsBlock2">
-								<div class="cellLeft">Клиент</div>
+								<div class="cellLeft">Ребёнок</div>
 								<div class="cellRight">
 									<a href="client.php?id='.$finance_j[0]['client'].'" class="ahref">'.WriteSearchUser('spr_clients', $finance_j[0]['client'], 'user_full').'</a>
 								</div>

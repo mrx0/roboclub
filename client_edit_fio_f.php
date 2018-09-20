@@ -13,8 +13,8 @@
 			if (($_POST['f'] == '')||($_POST['i'] == '')||($_POST['o'] == '')){
 				echo '
 					<div class="query_neok">
-						Что-то не заполнено. Если у клиента нет отчества, поставьте в поле "Отчество" символ "*"<br /><br />
-						<a href="clients.php" class="b">К списку клиентов</a>
+						Что-то не заполнено. Если у ребёнка нет отчества, поставьте в поле "Отчество" символ "*"<br /><br />
+						<a href="clients.php" class="b">К списку детей/a>
 					</div>';
 			}else{
 				include_once 'DBWork.php';
@@ -24,7 +24,7 @@
 					echo '
 						<div class="query_neok">
 							В ФИО встречаются латинские буквы. Это недопустимо<br /><br />
-							<a href="clients.php" class="b">К списку клиентов</a>
+							<a href="clients.php" class="b">К списку детей</a>
 						</div>';
 				}else{
 					$full_name = CreateFullName(trim($_POST['f']), trim($_POST['i']), trim($_POST['o']));
@@ -32,8 +32,8 @@
 					if (isSameFullName('spr_clients', $full_name)){
 						echo '
 							<div class="query_neok">
-								Такой клиент уже есть. Если тёзка, в конце поля "Отчество" поставьте символ "*"<br /><br />
-								<a href="clients.php" class="b">К списку клиентов</a>
+								Такой ребёнок уже есть. Если тёзка, в конце поля "Отчество" поставьте символ "*"<br /><br />
+								<a href="clients.php" class="b">К списку детей</a>
 							</div>';
 					}else{
 						$name = CreateName(trim($_POST['f']), trim($_POST['i']), trim($_POST['o']));
@@ -42,11 +42,11 @@
 					
 						echo '
 							<div class="query_ok">
-								<h3>ФИО клиента изменены</h3>
+								<h3>ФИО ребёнка изменены</h3>
 								ФИО: '.$full_name.'<br />
 								<br /><br />
 								<a href="client.php?id='.$_POST['id'].'" class="b">Вернуться в карточку</a>
-								<a href="clients.php" class="b">К списку клиентов</a>
+								<a href="clients.php" class="b">К списку детей</a>
 							</div>
 							';
 					}

@@ -259,3 +259,64 @@
         })
     }
 
+
+    //Удаление коментария из карточки ребенка
+    function deleteThisComment(comment_id){
+
+        var rys = confirm("Вы хотите удалить комментарий. \nЕго невозможно будет восстановить. \n\nВы уверены?");
+        if (rys){
+
+            link = "del_Comment_f.php";
+
+            reqData = {
+                comment_id: comment_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if(res.result == "success") {
+                        $("#status").html(res.data);
+                        setTimeout(function () {
+                            location.reload()
+                        }, 1000);
+                    }
+                    if(res.result == "error"){
+                        console.log(res);
+                    }
+                }
+            })
+
+        }
+    }
+
+    function Ajax_del_client(session_id) {
+        var id =  $("#id").val();
+
+        ajax({
+            url:"client_del_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id,
+                    session_id: session_id,
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                setTimeout(function () {
+                    window.location.replace('client.php?id='+id);
+                    //console.log('client.php?id='+id);
+                }, 100);
+            }
+        })
+    };

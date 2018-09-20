@@ -387,7 +387,7 @@
 		mysql_close();
 		
 		//логирование
-		AddLog ('0', $session_id, '', 'Добавлен клиент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Контакты: ['.$contacts.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Комментарий: ['.$comments.']. Филиал: ['.$filial.']');
+		AddLog ('0', $session_id, '', 'Добавлен ребёнок. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Контакты: ['.$contacts.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Комментарий: ['.$comments.']. Филиал: ['.$filial.']');
 		
 		return ($mysql_insert_id);
 	}
@@ -416,7 +416,7 @@
 		mysql_close();
 		
 		//логирование
-		AddLog ('0', $session_id, $old, 'Отредактирован клиент ['.$id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Комментарий: ['.$comments.']. Филиал: ['.$filial.']');
+		AddLog ('0', $session_id, $old, 'Отредактирован ребёнок ['.$id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Комментарий: ['.$comments.']. Филиал: ['.$filial.']');
 	}
 
 	//Обновление ФИО клиента из-под Web
@@ -442,7 +442,7 @@
 		mysql_close();
 		
 		//логирование
-		AddLog ('0', $session_id, $old, 'Отредактированы ФИО клиента ['.$id.']. ['.date('d.m.y H:i', $time).']. Фамилия: ['.$f.']. Имя: ['.$i.']. Отчество: ['.$o.'].');
+		AddLog ('0', $session_id, $old, 'Отредактированы ФИО ребёнка ['.$id.']. ['.date('d.m.y H:i', $time).']. Фамилия: ['.$f.']. Имя: ['.$i.']. Отчество: ['.$o.'].');
 	}
 
 	//Обновление ФИО пользователя из-под Web
@@ -471,31 +471,6 @@
 		AddLog ('0', $session_id, $old, 'Отредактированы ФИО пользователя ['.$id.']. ['.date('d.m.y H:i', $time).']. ФИО: ['.$full_name.'].');
 	}
 
-	//Обновление лечащего врача клиента из-под Web
-	function UpdateTherapist ($session_id, $client_id, $therapist, $sw){
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
-		//Для лога соберем сначала то, что было в записи.
-		$query = "SELECT `therapist` FROM `spr_clients` WHERE `id`=$client_id";
-		$res = mysql_query($query) or die(mysql_error());
-		$number = mysql_num_rows($res);
-		if ($number != 0){
-			$arr = mysql_fetch_assoc($res);
-			$old = 'Лечащий врач: ['.$arr['therapist'].']';
-		}else{
-			$old = 'Не нашли старую запись.';
-		}
-		$time = time();
-		$query = "UPDATE `spr_clients` SET `therapist{$sw}`='{$therapist}' WHERE `id`='{$client_id}'";
-		mysql_query($query) or die(mysql_error());
-		mysql_close();
-		
-		//логирование
-		AddLog ('0', $session_id, '', 'Отредактирован лечащий врач у клиента ['.$client_id.']. ['.date('d.m.y H:i', $time).']. Лечащий врач: ['.$therapist.'].');
-	}
-	
 	//Обновление карточки пользователя из-под Web
 	function WriteWorkerToDB_Update($session_id, $id, $permissions, $contacts, $fired){
 		$old = '';

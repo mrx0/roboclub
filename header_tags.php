@@ -299,7 +299,7 @@
 			echo '<li><a href="scheduler.php">Расписание</a></li>';
 		}*/
 		if (($clients['see_all'] == 1) || $god_mode){
-			echo '<li><a href="clients.php">Клиенты</a></li>';
+			echo '<li><a href="clients.php">Дети</a></li>';
 		}
 		if (($groups['see_all'] == 1) || ($groups['see_own'] == 1) || $god_mode){
 			echo '<li><a href="groups.php">Группы</a></li>';

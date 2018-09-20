@@ -3,6 +3,11 @@
 //user.php
 //
 
+
+//!!!!!!
+// Добавили в базу
+//ALTER TABLE  `spr_clients` ADD  `status` INT( 1 ) UNSIGNED NOT NULL DEFAULT  '0';
+
 	require_once 'header.php';
 	
 	if ($enter_ok){
@@ -18,13 +23,26 @@
 				echo '
 					<div id="status">
 						<header>
-							<h2>Карточка клиента #'.$client[0]['id'].'</h2>
+							<h2>Карточка ребёнка #'.$client[0]['id'];
+
+                if (($clients['edit'] == 1) || $god_mode){
+                    echo '
+							<a href="client_edit.php?id='.$_GET['id'].'" class=""><img src="img/edit.png" title="Редактировать"></a>';
+                }
+
+                /*if (($clients['close'] == 1) || $god_mode){
+                    echo '
+							<a href="client_del.php?id='.$_GET['id'].'" class=""><img src="img/delete.png" title="Удалить"></a>';
+                }*/
+
+                echo '
+				            </h2>
 						</header>';
 				if (($clients['see_all'] == 1) || $god_mode){
 					echo '
 						<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
 							<div class="cellRight">
-								<span style="font-size: 70%;">Быстрый поиск клиента</span><br />
+								<span style="font-size: 70%;">Быстрый поиск ребёнка</span><br />
 								<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
 								<div id="search_result_fc2"></div>
 							</div>
@@ -38,7 +56,9 @@
 
 							<div class="cellsBlock2">
 								<div class="cellLeft">ФИО</div>
-								<div class="cellRight">'.$client[0]['full_name'].'</div>
+								<div class="cellRight">'.$client[0]['full_name'];
+                echo '
+				                </div>
 							</div>';
 							if (($client[0]['birthday'] == "-1577934000") || ($client[0]['birthday'] == 0)){
 								$age = '';
@@ -129,11 +149,7 @@
 				}
 				
 				echo '<br><br>';
-				
-				if (($clients['edit'] == 1) || $god_mode){
-					echo '
-							<a href="client_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
-				}
+
 				echo '
 					</div>';
 					
@@ -153,12 +169,17 @@
 						<div style="max-height: 300px; overflow-y: scroll;" id="commentsLog">';
 					foreach ($comments as $value){
 						echo '
-							<div style="border: 1px solid #CCC; border-radius: 5px; background-color: #EEE; padding: 10px; margin-bottom: 5px; width: 350px;">
+							<div style="border: 1px solid #CCC; border-radius: 5px; background-color: #EEE; padding: 10px; margin-bottom: 5px; width: 350px; position: relative;">
 								<div style="font-size: 70%; border-bottom: 1px dotted #CCC; text-align: right;">
 									<a href="user.php?id='.$value['create_person'].'" class="ahref">'.WriteSearchUser('spr_workers',$value['create_person'], 'user').'</a><br>
 									<span style="font-size:80%;">'.date('d.m.y H:i', $value['create_time']).'</span>
 								</div>
-								<div style="margin-top: 5px;">'.nl2br($value['description']).'</div>
+								<div style="margin-top: 5px;">'.nl2br($value['description']).'</div>';
+						if ($god_mode) {
+                            echo '
+								<div class="msg_container_time" style="position: absolute; top: 2px; cursor: pointer;" onclick="deleteThisComment('.$value['id'].');">Удалить</div>';
+                        }
+                        echo '
 							</div>';
 					}
 					echo '
