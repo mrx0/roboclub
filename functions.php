@@ -135,7 +135,7 @@
 				return $user[0]['name'];
 			}
 		}else{
-			return 'unknown';
+			return 'не найдено';
 		}
 	}
 	
@@ -385,6 +385,150 @@
 
         return $rezult_str;
 
+    }
+
+    //добавляем клиенту новую запись с балансом
+    function addClientBalanceNew ($client_id, $balance){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $time = date('Y-m-d H:i:s', time());
+
+        //Вставим новую запись баланса пациента
+        $query = "INSERT INTO `journal_balance` (
+                            `client_id`, `summ`, `create_time`, `create_person`)
+                            VALUES (
+                                '{$client_id}', '{$balance}', '{$time}', '{$_SESSION['id']}')";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+    }
+
+    //Обновим баланс контрагента
+    function updateBalance ($id, $client_id, $Summ, $debited){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $query = "UPDATE `journal_balance` SET `summ`='$Summ', `debited`='$debited'  WHERE `id`='$id'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+    }
+
+    //Смотрим баланс
+    function watchBalance ($client_id, $Summ){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $clientBalance = array();
+
+        //Посмотрим баланс, если он есть. Если нет, то сделаем INSERT
+        $query = "SELECT * FROM `journal_balance` WHERE `client_id`='$client_id'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientBalance, $arr);
+            }
+        }else{
+            addClientBalanceNew ($client_id, $Summ);
+        }
+
+        return($clientBalance);
+    }
+
+    //считаем по нарядам, сколько потрачено и обновляем
+    function calculatePayment ($client_id){
+
+        $rezult = array();
+
+        $msql_cnnct = ConnectToDB ();
+
+        $clientPayments = array();
+        $arr = array();
+
+        //Соберем все оплаты
+        $query = "SELECT * FROM `journal_payment` WHERE `client_id`='$client_id'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientPayments, $arr);
+            }
+        }
+
+        //Переменная для суммы
+        $Summ = 0;
+
+        //Если были там какие-то оплаты
+        if (!empty($clientPayments)) {
+            //Посчитаем сумму
+            foreach ($clientPayments as $payments) {
+                if ($payments['type'] != 1) {
+                    $Summ += $payments['summ'];
+                }
+            }
+        }
+
+        $rezult['summ'] = $Summ;
+
+        //return (json_encode($rezult, true));
+
+        return ($Summ);
+    }
+
+    //считаем по платежам, сколько внесено и обновляем
+    function calculateBalance ($client_id){
+
+        $rezult = array();
+
+        $msql_cnnct = ConnectToDB ();
+
+        $clientOrders = array();
+
+        //Соберем все (неудаленные) платежи
+        $query = "SELECT * FROM `journal_order` WHERE `client_id`='$client_id' AND `status` <> '9'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientOrders, $arr);
+            }
+        }
+
+        //Переменная для суммы
+        $Summ = 0;
+
+        //Если были там какие-то платежи
+        if (!empty($clientOrders)) {
+            //Посчитаем сумму
+            foreach ($clientOrders as $orders) {
+                $Summ += $orders['summ'];
+            }
+        }
+
+        //Смотрим есть ли баланс вообще
+        $clientBalance = watchBalance ($client_id, $Summ);
+        //var_dump($clientBalance);
+
+        //Если че та там есть с балансом
+        if (!empty($clientBalance)){
+            $rezult['summ'] = $Summ;
+            //$rezult['debited'] = calculatePayment($client_id);
+            $rezult['debited'] = 0;
+
+            //Обновим баланс контрагента
+            updateBalance ($clientBalance[0]['id'], $client_id, $Summ, $rezult['debited']);
+        }else {
+            $rezult['summ'] = $Summ;
+            $rezult['debited'] = 0;
+        }
+
+        return (json_encode($rezult, true));
+
+        //return ($Summ);
     }
 
 

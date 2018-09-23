@@ -135,12 +135,13 @@
 						
 									
 			echo '
+
 				<div style="font-size: 90%; margin-bottom: 10px;">
 					<span  style="font-size: 80%; color: rgb(100,100,100);">Чтобы добавить платёж, <br>найдите ребёнка и нажмите <i class="fa fa-rub" style="font-size: 150%;color: green;"></i><i class="fa fa-plus" style="font-size: 90%;color: green;"></i></span>
 				</div>';
 
             echo '
-					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
+					<div class="cellsBlock2" style="width: 400px; ">';
 
             echo $block_fast_search_client;
 
@@ -151,7 +152,7 @@
 				<br>';	
 			/*echo '
 					<p style="margin: 5px 0; padding: 2px; font-size: 80%;">
-						Быстрый фильтр: 
+						Фильтр:
 						<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
 					</p>';*/
 			

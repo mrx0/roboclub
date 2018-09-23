@@ -80,13 +80,13 @@
 					<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
 						<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
 							<a href="birthdays.php?m='.$prev.'&y='.$pYear.'" class="cellTime ahref" style="text-align: center;">
-								<span style="font-weight: normal; font-size: 70%;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
+								<span style="font-weight: normal; font-size: 80%;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
 							</a>
 							<div class="cellTime" style="text-align: center;">
 								<span style="color: #2EB703">'.$monthsName[$month].'</span><br>'.$year.'
 							</div>
 							<a href="birthdays.php?m='.$next.'&y='.$nYear.'" class="cellTime ahref" style="text-align: center;">
-								<span style="font-weight: normal; font-size: 70%;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
+								<span style="font-weight: normal; font-size: 80%;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
 							</a>
 							
 							<div class="cellTime" style="text-align: center; width: auto;">
@@ -161,7 +161,7 @@
 				
 				echo '
 					<p style="margin: 5px 0; padding: 2px;">
-						Быстрый фильтр: 
+						Фильтр: 
 						<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
 					</p>
 					

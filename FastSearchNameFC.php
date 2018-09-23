@@ -22,25 +22,8 @@
 								<span style='font-size: 90%; font-weight: bold;'>".$fast_search[$i]["full_name"]."</span>";
 						if (isset($_POST['path']) && ($_POST['path'] == 'group_client.php')){
 							echo "<span clientid='".$fast_search[$i]["id"]."' class='addClientInGroup' style='float: right;'
-							onclick='
-										var id = $(this).attr(\"clientid\");
-										ajax({
-											url: \"add_ClientInGroup_f.php\",
-											method: \"POST\",
-											
-											data:
-											{
-												id: id,
-												group: group,
-												session_id: session_id
-											},
-											success: function(req){
-												alert(req);
-												location.reload(true);
-											}
-										})
-							'
-							><i class='fa fa-plus' style='color: green; border: 1px solid #CCC; padding: 3px; cursor: pointer; '></i></span>";
+							onclick='addClientInGroup(".$fast_search[$i]["id"].", group)'>
+							<i class='fa fa-plus' style='color: green; border: 1px solid #CCC; padding: 3px; cursor: pointer; '></i></span>";
 						}
 						
 						if (($fast_search[$i]['birthday'] == "-1577934000") || ($fast_search[$i]['birthday'] == 0)){

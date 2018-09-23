@@ -10,7 +10,7 @@
 		//var_dump ($offices);
 		echo '
 			<header>
-				<h1>Координаты филиалов</h1>
+				<h1>Филиалы</h1>
 			</header>';
 			
 		if (($offices['add_new'] == 1) || $god_mode){

@@ -14,21 +14,50 @@
 				
 				$filial = SelDataFromDB('spr_office', $_GET['id'], 'id');
 				//var_dump($filial);
+
+                if ($filial !=0) {
+                    if ($filial[0]['close'] == 1) {
+                        $closed = TRUE;
+                    } else {
+                        $closed = FALSE;
+                    }
+                }
+
 				echo '
 					<div id="status">
 						<header>
-							<h2>Филиал</h2>
+							<h2>Филиал';
+
+                if (($offices['edit'] == 1) || $god_mode){
+
+                    if (!$closed){
+                        echo '
+							<a href="edit_filial.php?id='.$filial[0]['id'].'" class=""><img src="img/edit.png" title="Редактировать"></a>';
+                    }
+                }
+                echo '
+				            </h2>';
+                echo '
 						</header>';
+
+                //перешли сюда после добавления ребенка
+                if (($groups['edit'] == 1) || $god_mode) {
+                    if (isset($_GET['client_id_add'])) {
+                        echo '<span style="color: red">Вы перешли сюда после добавления в базу ребёнка</span><br>
+                        <a href="client.php?id='.$_GET['client_id_add'].'" class="ahref">'.WriteSearchUser('spr_clients', $_GET['client_id_add'], 'user_full').'</a><br>
+                        <span style="color: red">Добавьте ребёнка в группу, нажав кнопку <i class="fa fa-plus" style="color: green; "></i> напротив нужной группы</span>';
+                    }
+                }
+
 				echo '
 						<div id="data">';
 				
 				if ($filial !=0){
-					if ($filial[0]['close'] == 1){
-						$closed = TRUE;
+
+                    if ($closed){
 						echo '<div style="margin-bottom: 10px;"><span style= "background: rgba(255,39,119,0.7);">Филиал закрыт</span></div>';
-					}else{
-						$closed = FALSE;
 					}
+
 					echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Название</div>
@@ -45,20 +74,19 @@
 									<div class="cellRight">'.$filial[0]['contacts'].'</div>
 								</div>';
 					if (($offices['edit'] == 1) || $god_mode){
-						echo '
+
+						if ($closed){
+
+                            echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Закрыть</div>
-									<div class="cellRight">';
-						if (!$closed){
-							echo '
-										<a href="close_filial.php?id='.$filial[0]['id'].'&close=1" style="float: right;"><img src="img/delete.png" title="Закрыть"></a>';
-						}else{
-							echo '
+									<div class="cellRight">
 										<a href="close_filial.php?id='.$filial[0]['id'].'&close=1" style="float: right;"><img src="img/reset.png" title="Открыть"></a>';
-						}
-						echo '
+                            echo '
 									</div>
 								</div>';
+						}
+
 					}
 					if (!$closed){
 						echo '
@@ -66,13 +94,7 @@
 								
 								<a href="filial_shed.php?id='.$filial[0]['id'].'" class="b">Расписание филиала</a>';
 					}			
-					if (($offices['edit'] == 1) || $god_mode){
-						if (!$closed){
-							echo '
-								<br /><br />
-								<a href="edit_filial.php?id='.$filial[0]['id'].'" class="b">Редактировать</a><br><br>';
-						}
-					}
+
 					
 					if (($groups['see_all'] == 1) || ($groups['see_own'] == 1) || $god_mode){	
 						$journal_groups = SelDataFromDB('journal_groups', $filial[0]['id'], 'filial');
@@ -94,6 +116,7 @@
 												<div class="cellPriority" style="text-align: center"></div>
 												<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Название</div>
 												<div class="cellCosmAct" style="text-align: center" title="Журнал группы">-</div>
+												<div class="cellCosmAct" style="text-align: center" title="Участники группы">-</div>
 												<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Филиал</div>
 												<div class="cellCosmAct" style="text-align: center" title="Расписание филиала">-</div>
 												<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Возраст</div>
@@ -101,9 +124,13 @@
 												<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Участников</div>
 												<div class="cellText" style="text-align: center">Комментарий</div>';
 							if (($groups['edit'] == 1) || $god_mode){
+							    if (isset($_GET['client_id_add'])){
+                                    echo '
+												<div class="cellCosmAct" style="text-align: center" title="Добавить сюда">-</div>';
+                                }
 								echo '
-												<div class="cellCosmAct" style="text-align: center">-</div>
-												<div class="cellCosmAct" style="text-align: center">-</div>';
+												<div class="cellCosmAct" style="text-align: center" title="Редактировать">-</div>
+												<div class="cellCosmAct" style="text-align: center" title="Закрыть">-</div>';
 							}
 							
 							$closed_groups = '';
@@ -152,6 +179,7 @@
 												<div class="cellPriority" style="text-align: center; background-color: '.$journal_groups[$i]['color'].';"></div>
 												<a href="group.php?id='.$journal_groups[$i]['id'].'" class="cellName ahref" style="background-color: '.$filialColor.';">'.$journal_groups[$i]['name'].'</a>
 												<a href="journal.php?id='.$journal_groups[$i]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: green" title="Журнал группы"><i class="fa fa-calendar"></i></a>
+												<a href="group_client.php?id='.$journal_groups[$i]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: rgba(47, 47, 47, 0.93);" title="Участники группы"><i class="fa fa-users"></i></a>
 												<a href="filial.php?id='.$filials[0]['id'].'" id="4filter" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.$filial.'</a>
 												<a href="filial_shed.php?id='.$filials[0]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: rgb(182, 82, 227);" title="Расписание филиала"><i class="fa fa-clock-o"></i></a>
 												<div class="cellName" style="text-align: center; '.$bg_color.'">'.$age.'</div>
@@ -169,6 +197,13 @@
 													</div>
 													<div class="cellText" style="text-align: left;'.$bg_color.'">'.$journal_groups[$i]['comment'].'</div>';
 									if (($groups['edit'] == 1) || $god_mode){
+                                        if (isset($_GET['client_id_add'])){
+                                            $result_html .= '
+												<div class="cellCosmAct" style="text-align: center" title="Добавить сюда" onclick="addClientInGroup('.$_GET['client_id_add'].', '.$journal_groups[$i]['id'].');">
+                                                    <i class="fa fa-plus" style="color: green; border: 1px solid #CCC; padding: 3px; cursor: pointer; "></i>
+                                                </div>';
+                                        }
+
 										$result_html .= '
 													<div class="cellCosmAct" style="text-align: center"><a href="edit_group.php?id='.$journal_groups[$i]['id'].'"><img src="img/edit.png" title="Редактировать"></a></div>
 													<div class="cellCosmAct" style="text-align: center"><a href="close_group.php?id='.$journal_groups[$i]['id'].'&close=1">'.$cls_img.'</a></div>';

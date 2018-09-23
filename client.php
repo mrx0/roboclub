@@ -1,6 +1,6 @@
 <?php
 
-//user.php
+//client.php
 //
 
 
@@ -17,10 +17,23 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 
+            $msql_cnnct = ConnectToDB ();
+
 			$client = SelDataFromDB('spr_clients', $_GET['id'], 'user');
 			//var_dump($user);
 			
 			if ($client != 0){
+
+                $filials = SelDataFromDB('spr_office', $client[0]['filial'], 'offices');
+
+                if ($filials != 0){
+                    $filial_id = $filials[0]['id'];
+                    $filial_str = '<a href="filial.php?id='.$filials[0]['id'].'" class="ahref">'.$filials[0]['name'].'</a>';
+                }else{
+                    $filial_id = 0;
+                    $filial_str = 'Не указан филиал';
+                }
+
 				echo '
 					<div id="status">
 						<header>
@@ -39,6 +52,26 @@
                 echo '
 				            </h2>
 						</header>';
+
+                if (($finance['add_new'] == 1) || $god_mode){
+                    echo '
+							<a href="add_order.php?client_id='.$_GET['id'].'&filial_id='.$filial_id.'" class="b3">Добавить платёж</a>';
+                }
+
+                if (($finance['see_all'] == 1) || $god_mode){
+                    echo '
+							<a href="client_finance_tabel.php?client='.$_GET['id'].'" class="b3">Баланс</a>';
+                }
+
+                if (($finance['add_new'] == 1) || $god_mode){
+                    echo '
+							<a href="add_finance.php?client='.$_GET['id'].'" class="b3" style="background-color: #CCC;">Добавить платёж (старое) <i class="fa fa-rub"></i></a>';
+                }
+                if (($finance['see_all'] == 1) || $god_mode){
+                    echo '
+							<a href="client_finance.php?client='.$_GET['id'].'" class="b3" style="background-color: #CCC;">История (старое) <i class="fa fa-rub"></i></a>';
+                }
+
 				if (($clients['see_all'] == 1) || $god_mode){
                     echo '
 					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
@@ -105,69 +138,115 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">Филиал</div>
 									<div class="cellRight">';
-				$filials = SelDataFromDB('spr_office', $client[0]['filial'], 'offices');
-				if ($filials != 0){
-					echo '<a href="filial.php?id='.$filials[0]['id'].'" class="ahref">'.$filials[0]['name'].'</a>';	
-				}else{
-					echo 'Не указан филиал';
-				}
+
+                echo $filial_str;
+
 				echo '
 									</div>
-								</div>
-
+								</div>';
+                echo '
 								<div class="cellsBlock2">
-									<div class="cellLeft">Группа</div>
+									<div class="cellLeft">Группа(ы)</div>
 									<div class="cellRight">';
-				$groups = SelDataFromDB('journal_groups_clients', $_GET['id'], 'client');
-				if ($groups != 0){
-					//var_dump ($groups);
-					foreach($groups as $key => $value){
-						$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
-						if ($group != 0){
-							echo '<a href="group.php?id='.$value['group_id'].'" class="ahref" style="padding: 0 4px; background-color: '.$group[0]['color'].'">'.$group[0]['name'].'</a>';	
-						}else{
-							echo 'ошибка группы';
-						}
+
+				//$groups = SelDataFromDB('journal_groups_clients', $_GET['id'], 'client');
+
+                $groups_j = array();
+
+                $query = "SELECT j_grcl.*, j_gr.name AS group_name, j_gr.color AS color, s_o.name AS office_name FROM `journal_groups_clients` j_grcl
+                            LEFT JOIN `journal_groups` j_gr ON j_gr.id = j_grcl.group_id
+                            LEFT JOIN `spr_office` s_o ON j_gr.filial = s_o.id
+                            WHERE j_grcl.client='{$_GET['id']}';";
+                //var_dump($query);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        array_push($groups_j, $arr);
+                    }
+                }
+
+				if (!empty($groups_j)){
+					//var_dump ($groups_j);
+
+					foreach($groups_j as $key => $value){
+						//$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
+                        //var_dump ($group);
+
+						echo '
+                            <div style="margin-bottom: 7px; border: 1px solid #CCC; padding: 2px; background-color: '.$value['color'].'">
+                                <div style="display: inline; ">
+                                    <a href="group.php?id='.$value['group_id'].'" class="ahref" style="padding: 0 4px;"><b>'.$value['group_name'].'</b> [<i>'.$value['office_name'].'</i>]</a>
+                                </div>';
+                        if (($finance['add_new'] == 1) || $god_mode){
+                            echo ' 
+                                <div style="display: inline;">
+							        <a href="invoice_add.php?client_id='.$_GET['id'].'&group_id='.$value['group_id'].'" class="b3" style="font-size: 90%">Добавить счёт</a>
+							    </div>';
+                        }
+                        echo '
+                            </div>';
 					}
 				}else{
 					echo 'Не в группе';
 				}
 				echo '
 									</div>
-								</div>
-								<br>';
+								</div>';
 
+				//Тарифы
 
-									
-				if (($finance['add_new'] == 1) || $god_mode){
-					echo '
-							<a href="add_order.php?client='.$_GET['id'].'" class="b">Добавить платёж <i class="fa fa-rub"></i></a>';
-				}
-				if (($finance['see_all'] == 1) || $god_mode){
-					echo '
-							<a href="client_finance_tabel.php?client='.$_GET['id'].'" class="b">История <i class="fa fa-rub"></i></a>';
-				}
+                $tarifs_j = array();
 
-                echo '<br>';
-				
-				if (($finance['add_new'] == 1) || $god_mode){
-					echo '
-							<a href="add_finance.php?client='.$_GET['id'].'" class="b" style="background-color: #CCC;">Добавить платёж (старое) <i class="fa fa-rub"></i></a>';
-				}
-				if (($finance['see_all'] == 1) || $god_mode){
-					echo '
-							<a href="client_finance.php?client='.$_GET['id'].'" class="b" style="background-color: #CCC;">История (старое) <i class="fa fa-rub"></i></a>';
-				}
+                //$query = "SELECT * FROM `logs` ORDER BY `date` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]};";
 
-				echo '<br><br>';
+                //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                /*$number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        array_push($tarifs_j, $arr);
+                    }
+                }*/
+
+                echo '
+                            <div style="width: 400px; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-top: 10px;">
+                                <div style="color: darkred; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin: -5px -10px; background-color: rgba(239, 253, 195, 0.39);">
+                                    <div style="display: inline; margin-right: 20px;"><i>Тарифы</i></div>
+                                    <div style="display: inline;">
+                                        <a href="client_tarif_edit.php?client_id='.$_GET['id'].'" class="">
+                                            <img src="img/table-edit-16x16.gif" title="Управление" style="vertical-align: middle;">
+                                        </a>
+                                    </div>
+                                </div>
+								<div style="margin-top: 20px;">';
+
+				if (!empty($tarifs_j)){
+					//var_dump ($groups);
+					/*foreach($groups as $key => $value){
+						$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
+						if ($group != 0){
+							echo '<a href="group.php?id='.$value['group_id'].'" class="ahref" style="padding: 0 4px; background-color: '.$group[0]['color'].'">'.$group[0]['name'].'</a>';
+						}else{
+							echo 'ошибка группы';
+						}
+					}*/
+				}else {
+                    echo '<span style="color: red">не определены</span>';
+                }
+				echo '
+                                </div>
+                            </div>';
 
 				echo '
 					</div>';
 					
 					
 				echo '
-					<div style="margin-top: 20px; border: 1px dotted green; padding: 10px; width: 400px; background-color: rgba(113, 226, 209, 0.2);">
-						<div style="font-size: 90%; color: #999; margin-bottom: 10px;">Примечания</div>';
+					<div style="margin-top: 20px; border: 1px dotted green; padding: 5px 10px; width: 400px; background-color: rgba(113, 226, 209, 0.2);">
+						<div style="font-size: 75%; color: #999; margin-bottom: 5px;">Примечания</div>';
 
 				//отобразить комментарии
 				
@@ -199,7 +278,7 @@
 					
 				//оставить комментарий
 				echo '
-						<div style="margin-top: 20px;">
+						<div style="margin-top: 5px;">
 							<form>
 								<div id="reqCom"></div>
 								<div><textarea name="t_s_comment" id="t_s_comment" cols="40" rows="3"></textarea></div>
@@ -207,6 +286,9 @@
 							</form>
 						</div>
 					</div>';
+
+
+                CloseDB($msql_cnnct);
 				
 				echo '
 					<script type="text/javascript">
@@ -228,7 +310,10 @@
 							});
 						}
 						//Прокручиваем лог в конец
-						document.querySelector("#commentsLog").scrollTop = document.querySelector("#commentsLog").scrollHeight;
+						if ($("*").is("#commentsLog")){
+						    document.querySelector("#commentsLog").scrollTop = document.querySelector("#commentsLog").scrollHeight;
+						}
+						    
 						
 					</script>';
 			}else{

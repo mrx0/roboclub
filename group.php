@@ -36,7 +36,13 @@
 				echo '
 					<div id="status">
 						<header>
-							<h2>Группа</h2>
+							<h2>Группа';
+                if (($groups['edit'] == 1) || $god_mode){
+                    echo '
+							<a href="edit_group.php?id='.$_GET['id'].'" class""><img src="img/edit.png" title="Редактировать"></a>';
+                }
+                echo '
+				            </h2>
 						</header>';
 				if ($j_group != 0){
 					if (($groups['see_all'] == 1) || (($groups['see_own'] == 1) && (($j_group[0]['worker'] == $_SESSION['id']) || ($iReplace))) || $god_mode){
@@ -91,7 +97,8 @@
 											<div class="cellRight">';
 						//Если в группе нет тренера
 						if ($j_group[0]['worker'] == 0){
-							echo '<span style="text-align: center; background-color: rgba(255, 0, 99, 0.52);">не указан</span>';
+							//echo '<span style="text-align: center; background-color: rgba(255, 0, 99, 0.52);">не указан</span>';
+							echo '<span style="color: red;">не назначен</span>';
 						}else{
 							echo '<a href="user.php?id='.$j_group[0]['worker'].'" class="ahref" style="text-align: center;">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</a>';
 						}
@@ -156,12 +163,8 @@
 								echo '
 											<a href="journal.php?id='.$_GET['id'].'" class="b">Журнал</a>';
 						}
-								echo '
-											<br /><br />';
-						if (($groups['edit'] == 1) || $god_mode){
-							echo '
-											<a href="edit_group.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
-						}
+
+
 					}else{
 						echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 					}

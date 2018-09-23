@@ -3,27 +3,27 @@
 //add_client.php
 //Добавить клиента
 
-	require_once 'header.php';
-	
-	if ($enter_ok){
-		require_once 'header_tags.php';
-		if (($clients['add_new'] == 1) || $god_mode){
-			include_once 'DBWork.php';
-			
-			$permissions = SelDataFromDB('spr_permissions', '', '');
-			
-			echo '
+require_once 'header.php';
+
+if ($enter_ok){
+    require_once 'header_tags.php';
+    if (($clients['add_new'] == 1) || $god_mode){
+        include_once 'DBWork.php';
+
+        //$permissions = SelDataFromDB('spr_permissions', '', '');
+
+        echo '
 				<div id="status">
 					<header>
 						<h2>Добавить ребёнка</h2>
 						Заполните поля
 					</header>';
 
-			echo '
+        echo '
 					<div id="data">';
-			echo '
+        echo '
 						<div id="errrror"></div>';
-			echo '
+        echo '
 							<div class="cellsBlock2">
 								<div class="cellLeft">Фамилия</div>
 								<div class="cellRight">
@@ -51,55 +51,55 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">Дата рождения</div>
 								<div class="cellRight">';
-			echo '
+        echo '
 									<select name="sel_date" id="sel_date">
 										<option value="00">00</option>';
-			$i = 1;
-			while ($i <= 31) {
-				echo '
+        $i = 1;
+        while ($i <= 31) {
+            echo '
 										<option value="'.$i.'">'.$i.'</option>';
-				$i++;
-			}
-			echo '
+            $i++;
+        }
+        echo '
 									</select>';
-			// Месяц
-			echo '
+        // Месяц
+        echo '
 									<select name="sel_month" id="sel_month">
 										<option value="00">---</option>';
-			$month = array(
-				"Январь",
-				"Февраль",
-				"Март",
-				"Апрель",
-				"Май",
-				"Июнь",
-				"Июль",
-				"Август",
-				"Сентябрь",
-				"Октябрь",
-				"Ноябрь",
-				"Декабрь"
-			);
-			foreach ($month as $m => $n) {
-				echo '
+        $month = array(
+            "Январь",
+            "Февраль",
+            "Март",
+            "Апрель",
+            "Май",
+            "Июнь",
+            "Июль",
+            "Август",
+            "Сентябрь",
+            "Октябрь",
+            "Ноябрь",
+            "Декабрь"
+        );
+        foreach ($month as $m => $n) {
+            echo '
 										<option value="'.($m + 1).'">'.$n.'</option>';
-			}
-			echo '
+        }
+        echo '
 									</select>';
-			// Год
-			echo '
+        // Год
+        echo '
 									<select name="sel_year" id="sel_year">
 										<option value="0000">0000</option>';
-			$j = 2000;
-			while ($j <= 2020) {
-				echo '
+        $j = 2000;
+        while ($j <= 2020) {
+            echo '
 										<option value="'.$j.'">'.$j.'</option>';
-				$j++;
-			}
-			echo '	
+            $j++;
+        }
+        echo '	
 									</select>';
 
-			echo '
+        echo '
 									<label id="sel_date_error" class="error"></label>
 									<label id="sel_month_error" class="error"></label>
 									<label id="sel_year_error" class="error"></label>
@@ -125,51 +125,29 @@
 								<div class="cellRight"><textarea name="comment" id="comment" cols="35" rows="5"></textarea></div>
 							</div>';
 
-			//Тариф
-
-            //!!! Переделай на следующее окно
-
-            //Получим все тарифы
-            $tarifs_j = array();
-
-            $msql_cnnct = ConnectToDB ();
-
-            $query = "SELECT * FROM `spr_tarifs` WHERE `status` <> '9';";
-
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-            $number = mysqli_num_rows($res);
-            if ($number != 0){
-                while ($arr = mysqli_fetch_assoc($res)){
-                    array_push($tarifs_j, $arr);
-                }
-            }
-
-/*
-            echo '
+        $filials = SelDataFromDB('spr_office', '', '');
+        echo '
 							<div class="cellsBlock2">
-								<div class="cellLeft">Тариф</div>
+								<div class="cellLeft">Филиал</div>
 								<div class="cellRight">
 									<select name="filial" id="filial">
-										<option value="0" selected>Выберите тариф</option>';
-            if (!empty($tarifs_j)){
-                for ($i=0;$i<count($tarifs_j);$i++){
-                    echo "<option value='".$tarifs_j[$i]['id']."'>".$tarifs_j[$i]['name']."</option>";
-                }
+										<option value="0" selected>Выберите филиал</option>';
+        if ($filials != 0){
+            for ($i=0;$i<count($filials);$i++){
+                echo "<option value='".$filials[$i]['id']."'>".$filials[$i]['name']."</option>";
             }
-            echo '
+        }
+        echo '
 									</select>
 									<label id="filial_error" class="error"></label>
 								</div>
-							</div>';*/
-
-
-
-			echo '				
+							</div>';
+        echo '				
 							<div id="errror"></div>
-							<br><input type="button" class="b" value="Добавить и перейти к следующему шагу" onclick="Ajax_add_client();">';
-				
-			echo '
+							<input type="button" class="b" value="Добавить" onclick="Ajax_add_client();">
+						</form>';
+
+        echo '
 					</div>
 				</div>
 				
@@ -180,13 +158,14 @@
 					});
 				</script>';
 
-		}else{
-			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
-		}
-	}else{
-		header("location: enter.php");
-	}	
-		
-	require_once 'footer.php';
+
+    }else{
+        echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+    }
+}else{
+    header("location: enter.php");
+}
+
+require_once 'footer.php';
 
 ?>

@@ -62,8 +62,16 @@
 				echo '
 							</div>
 							
-							<div style="font-size: 90%; color: #999; margin-bottom: 20px;">Тренер: 
-								<span style="color: rgb(36,36,36); font-weight: bold;"><a href="user.php?id='.$j_group[0]['worker'].'" class="ahref">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</a></span>
+							<div style="font-size: 90%; color: #999; margin-bottom: 20px;">Тренер:
+								<span style="color: rgb(36,36,36); font-weight: bold;">';
+				if ($j_group[0]['worker'] != 0) {
+                    echo '
+								    <a href="user.php?id=' . $j_group[0]['worker'] . '" class="ahref">' . WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user') . '</a>';
+                }else{
+                    echo 'не назначен';
+                }
+                echo '
+								</span>
 							</div>';
 				
 				if ($j_group[0]['close'] != '1'){
@@ -193,7 +201,7 @@
 
 									echo '
 												<div class="cellTime" style="width: 140px; text-align: center">', (($free_uch_arr[$i]['birthday'] == "-1577934000") || ($free_uch_arr[$i]['birthday'] == 0)) ? "не указана" : date("d.m.Y", $free_uch_arr[$i]["birthday"]) ,' / <b>'.$age.'</b></div>
-												<div id="addClientInGroup" clientid="'.$free_uch_arr[$i]['id'].'" class="cellCosmAct addClientInGroup" style="text-align: center">
+												<div id="addClientInGroup" class="cellCosmAct addClientInGroup" style="text-align: center" onclick="addClientInGroup('.$free_uch_arr[$i]['id'].', '.$_GET['id'].');">
 													<i class="fa fa-plus" style="color: green; cursor: pointer;"></i>
 												</div>
 												<div id="cellTime" class="cellTime" style="text-align: center; font-size: 80%;">
@@ -216,44 +224,28 @@
 									<a href="group_add_client.php?id='.$_GET['id'].'" class="b">Заполнить участниками</a>';*/
 
 						echo '
-									<br /><br />';
+						<div style="position: absolute; top: 20px; right: 50px; z-index: 101;">';
 									
 						echo '
 							<div style="font-size: 90%; margin-bottom: 10px;">
 								Добавление "в лоб": <br>
-								<span  style="font-size: 70%; color: rgb(100,100,100);">Поиск и добавление участников,<br>в обход критериев (район, возраст...)</span>
+								<span  style="font-size: 70%; color: rgb(100,100,100);">Поиск и добавление участников,в обход критериев (район, возраст...)</span>
 							</div>';
 
                         echo '
-					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
+                            <div class="cellsBlock2" style="width: 400px;">';
 
-                        echo $block_fast_search_client;
+                                echo $block_fast_search_client;
+
+                                echo '
+                            </div>';
 
                         echo '
-					</div>';
+                        </div>';
 									
 						echo '
 							<script type="text/javascript">
 								$(document).ready(function(){
-									$(\'.addClientInGroup\').on(\'click\', function(data){
-										var id = $(this).attr(\'clientid\');
-										ajax({
-											url: "add_ClientInGroup_f.php",
-											method: "POST",
-											
-											data:
-											{
-												id: id,
-												group: '.$_GET['id'].',
-												session_id: '.$_SESSION['id'].'
-											},
-											success: function(req){
-												//document.getElementById("request").innerHTML = req;
-												alert(req);
-												location.reload(true);
-											}
-										})
-									})
 									
 									$(\'.delClientFromGroup\').on(\'click\', function(data){
 										var rys = confirm("Вы уверены?");

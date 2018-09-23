@@ -1,5 +1,8 @@
 <?php 
 
+//close_filial.php
+
+
 	require_once 'header.php';
 	
 	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
@@ -34,7 +37,7 @@
 					AddLog ('0', $_SESSION['id'], '', 'Статус филиала ['.$filial[0]['name'].'] изменён на ['.$closed_text.']');	
 			
 					echo '
-						Филиал ['.$filial[0]['name'].'] '.$closed_text.'.
+						Филиал <a href="filial.php?id='.$filial[0]['id'].'">['.$filial[0]['name'].']</a> '.$closed_text.'.
 						<br /><br />
 						<a href="index.php" class="b">На главную</a>
 						';

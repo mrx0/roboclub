@@ -43,41 +43,11 @@
 						//Переменная для тестов
                         //$client_id = 778;
 
-						$client_id = WriteClientToDB_Edit ($_SESSION['id'], $name, $full_name, $_POST['fname'], $_POST['iname'], $_POST['oname'], $_POST['contacts'],  $_POST['comment'], $birthday, $birth, $_POST['sex'], 0);
+						$client_id = WriteClientToDB_Edit ($_SESSION['id'], $name, $full_name, $_POST['fname'], $_POST['iname'], $_POST['oname'], $_POST['contacts'],  $_POST['comment'], $birthday, $birth, $_POST['sex'], $_POST['filial']);
 
-						$data = "";
-
-			            $filials = SelDataFromDB('spr_office', '', '');
-
-                        $data .= "
-                            <header>
-                                <h2>Ребёнок ".$full_name." добавлен</h2>
-                                Теперь вы можете определить филиал и перейти к следующему шагу.
-                            </header>";
-
-			            $data .= "
-                            <div id='data'>
-                                <div class='cellsBlock2'>
-                                    <div class='cellLeft'>Филиал</div>
-                                    <div class='cellRight'>
-                                        <select name='filial' id='filial'>
-                                            <option value='0' selected>Выберите филиал</option>";
-									if ($filials != 0){
-										for ($i=0;$i<count($filials);$i++){
-                                            $data .= "<option value='".$filials[$i]['id']."'>".$filials[$i]['name']."</option>";
-										}
-									}
-                        $data .= "
-									</select>
-									<label id='filial_error' class='error'></label>
-								</div>
-							</div>";
-
-                        $data .= "
-                            <div id='errror'></div>
-                            <input type='hidden' id='client_id' name='client_id' value='".$client_id."'>
-							<br><input type='button' class='b' value='Перейти к следующему шагу' onclick='Ajax_update_filial_client(".$client_id.");'>";
-
+                        $data = "
+                                <div class='query_ok' style='padding: 10px; margin-bottom: 10px;'>Ребёнок <a href='client.php?id=$client_id' class='ahref'>$full_name</a> добавлен</div>
+                                <div><a href='filial.php?id={$_POST['filial']}&client_id_add={$client_id}' class='b3'>Добавить в группу</a></div>";
 
                         echo json_encode(array('result' => 'success', 'data' => $data, 'client_id' => $client_id));
 

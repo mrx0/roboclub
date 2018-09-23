@@ -73,7 +73,7 @@
 					<a href="add_client.php" class="b">Добавить</a>';
 			}
 			if (!$filter){
-				echo '<button class="md-trigger b" data-modal="modal-11">Поиск</button>';
+				//echo '<button class="md-trigger b" data-modal="modal-11">Поиск</button>';
 			}
 			echo '
 				</header>';
@@ -88,9 +88,8 @@
             echo '
 					</div>';
 				echo '
-					<br />
 					<div>
-						Нажмите первую букву фамилии<br /><br />
+						<span style="font-size: 80%; color: #CCC">Нажмите первую букву фамилии</span><br>
 						<a href="clients.php?alpha=А" class="', (!empty($_GET['alpha']) && ($_GET['alpha'] == 'А') || empty($_GET['alpha'])) ? 'AlphaSearchSel' : 'AlphaSearch' ,'">А</a> 
 						<a href="clients.php?alpha=Б" class="', (!empty($_GET['alpha']) && ($_GET['alpha'] == 'Б')) ? 'AlphaSearchSel' : 'AlphaSearch' ,'">Б</a>  
 						<a href="clients.php?alpha=В" class="', (!empty($_GET['alpha']) && ($_GET['alpha'] == 'В')) ? 'AlphaSearchSel' : 'AlphaSearch' ,'">В</a>  
@@ -130,8 +129,8 @@
 			
 			if ($clients_j != 0){
 				echo '
-					<p style="margin: 5px 0; padding: 2px;">
-						Быстрый фильтр: 
+					<p style="margin: 5px 0 0; padding: 0; font-size: 90%">
+						Фильтр: 
 						<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
 					</p>
 					
