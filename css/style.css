@@ -235,6 +235,15 @@ area {
 	min-width:250px;
 }
 
+.cellText2 {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+}
+
+
 .cellComment {
 	width: 400px;
 }

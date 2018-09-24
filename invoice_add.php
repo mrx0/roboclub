@@ -65,13 +65,14 @@
 
                                 if (!isset($_SESSION['invoice_data'][$_GET['client_id']])) {
                                     $_SESSION['invoice_data'][$_GET['client_id']][$_GET['group_id']]['t_number_active'] = 0;
-                                    $_SESSION['invoice_data'][$_GET['client_id']][$_GET['group_id']]['discount'] = $discount = 0;
+                                    //$_SESSION['invoice_data'][$_GET['client_id']][$_GET['group_id']]['discount'] = $discount = 0;
                                     $_SESSION['invoice_data'][$_GET['client_id']][$_GET['group_id']]['data'] = array();
                                 }
-                                var_dump($_SESSION['invoice_data']);
+                                //var_dump($_SESSION['invoice_data']);
 
                                 //var_dump($_SESSION);
-                                //var_dump($_SESSION['invoice_data'][$_GET['client_id']]['data']);
+                                //var_dump($_SESSION['invoice_data'][$_GET['client_id']][$_GET['group_id']]);
+                                //var_dump($_SESSION['invoice_data'][$_GET['client_id']][$_GET['group_id']]['data']);
 
                                 echo '
                                 <div id="status">
@@ -172,7 +173,7 @@
                                                 //var_dump($tarif_item);
                                                 echo '
                                                     <li style="cursor: pointer;">
-                                                        <p onclick="checkPriceItem(' .$tarif_item['id'] . ', ' . 0 . ')">
+                                                        <p onclick="checkPriceItem(' .$tarif_item['id'] . ')">
                                                             <span class="" style="padding: 0 20px;">' . $tarif_item['name'] . ' </span> <span class="" style="float: right; color: red;">' . $tarif_item['cost'] . ' руб.</span>
                                                         </p>
                                                     </li>';
@@ -256,7 +257,7 @@
                                             $(document).ready(function(){
             
                                                 //получим активный зуб
-                                                var t_number_active = document.getElementById("t_number_active").value;
+                                                var t_number_active = $("#t_number_active").val();
                                                 
                                                 if (t_number_active != 0){
                                                     //colorizeTButton (t_number_active);
@@ -279,7 +280,7 @@
                                                     //addInvoiceInSession(t_number);
                                                 });
                                                 
-                                                //fillInvoiseRez(true);
+                                                fillInvoiseRez(true);
                                             });
                                             
                                         </script>';
