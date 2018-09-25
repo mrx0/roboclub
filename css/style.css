@@ -268,15 +268,23 @@ area {
 	min-width:150px;
 }
 
-.cellName {
+.cellName, .cellOrder {
 	display: table-cell !important;
 	display: inline; /* для IE */
 	padding:4px;
 	border: 1px solid #BFBCB5;
 	vertical-align:middle;
+	/*white-space:nowrap;*/
+}
+
+.cellName{
 	width:120px;
 	min-width:120px;
-	/*white-space:nowrap;*/
+}
+
+.cellOrder{
+	width: 200px;
+	min-width: 200px;
 }
 
 .cellCosmAct {
@@ -552,6 +560,7 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 	/*background: rgba(00,255,255,0.7);*/
 	font-style: italic;
 	color: orangered;
+	border-bottom: 1px dashed rgb(255, 0, 0);
 }
 
 .ahref_wodec {
@@ -1980,4 +1989,26 @@ ul.ul-tree li:last-child {
 
 .settings_text:hover{
 	color: #FF9900;
+}
+
+/*Центральный блок над оверлеем появляется иногда*/
+.center_block {
+	/*width: 200px; /* Ширина элемента в пикселах */
+	width: 30%;
+	padding: 10px; /* Поля вокруг текста */
+	background: rgb(254, 253, 211);/* Цвет фона */
+	z-index: 106; /* окно должно быть наиболее большем слое */
+	text-align: center;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+	position: absolute;
+	height: 150px;
+}
+
+/*Заголовок страниц*/
+#doc_title{
+	display: none;
 }

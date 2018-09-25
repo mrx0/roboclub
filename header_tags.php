@@ -14,7 +14,7 @@
 			<meta name="keywords" content="" />
 			<meta name="author" content="" />
 			
-			<title>:)</title>
+			<title>R1t</title>
 			
 			<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
 			<!-- Font Awesome -->

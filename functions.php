@@ -404,12 +404,39 @@
 
     }
 
+    //добавляем клиенту новую запись с долгом
+    function addClientDebtNew ($client_id, $balance){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $time = date('Y-m-d H:i:s', time());
+
+        //Вставим новую запись баланса пациента
+        $query = "INSERT INTO `journal_debt` (
+                            `client_id`, `summ`, `create_time`, `create_person`)
+                            VALUES (
+                                '{$client_id}', '{$balance}', '{$time}', '{$_SESSION['id']}')";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+    }
+
     //Обновим баланс контрагента
     function updateBalance ($id, $client_id, $Summ, $debited){
 
         $msql_cnnct = ConnectToDB ();
 
         $query = "UPDATE `journal_balance` SET `summ`='$Summ', `debited`='$debited'  WHERE `id`='$id'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+    }
+
+    //Обновим долг контрагента
+    function updateDebt ($id, $client_id, $Summ){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $query = "UPDATE `journal_debt` SET `summ`='$Summ'  WHERE `id`='$id'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
     }
@@ -478,6 +505,31 @@
         return ($Summ);
     }
 
+    //Смотрим долг
+    function watchDebt ($client_id, $Summ){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $clientDebt = array();
+        $arr = array();
+
+        //Посмотрим баланс, если он есть. Если нет, то сделаем INSERT
+        $query = "SELECT * FROM `journal_debt` WHERE `client_id`='$client_id'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientDebt, $arr);
+            }
+        }else{
+            addClientDebtNew ($client_id, $Summ);
+        }
+
+        return($clientDebt);
+    }
+
+
     //считаем по платежам, сколько внесено и обновляем
     function calculateBalance ($client_id){
 
@@ -531,5 +583,57 @@
         //return ($Summ);
     }
 
+    //считаем по нарядам, сколько выставлено и обновляем
+    function calculateDebt ($client_id){
+
+        $rezult = array();
+
+        $msql_cnnct = ConnectToDB ();
+
+        $clientInvoices = array();
+        $arr = array();
+
+        //Соберем все (неудаленные) наряды, где общая сумма не равна оплаченной
+        $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='$client_id' AND `status` <> '9' AND `summ` <> `paid`";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientInvoices, $arr);
+            }
+        }
+        //return ($clientInvoices);
+
+        //Переменная для суммы
+        $Summ = 0;
+
+        //Если были там какие-то наряды
+        if (!empty($clientInvoices)) {
+            //Посчитаем сумму
+            foreach ($clientInvoices as $invoices) {
+                $Summ += $invoices['summ'] - $invoices['paid'];
+            }
+        }
+
+        //Смотрим есть ли долг в базе вообще
+        $clientDebt = watchDebt ($client_id, $Summ);
+        //var_dump($clientBalance);
+
+        //Если че та там есть с долгом
+        if (!empty($clientDebt)){
+            $rezult['summ'] = $Summ;
+
+            //Обновим баланс контрагента
+            updateDebt ($clientDebt[0]['id'], $client_id, $Summ);
+        }else {
+            $rezult['summ'] = $Summ;
+        }
+
+        return (json_encode($rezult, true));
+
+        //return ($Summ);
+    }
 
 ?>

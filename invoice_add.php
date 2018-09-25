@@ -74,6 +74,7 @@
                                 //var_dump($_SESSION['invoice_data'][$_GET['client_id']][$_GET['group_id']]);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client_id']][$_GET['group_id']]['data']);
 
+
                                 echo '
                                 <div id="status">
                                     <header>
@@ -91,6 +92,10 @@
                                     </ul>';
 
                                 echo '
+
+                                    <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;">
+                                    </ul>
+                                    
                                     <div id="data">';
 
                                 echo '	
@@ -200,7 +205,7 @@
                                                 <div id="errror" class="invoceHeader" style="position: relative;">
                                                     <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                         <div>	
-                                                            <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . 0 . ', \'add\')">
+                                                            <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd()">
                                                         </div>
                                                     </div>
                                                     <div>
@@ -243,7 +248,7 @@
 
                                     echo '
                                             <div>	
-                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd('. 0 . ', \'add\')">
+                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd()">
                                             </div>
                                         </div>
                     

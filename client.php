@@ -60,7 +60,7 @@
 
                 if (($finance['see_all'] == 1) || $god_mode){
                     echo '
-							<a href="client_finance_tabel.php?client='.$_GET['id'].'" class="b3">Баланс</a>';
+							<a href="client_balance.php?client_id='.$_GET['id'].'" class="b3">Баланс</a>';
                 }
 
                 if (($finance['add_new'] == 1) || $god_mode){
@@ -193,12 +193,12 @@
 					echo 'Не в группе';
 				}
 				echo '
-									</div>
-								</div>';
+                        </div>
+                    </div>';
 
 				//Тарифы
 
-                $tarifs_j = array();
+                //$tarifs_j = array();
 
                 //$query = "SELECT * FROM `logs` ORDER BY `date` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]};";
 
@@ -211,7 +211,7 @@
                     }
                 }*/
 
-                echo '
+                /*echo '
                             <div style="width: 400px; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-top: 10px;">
                                 <div style="color: darkred; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin: -5px -10px; background-color: rgba(239, 253, 195, 0.39);">
                                     <div style="display: inline; margin-right: 20px;"><i>Тарифы</i></div>
@@ -221,9 +221,9 @@
                                         </a>
                                     </div>
                                 </div>
-								<div style="margin-top: 20px;">';
+								<div style="margin-top: 20px;">';*/
 
-				if (!empty($tarifs_j)){
+				//if (!empty($tarifs_j)){
 					//var_dump ($groups);
 					/*foreach($groups as $key => $value){
 						$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
@@ -233,12 +233,12 @@
 							echo 'ошибка группы';
 						}
 					}*/
-				}else {
+				/*}else {
                     echo '<span style="color: red">не определены</span>';
-                }
-				echo '
+                }*/
+				/*echo '
                                 </div>
-                            </div>';
+                            </div>';*/
 
 				echo '
 					</div>';

@@ -444,7 +444,7 @@
 
             if (invoice_id != 0) {
                 paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
-                    '<a href= "payment_add.php?invoice_id=' + invoice_id + '" class="b">Оплатить наряд #' + invoice_id + '</a>' +
+                    '<a href= "payment_add.php?invoice_id=' + invoice_id + '" class="b">Оплатить счёт #' + invoice_id + '</a>' +
                     '</li>';
             }
 
@@ -506,7 +506,7 @@
                                         '</li>' +
                                         paymentStr +
                                         '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
-                                        '<a href="finance_account.php?client_id=' + client_id + '" class="b">Управление счётом</a>' +
+                                        '<a href="client_balance.php?client_id=' + client_id + '" class="b">Баланс</a>' +
                                         '</li>' +
                                         '</ul>');
 
@@ -1915,31 +1915,79 @@
     };*/
 
 
+    //Добавляем/редактируем в базу наряд из сессии
+    function Ajax_invoice_add(mode){
+
+        var link = "invoice_add_f.php";
+
+        var Summ = $("#calculateInvoice").html();
+
+        var client_id = $("#client_id").val();
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    client_id: client_id,
+                    group_id: $("#group_id").val(),
+
+                    summ: Summ
+
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+                $('.center_block').remove();
+                $('#overlay').hide();
+
+                if(res.result == "success"){
+                    $('#data').hide();
+                    $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Cчёт добавлен</li>'+
+                        '<li class="cellsBlock" style="width: auto;">'+
+                        '<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
+                        '<b>Счёт #'+res.data+'</b><br>'+
+                        '</a>'+
+                        '<div class="cellName">'+
+                        '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+                        'Сумма:<br>'+
+                        '<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
+                        '</div>'+
+                        '</div>'+
+                        '</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
+                        '</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="add_order.php?client_id='+client_id+'&invoice_id='+res.data+'" class="b">Добавить платёж</a>'+
+                        '</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="client_balance.php?client_id='+client_id+'" class="b">Баланс</a>'+
+                        '</li>'+
+                        '</ul>');
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
+
     //Показываем блок с суммами и кнопками Для наряда
-    /*function showInvoiceAdd(invoice_type, mode){
+    function showInvoiceAdd(){
         //console.log(mode);
         $('#overlay').show();
 
         var Summ = $("#calculateInvoice").html();
-        var SummIns = 0;
-        var SummInsBlock = '';
 
-        if (invoice_type == 5){
-            SummIns = $("#calculateInsInvoice").html();
-            SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
-        }
-
-        var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
-
-        if (invoice_type == 88){
-            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
-        }
-
-        if (mode == 'edit'){
-            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
-        }
-
-
+        var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add()">';
 
         // Создаем меню:
         var menu = $('<div/>', {
@@ -1966,7 +2014,7 @@
                                 "right": "0",
                                 "height": "50%",
                             })
-                            .append('<div style="margin: 10px;">К оплате: <span class="calculateInvoice">'+Summ+'</span> руб.</div>'+SummInsBlock)
+                            .append('<div style="margin: 10px;">К оплате: <span class="calculateInvoice">'+Summ+'</span> руб.</div>')
                     )
                     .append(
                         $('<div/>')
@@ -1983,7 +2031,7 @@
 
         menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 
-    }*/
+    }
 
     //попытка показать контекстное меню
     function contextMenuShow(ind, key, event, mark){
