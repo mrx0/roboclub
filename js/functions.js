@@ -402,7 +402,7 @@
             data:
                 {
                     id: id,
-                    session_id: session_id,
+                    session_id: session_id
                 },
             success:function(data){
                 $("#errrror").html(data);
@@ -1924,6 +1924,8 @@
 
         var client_id = $("#client_id").val();
 
+        var date_in = $("#date_in").val();
+
         $.ajax({
             url: link,
             global: false,
@@ -1933,6 +1935,7 @@
                 {
                     client_id: client_id,
                     group_id: $("#group_id").val(),
+                    date_in: date_in,
 
                     summ: Summ
 

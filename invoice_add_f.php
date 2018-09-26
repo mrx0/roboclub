@@ -29,15 +29,17 @@
                         $msql_cnnct = ConnectToDB ();
 						
 						$time = date('Y-m-d H:i:s', time());
+                        $date_in = date('Y-m-d H:i:s', strtotime($_POST['date_in']." 09:00:00"));
+
                         $itog_price = 0;
                         $mysql_insert_id = 0;
 
                         //$discount = $_SESSION['invoice_data'][$_POST['client_id']][$_POST['group_id']]['discount'];
 
 						//Добавляем в базу
-						$query = "INSERT INTO `journal_invoice` (`group_id`, `client_id`, `summ`, `create_person`, `create_time`) 
+						$query = "INSERT INTO `journal_invoice` (`group_id`, `client_id`, `summ`, `date_in`, `create_person`, `create_time`) 
 						VALUES (
-						'{$_POST['group_id']}', '{$_POST['client_id']}', '{$_POST['summ']}', '{$_SESSION['id']}', '{$time}')";
+						'{$_POST['group_id']}', '{$_POST['client_id']}', '{$_POST['summ']}', '{$date_in}', '{$_SESSION['id']}', '{$time}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 						

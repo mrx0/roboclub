@@ -82,14 +82,26 @@
                                         <!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
                                         <h2>Новый счёт</h2>';
 
-                                echo '		
-                                    </header>';
+
 
                                 echo '
                                     <ul style="margin-left: 6px; margin-bottom: 10px;">	
                                         <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Контрагент: <a href="client.php?id='.$client_j[0]['id'].'" class="ahref">'.$client_j[0]['full_name'].'</a></li>';
+
+                                //Календарик
+                                echo '
+                                        <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+                                            <span style="color: rgb(125, 125, 125);">
+                                                Отчетная дата: <input type="text" id="date_in" name="date_in" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date("d").'.'.date("m").'.'.date("Y").'" onfocus="this.select();_Calendar.lcs(this)" 
+                                                        onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+                                            </span>
+                                        </li>';
+
                                 echo '
                                     </ul>';
+
+                                echo '		
+                                    </header>';
 
                                 echo '
 

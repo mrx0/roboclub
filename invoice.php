@@ -1,7 +1,7 @@
 <?php
 
 //invoice.php
-//Наряд заказ
+//Счёт
 
 	require_once 'header.php';
 	
@@ -70,7 +70,7 @@
 							<div id="status">
 								<header>
 
-									<h2>Наряд #'.$_GET['id'].'';
+									<h2>Счёт #'.$_GET['id'].'';
 
 							//Изменить дату внесения
 							if (($finance['see_all'] == 1) || $god_mode){
@@ -90,7 +90,7 @@
 										</h2>';
 
 							if ($invoice_j[0]['status'] == 9){
-								echo '<i style="color:red;">Наряд удалён (заблокирован).</i><br>';
+								echo '<i style="color:red;">Счёт удалён (заблокирован).</i><br>';
 							}
 
 
@@ -125,7 +125,7 @@
                             $summins = 0;
 
 
-							//Наряды
+							//Счёт
 
 							//$query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='".$_GET['id']."'";
 							//!!! пробуем JOIN
@@ -194,19 +194,19 @@
                             if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
                                 echo '
                                                 <div style="color: red; ">
-                                                    Наряд не закрыт (оплачен не полностью)
+                                                    Счёт не закрыт (оплачен не полностью)
                                                 </div>';
                             }
                             if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
                                 if ($invoice_j[0]['closed_time'] == 0){
                                     /*echo '
                                                 <div>
-                                                    <div style="display: inline-block; color: red;">Наряд оплачен, но не закрыт. Если наряд <br><b>не страховой</b>, перепроведите оплаты или обратитесь к руководителю.</div>                                                    <!--<div style="display: inline-block;"><div class="b" onclick="alert('.$invoice_j[0]['id'].');">Закрыть</div></div>-->
+                                                    <div style="display: inline-block; color: red;">Счёт оплачен, но не закрыт. Если счёт <br><b>не страховой</b>, перепроведите оплаты или обратитесь к руководителю.</div>                                                    <!--<div style="display: inline-block;"><div class="b" onclick="alert('.$invoice_j[0]['id'].');">Закрыть</div></div>-->
                                                 </div>';*/
                                 }else{
                                     echo '
                                                 <div style="margin-top: 5px;">
-                                                    <div style="display: inline-block; color: green;">Наряд закрыт</div>
+                                                    <div style="display: inline-block; color: green;">Счёт закрыт</div>
                                                     <div style="display: inline-block;">'.date('d.m.y', strtotime($invoice_j[0]['closed_time'])).'</div>
                                                 </div>';
                                 }
@@ -476,7 +476,7 @@
 
 
 
-                            //Документы закрытия/оплаты нарядов списком
+                            //Документы закрытия/оплаты счетов списком
                             $payment_j = array();
 
                             $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_GET['id']."' ORDER BY `date_in` DESC";
@@ -497,7 +497,7 @@
                                             <div class="invoceHeader" style="">
                                                 <ul style="margin-left: 6px; margin-bottom: 10px;">
                                                     <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                        Проведённые оплаты по наряду:
+                                                        Проведённые оплаты по счёту:
                                                     </li>';
                                 foreach ($payment_j as $payment_item) {
 
