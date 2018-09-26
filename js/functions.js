@@ -415,7 +415,7 @@
     };
 
 
-    //Добавляем/редактируем в базу платёж
+    //Добавляем/редактируем в базу ордер
     function Ajax_order_add(mode){
         //console.log(mode);
 
@@ -492,10 +492,10 @@
                                 if (res.result == "success") {
                                     //$('#data').hide();
                                     $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
-                                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен платёж</li>' +
+                                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен ордер</li>' +
                                         '<li class="cellsBlock" style="width: auto;">' +
                                         '<a href="order.php?id=' + res.data + '" class="cellName ahref">' +
-                                        '<b>Платёж #' + res.data + '</b><br>' +
+                                        '<b>Ордер #' + res.data + '</b><br>' +
                                         '</a>' +
                                         '<div class="cellName">' +
                                         '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">' +
@@ -820,7 +820,7 @@
     function fillInvoiseRez(changeItogPrice){
 
         //var invoice_type =  $("#invoice_type").val();
-        //console.log(invoice_type);
+        //console.log(150);
 
         var link = "fill_invoice_from_session_f.php";
 
@@ -1871,7 +1871,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res.data);
+                console.log(res.data);
 
                 fillInvoiseRez(true);
 
@@ -2150,3 +2150,242 @@
             }
         });*/
     }
+
+    //Удаление блокировка ордера
+    function Ajax_del_order(id, client_id) {
+
+        ajax({
+            url:"order_del_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id,
+                    client_id: client_id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                //setTimeout(function () {
+                //    window.location.replace('client_balance.php?client_id='+client_id);
+                    //console.log('client.php?id='+id);
+                //}, 1000);
+            }
+        })
+    };
+
+    //Добавляем/редактируем в базу оплату
+    function Ajax_payment_add(){
+        //console.log(mode);
+
+        var link = "payment_add_f.php";
+
+        var Summ = $("#summ").val();
+        var invoice_id = $("#invoice_id").val();
+
+        var client_id = $("#client_id").val();
+        var date_in = $("#date_in").val();
+        //console.log(date_in);
+
+        var comment = $("#comment").val();
+        //console.log(comment);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    client_id: client_id,
+                    invoice_id: invoice_id,
+                    summ: Summ,
+                    date_in: date_in,
+                    comment: comment
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+                $('.center_block').remove();
+                $('#overlay').hide();
+
+                if(res.result == "success"){
+                    //$('#data').hide();
+                    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+                        /*'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Оплата наряда прошла успешно</li>'+*/
+                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">'+res.data+'</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="client_balance.php?client_id='+client_id+'" class="b">Баланс</a>'+
+                        //'<a href="invoice.php?id='+invoice_id+'" class="b">Вернуться в наряд</a>'+
+                        '</li>'+
+                        '</ul>');
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
+    //Показываем блок с суммами и кнопками Для оплаты наряда
+    function showPaymentAdd(){
+        //console.log(mode);
+
+        var Summ = $("#summ").val();
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    summ:Summ
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+
+                    Ajax_payment_add();
+
+                    // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+                }
+            }
+        })
+    }
+
+    //Удалить текущую проплату
+    function deletePaymentItem(id, client_id, invoice_id){
+        //console.log(id);
+        //console.log(client_id);
+        //console.log(invoice_id);
+
+        var rys = false;
+
+        rys = confirm("Удалить оплату?");
+
+        if (rys) {
+
+            $.ajax({
+                url: "payment_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id,
+                    client_id: client_id,
+                    invoice_id: invoice_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+                    if (res.result == "success") {
+                        location.reload();
+                        //console.log(res.data);
+                    }
+                    if (res.result == "error") {
+                        alert(res.data);
+                    }
+                    //console.log(data.data);
+
+                }
+            });
+        }
+    }
+
+    //Удаление блокировка наряда
+    function Ajax_del_invoice(id, client_id) {
+        //console.log(id);
+
+        $.ajax({
+            url:"invoice_del_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    id: id,
+                    client_id: client_id
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+                console.log(res);
+                if(res.result == 'success') {
+                    //console.log(1);
+                    $("#errrror").html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('invoice.php?id=' + id);
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }else{
+                    //console.log(2);
+                    $("#errrror").html(res.data);
+                }
+            }
+        })
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Для добавления суммы в оплате счета
+    $('#addSummInPayment').click(function () {
+
+        var lefttopay = Number($("#leftToPay").html());
+        var available = Number($("#addSummInPayment").html());
+        //console.log(lefttopay);
+        //console.log(available);
+
+        var rezult = 0;
+
+        if (available >= lefttopay) {
+            rezult = lefttopay;
+        }else{
+            //rezult = lefttopay - available;
+            rezult = available;
+        }
+
+        $("#summ").val(rezult);
+
+    });

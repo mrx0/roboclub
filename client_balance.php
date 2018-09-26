@@ -191,7 +191,7 @@ if ($enter_ok){
 
 
 
-                //Амортизационный платёж
+                //Амортизационный взнос
                 $arr = array();
                 $amortInvoice_j = array();
                 $amortThisYear = '';
@@ -251,14 +251,14 @@ if ($enter_ok){
                         if (($arr['create_time'] != 0) || ($arr['create_person'] != 0)) {
                             $amortThisYear .= '
                                         Добавлен: ' . date('d.m.y H:i', strtotime($arr['create_time'])) . '<br>
-                                        <!--Автор: ' . WriteSearchUser('spr_workers', $arr['create_person'], 'user', true) . '<br>-->';
+                                        <!--Автор: ' . WriteSearchUser2('spr_workers', $arr['create_person'], 'user', true) . '<br>-->';
                         } else {
                             $amortThisYear .= 'Добавлен: не указано<br>';
                         }
                         if (($arr['last_edit_time'] != 0) || ($arr['last_edit_person'] != 0)) {
                             $amortThisYear .= '
                                         Последний раз редактировался: ' . date('d.m.y H:i', strtotime($arr['last_edit_time'])) . '<br>
-                                        <!--Кем: ' . WriteSearchUser('spr_workers', $arr['last_edit_person'], 'user', true) . '-->';
+                                        <!--Кем: ' . WriteSearchUser2('spr_workers', $arr['last_edit_person'], 'user', true) . '-->';
                         }
                         $amortThisYear .= '
                                     </span>
@@ -300,15 +300,18 @@ if ($enter_ok){
                         }
                     }
                 }else{
-                    $amortThisYear = '<h1 style="font-size: 100%;">В этом году амортизационный взнос не вносился.</h1>';
+                    $amortThisYear = '<h1 style="font-size: 100%; color: red;"><i>В этом году амортизационный взнос не вносился.</i></h1>';
                 }
 
                 echo '
 						<ul style="width: 424px; display: inline-block; padding: 5px; margin: 10px 5px 10px 4px; border: 1px outset #AAA; vertical-align: top;">
 						    
+							<li class="cellsBlock" style="width: auto; text-align: left; font-size: 80%; color: rgb(78, 78, 78); margin-bottom: 5px;">
+								Амортизационный взнос за текущий год<br>
+								<span style="font-size: 80%; color: #7D7D7D;"><i>Отображаются счета, в которые включён Амортизационный взнос</i></span>
+							</li>
 							<li class="cellsBlock" style="width: auto; text-align: left; font-size: 80%; color: rgb(78, 78, 78); margin-bottom: 10px;">
-								Амортизационный платёж<br>
-								<span style="font-size: 80%; color: #7D7D7D;"><i>Отображаются счета, в которые включена плата за амортизационный платёж</i></span>
+								<input type="button" class="b2" value="Показать все" onclick="showAllAmortizationInvoices();">
 							</li>		
 							<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 0px;">
 								'.$amortThisYear.'
@@ -377,14 +380,14 @@ if ($enter_ok){
                         if (($invoice_item['create_time'] != 0) || ($invoice_item['create_person'] != 0)) {
                             $invoiceTemp_str .= '
                                         Добавлен: ' . date('d.m.y H:i', strtotime($invoice_item['create_time'])) . '<br>
-                                        <!--Автор: ' . WriteSearchUser('spr_workers', $invoice_item['create_person'], 'user', true) . '<br>-->';
+                                        <!--Автор: ' . WriteSearchUser2('spr_workers', $invoice_item['create_person'], 'user', true) . '<br>-->';
                         } else {
                             $invoiceTemp_str .= 'Добавлен: не указано<br>';
                         }
                         if (($invoice_item['last_edit_time'] != 0) || ($invoice_item['last_edit_person'] != 0)) {
                             $invoiceTemp_str .= '
                                         Последний раз редактировался: ' . date('d.m.y H:i', strtotime($invoice_item['last_edit_time'])) . '<br>
-                                        <!--Кем: ' . WriteSearchUser('spr_workers', $invoice_item['last_edit_person'], 'user', true) . '-->';
+                                        <!--Кем: ' . WriteSearchUser2('spr_workers', $invoice_item['last_edit_person'], 'user', true) . '-->';
                         }
                         $invoiceTemp_str .= '
                                     </span>
@@ -494,21 +497,21 @@ if ($enter_ok){
                         $orderTemp_str .= '
                                 <div class="cellOrder" style="position: relative;">
                                     <a href="order.php?id='.$order_item['id'].'" class="ahref" style="position: relative;">
-                                        <b>Платёж #'.$order_item['id'].'</b> от '.date('d.m.y' ,strtotime($order_item['date_in'])).'
+                                        <b>Ордер #'.$order_item['id'].'</b> от '.date('d.m.y' ,strtotime($order_item['date_in'])).'
                                     </a><br>
                                     <span style="font-size:80%;  color: #555;">';
 
                         if (($order_item['create_time'] != 0) || ($order_item['create_person'] != 0)){
                             $orderTemp_str .= '
                                         Добавлен: '.date('d.m.y H:i' ,strtotime($order_item['create_time'])).'<br>
-                                        <!--Автор: '.WriteSearchUser('spr_workers', $order_item['create_person'], 'user', true).'<br>-->';
+                                        <!--Автор: '.WriteSearchUser2('spr_workers', $order_item['create_person'], 'user', true).'<br>-->';
                         }else{
                             $orderTemp_str .= 'Добавлен: не указано<br>';
                         }
                         if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
                             $orderTemp_str .= '
                                         Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
-                                        <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+                                        <!--Кем: '.WriteSearchUser2('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
                         }
                         $orderTemp_str .= '
                                     </span>

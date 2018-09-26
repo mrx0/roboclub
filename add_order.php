@@ -28,7 +28,7 @@
                     echo '
                     <div id="status">
                         <header>
-                            <h2>Новый платёж</h2>
+                            <h2>Новый ордер</h2>
                             <ul style="margin-left: 6px; margin-bottom: 10px;">
 								<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
 								    Плательщик: <a href="client.php?id='.$_GET['client_id'].'" class="ahref">'.WriteSearchUser('spr_clients', $_GET['client_id'], 'user_full').'</a>

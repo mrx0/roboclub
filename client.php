@@ -24,11 +24,14 @@
 			
 			if ($client != 0){
 
+                $add_group_str = '';
+
                 $filials = SelDataFromDB('spr_office', $client[0]['filial'], 'offices');
 
                 if ($filials != 0){
                     $filial_id = $filials[0]['id'];
                     $filial_str = '<a href="filial.php?id='.$filials[0]['id'].'" class="ahref">'.$filials[0]['name'].'</a>';
+                    $add_group_str = "<a href='filial.php?id={$filials[0]['id']}&client_id_add={$_GET['id']}' class='b3'>Добавить в группу</a>";
                 }else{
                     $filial_id = 0;
                     $filial_str = 'Не указан филиал';
@@ -55,7 +58,7 @@
 
                 if (($finance['add_new'] == 1) || $god_mode){
                     echo '
-							<a href="add_order.php?client_id='.$_GET['id'].'&filial_id='.$filial_id.'" class="b3">Добавить платёж</a>';
+							<a href="add_order.php?client_id='.$_GET['id'].'&filial_id='.$filial_id.'" class="b3">Добавить ордер</a>';
                 }
 
                 if (($finance['see_all'] == 1) || $god_mode){
@@ -190,7 +193,7 @@
                             </div>';
 					}
 				}else{
-					echo 'Не в группе';
+					echo 'Не в группе '.$add_group_str;
 				}
 				echo '
                         </div>

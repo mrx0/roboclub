@@ -43,9 +43,9 @@
                 //перешли сюда после добавления ребенка
                 if (($groups['edit'] == 1) || $god_mode) {
                     if (isset($_GET['client_id_add'])) {
-                        echo '<span style="color: red">Вы перешли сюда после добавления в базу ребёнка</span><br>
-                        <a href="client.php?id='.$_GET['client_id_add'].'" class="ahref">'.WriteSearchUser('spr_clients', $_GET['client_id_add'], 'user_full').'</a><br>
-                        <span style="color: red">Добавьте ребёнка в группу, нажав кнопку <i class="fa fa-plus" style="color: green; "></i> напротив нужной группы</span>';
+                        echo '<span style="color: red">Можете добавить ребёнка 
+                        <a href="client.php?id='.$_GET['client_id_add'].'" class="ahref">'.WriteSearchUser('spr_clients', $_GET['client_id_add'], 'user_full').'</a> в группу</span><br>
+                        <span style="color: red">Нажмите кнопку <i class="fa fa-plus" style="color: green; "></i> напротив нужной группы</span>';
                     }
                 }
 

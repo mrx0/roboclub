@@ -138,6 +138,48 @@
 			return 'не найдено';
 		}
 	}
+
+    //Пишем ФИО человека
+    function WriteSearchUser2($datatable, $sw, $type, $link){
+        if ($type == 'user_full'){
+            $search = 'user';
+        }else{
+            $search = $type;
+        }
+
+        if ($datatable == 'spr_clients'){
+            $uri = 'client.php';
+        }
+        if ($datatable == 'spr_workers'){
+            $uri = 'user.php';
+        }
+
+        if ($sw != ''){
+            $user = SelDataFromDB($datatable, $sw, $search);
+            //var_dump ($user);
+            //var_dump ($search);
+
+            if ($user != 0){
+                if ($type == 'user_full'){
+                    if ($link){
+                        return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['full_name'].'</a>';
+                    }else{
+                        return $user[0]['full_name'];
+                    }
+                }else{
+                    if ($link){
+                        return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['name'].'</a>';
+                    }else{
+                        return $user[0]['name'];
+                    }
+                }
+            }else{
+                return 'не указан';
+            }
+        }else{
+            return 'не указан';
+        }
+    }
 	
 	//Сложение двух массивов
 	function ArraySum($array1, $array2){
@@ -568,8 +610,7 @@
         //Если че та там есть с балансом
         if (!empty($clientBalance)){
             $rezult['summ'] = $Summ;
-            //$rezult['debited'] = calculatePayment($client_id);
-            $rezult['debited'] = 0;
+            $rezult['debited'] = calculatePayment($client_id);
 
             //Обновим баланс контрагента
             updateBalance ($clientBalance[0]['id'], $client_id, $Summ, $rezult['debited']);

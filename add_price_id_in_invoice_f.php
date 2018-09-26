@@ -77,6 +77,8 @@
 
                     array_push($_SESSION['invoice_data'][$_POST['client_id']][$_POST['group_id']]['data'], $temp_arr);
 
+                    echo json_encode(array('result' => 'success', 'data' => 'Ok'));
+
                 }
 			}
 		}

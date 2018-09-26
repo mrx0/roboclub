@@ -103,7 +103,7 @@
 							if (($invoice_j[0]['create_time'] != 0) || ($invoice_j[0]['create_person'] != 0)){
 								echo '
 													Добавлен: '.date('d.m.y H:i' ,strtotime($invoice_j[0]['create_time'])).'<br>
-													Автор: '.WriteSearchUser('spr_workers', $invoice_j[0]['create_person'], 'user', true).'<br>';
+													Автор: '.WriteSearchUser2('spr_workers', $invoice_j[0]['create_person'], 'user', true).'<br>';
 							}else{
 								echo 'Добавлен: не указано<br>';
 							}
@@ -211,12 +211,12 @@
                                                 </div>';
                                 }
 
-                                if (($invoice_j[0]['type'] == 5) || ($invoice_j[0]['type'] == 6)) {
+                                /*if (($invoice_j[0]['type'] == 5) || ($invoice_j[0]['type'] == 6)) {
                                     echo '
                                             <div style="margin-top: 5px;">
                                                 <div style="display: inline-block;"><a href="fl_calculation_add3.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
                                             </div>';
-                                }
+                                }*/
 
                             }
                             echo '
@@ -528,14 +528,14 @@
                                     if (($payment_item['create_time'] != 0) || ($payment_item['create_person'] != 0)) {
                                         echo '
                                                                 Добавлен: ' . date('d.m.y H:i', strtotime($payment_item['create_time'])) . '<br>
-                                                                Автор: ' . WriteSearchUser('spr_workers', $payment_item['create_person'], 'user', false) . '<br>';
+                                                                Автор: ' . WriteSearchUser2('spr_workers', $payment_item['create_person'], 'user', false) . '<br>';
                                     } else {
                                         echo 'Добавлен: не указано<br>';
                                     }
                                     /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
                                         echo'
                                                                 Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
-                                                                <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+                                                                <!--Кем: '.WriteSearchUser2('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
                                     }*/
                                     echo '
                                                             </span>
@@ -570,7 +570,7 @@
 
 
                             echo '
-		                            <div id="doc_title">Счёт #'.$_GET['id'].' Сумма: '.$invoice_j[0]['summ'].' / '.WriteSearchUser('spr_clients',  $invoice_j[0]['client_id'], 'user', false).' - R1t</div>';
+		                            <div id="doc_title">Счёт #'.$_GET['id'].' Сумма: '.$invoice_j[0]['summ'].' / '.WriteSearchUser2('spr_clients',  $invoice_j[0]['client_id'], 'user', false).' - R1t</div>';
 							echo '
 								</div>
 							';
