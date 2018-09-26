@@ -183,9 +183,9 @@
 						$age = getyeardiff( $clients_j[$i]['birthday']).' лет';
 					}
 					echo '
-								<div class="cellTime" style="width: 140px; text-align: center">', (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)) ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.$age.'</b></div>
-								<div class="cellText">'.$clients_j[$i]['contacts'].'</div>
-								<div class="cellText cellComment">'.$clients_j[$i]['comments'].'</div>
+								<div class="cellTime" style="width: 140px; text-align: right; font-size: 85%">', (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)) ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.$age.'</b></div>
+								<div class="cellText" style="text-align: right;">'.$clients_j[$i]['contacts'].'</div>
+								<div class="cellText cellComment" style="text-align: right;">'.$clients_j[$i]['comments'].'</div>
 							</li>';
 				}
 			}else{
