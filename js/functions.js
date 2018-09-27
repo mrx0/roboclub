@@ -1,4 +1,29 @@
-	//Размер объекта
+    //Меняем цвет текста от фона
+    function changeTextColor(target) {
+
+        $(target).each(function(){
+            //console.log($(this).css('backgroundColor'));
+
+            var rgb = $(this).css('backgroundColor');
+            var colors = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            var brightness = 1;
+
+            var r = colors[1];
+            var g = colors[2];
+            var b = colors[3];
+
+            var ir = Math.floor((255 - r) * brightness);
+            var ig = Math.floor((255 - g) * brightness);
+            var ib = Math.floor((255 - b) * brightness);
+
+            $(this).css('color', 'rgb(' + ir + ',' + ig + ',' + ib + ')');
+
+        });
+    }
+
+
+
+    //Размер объекта
 	Object.size = function(obj) {
 		var size = 0, key;
 		for (key in obj) {
@@ -1969,7 +1994,7 @@
                         '<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
                         '</li>'+
                         '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                        '<a href="add_order.php?client_id='+client_id+'&invoice_id='+res.data+'" class="b">Добавить платёж</a>'+
+                        '<a href="add_order.php?client_id='+client_id+'&invoice_id='+res.data+'" class="b">Добавить ордер</a>'+
                         '</li>'+
                         '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                         '<a href="client_balance.php?client_id='+client_id+'" class="b">Баланс</a>'+
@@ -2348,6 +2373,42 @@
                 }
             }
         })
+    };
+
+    //Удаление блокировка ордера по-любому
+    function Ajax_del_order_anyway(id, client_id) {
+
+        var rys = false;
+
+        rys = confirm("Вы собираетесь принудительно удалить ордер. \nЭто невозможно будет исправить \n\nВы уверены?");
+
+        if (rys) {
+
+            $.ajax({
+                url: "order_del_anyway_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id,
+                    client_id: client_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log(data);
+                    $("#errrror").html(res.data);
+                    if (res.result == 'success') {
+                        setTimeout(function () {
+                            window.location.replace('client_balance.php?client_id=' + id);
+                            //console.log('client.php?id='+id);
+                        }, 2000);
+                    }
+                }
+            })
+        }
     };
 
 

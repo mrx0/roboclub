@@ -25,7 +25,7 @@
             $order_j = SelDataFromDB('journal_order', $_POST['id'], 'id');
 
             //Если заднее число
-            if ((strtotime($order_j[0]['create_time']) + 12*60*60 < time()) && (($finances['see_all'] != 1) && !$god_mode)){
+            if ((strtotime($order_j[0]['create_time']) + 12*60*60 < time()) && (($finance['see_all'] != 1) && !$god_mode)){
 
                 $data = '
                     <div class="query_neok" style="padding-bottom: 10px;">
@@ -51,24 +51,24 @@
                     if ($arr['summ'] - $arr['debited'] < $order_j[0]['summ']){
                         $data = '
                             <div class="query_neok" style="padding-bottom: 10px;">
-                                <h3>Нельзя удалить ордер, если на счету не хватает средств для списания.</h3>
+                                <h3>Нельзя удалить ордер, если на счету не хватает средств для списания по уже оплаченным счетам.</h3>
                             </div>';
 
                     }else {
 
-                        $query = "UPDATE `journal_order` SET `status`='9' WHERE `id`='{$_POST['id']}'";
+                        //$query = "UPDATE `journal_order` SET `status`='9' WHERE `id`='{$_POST['id']}'";
+                        $query = "DELETE FROM `journal_order` WHERE `id`='{$_POST['id']}'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                         //mysql_close();
 
                         //!!! @@@ Пересчет баланса
-                        include_once 'ffun.php';
                         calculateBalance($_POST['client_id']);
 
                         $data = '
                             <div class="query_ok" style="padding-bottom: 10px;">
-                                <h3>Ордер удален (заблокирован).</h3>
+                                <h3>Ордер удален.</h3>
                             </div>';
 
                         $status = 'success';

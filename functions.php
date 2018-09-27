@@ -677,4 +677,78 @@
         //return ($Summ);
     }
 
+    //Пересчёт количества занятий в конкретной группе, к которым допущен ребёнок
+    function calculateUpdateLessonsBalance($client_id){
+        $lessons_summ = 0;
+        $invoice_ex_j = array();
+
+        $msql_cnnct = ConnectToDB ();
+
+        //Соберем
+        //Общая сумма количеств занятий выписанных ребенку для всех групп
+        $query = "SELECT jiex.*, ji.client_id AS client_id, ji.group_id AS group_id FROM `journal_invoice_ex` jiex
+              LEFT JOIN `journal_invoice` ji ON ji.id = jiex.invoice_id
+              LEFT JOIN `spr_tarifs` st ON st.id = jiex.tarif_id AND jiex.tarif_id IN (
+              SELECT id FROM `spr_tarifs` WHERE `type` = '3'
+              )
+              WHERE ji.client_id='$client_id';";
+
+        //для отдельной группы
+        /*$query = "SELECT jiex.*, ji.client_id AS client_id FROM `journal_invoice_ex` jiex
+              LEFT JOIN `journal_invoice` ji ON ji.id = jiex.invoice_id
+              LEFT JOIN `spr_tarifs` st ON st.id = jiex.tarif_id AND jiex.tarif_id IN (
+              SELECT id FROM `spr_tarifs` WHERE `type` = '3'
+              )
+              WHERE ji.client_id='2170' AND ji.group_id='$group_id';";*/
+
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                //array_push($rezult, $arr);
+
+                if (!isset($invoice_ex_j[$arr['group_id']])){
+                    $invoice_ex_j[$arr['group_id']] = array();
+                }
+
+                array_push($invoice_ex_j[$arr['group_id']], $arr);
+            }
+        }
+
+
+        if (!empty)
+
+        return ($invoice_ex_j);
+
+        //Переменная для суммы
+        /*$Summ = 0;
+
+        //Если были там какие-то наряды
+        if (!empty($clientInvoices)) {
+            //Посчитаем сумму
+            foreach ($clientInvoices as $invoices) {
+                $Summ += $invoices['summ'] - $invoices['paid'];
+            }
+        }
+
+        //Смотрим есть ли долг в базе вообще
+        $clientDebt = watchDebt ($client_id, $Summ);
+        //var_dump($clientBalance);
+
+        //Если че та там есть с долгом
+        if (!empty($clientDebt)){
+            $rezult['summ'] = $Summ;
+
+            //Обновим баланс контрагента
+            updateDebt ($clientDebt[0]['id'], $client_id, $Summ);
+        }else {
+            $rezult['summ'] = $Summ;
+        }
+
+        return (json_encode($rezult, true));*/
+
+    }
+
 ?>

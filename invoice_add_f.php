@@ -72,6 +72,8 @@
 
                         //!!! @@@ Пересчет долга
                         calculateDebt ($_POST['client_id']);
+                        //Пересчёт кол-ва занятий
+                        calculateUpdateLessonsBalance($_POST['client_id'], $_POST['group_id']);
 
 						echo json_encode(array('result' => 'success', 'data' => $mysql_insert_id, 'data2' => $itog_price));
 					}

@@ -20,7 +20,7 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>Удаления ордера <a href="order.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
+								<h2>Удаление ордера <a href="order.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
 							</header>';
 
 

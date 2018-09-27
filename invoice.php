@@ -46,8 +46,8 @@
                         $groups_j = array();
 
                         $query = "SELECT j_gr.name AS group_name, j_gr.color AS color, s_o.name AS office_name FROM `journal_groups` j_gr
-                            LEFT JOIN `spr_office` s_o ON j_gr.filial = s_o.id
-                            WHERE j_gr.id='{$invoice_j[0]['group_id']}';";
+                                    LEFT JOIN `spr_office` s_o ON j_gr.filial = s_o.id
+                                    WHERE j_gr.id='{$invoice_j[0]['group_id']}';";
                         //var_dump($query);
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -73,12 +73,12 @@
 									<h2>Счёт #'.$_GET['id'].'';
 
 							//Изменить дату внесения
-							if (($finance['see_all'] == 1) || $god_mode){
+							/*if (($finance['see_all'] == 1) || $god_mode){
 								if ($invoice_j[0]['status'] != 9){
 									echo '
 												<a href="invoice_time_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Изменить дату"><i class="fa fa-clock-o" aria-hidden="true"></i></a>';
 								}
-							}
+							}*/
 							if (($finance['close'] == 1) || $god_mode){
 								if ($invoice_j[0]['status'] != 9){
 									echo '
@@ -167,7 +167,7 @@
                                                     <div style="">Контрагент: <a href="client.php?id='.$invoice_j[0]['client_id'].'" class="ahref">'.WriteSearchUser('spr_clients', $invoice_j[0]['client_id'], 'user_full').'</a></div>
                                                 </div>
                                                 <div>
-                                                    <div style="background-color: '. $groups_j['color'].'">Группа: <a href="group.php?id='.$invoice_j[0]['group_id'].'" class="ahref"><b>'.$groups_j['group_name'].'</b> [<i>'.$groups_j['office_name'].'</i>]</a></div>
+                                                    <div style="">Группа: <span style="background-color: '. $groups_j['color'].'"><a href="group.php?id='.$invoice_j[0]['group_id'].'" class="ahref"><b>'.$groups_j['group_name'].'</b> [<i>'.$groups_j['office_name'].'</i>]</a></span></div>
                                                 </div>
                                                 <div style="margin: 20px;">
                                                     <div style="">Сумма: <div id="calculateInvoice" style="">'.$invoice_j[0]['summ'].'</div> руб.</div>
@@ -207,7 +207,7 @@
                                     echo '
                                                 <div style="margin-top: 5px;">
                                                     <div style="display: inline-block; color: green;">Счёт закрыт</div>
-                                                    <div style="display: inline-block;">'.date('d.m.y', strtotime($invoice_j[0]['closed_time'])).'</div>
+                                                    <!--<div style="display: inline-block;">'.date('d.m.y', strtotime($invoice_j[0]['closed_time'])).'</div>-->
                                                 </div>';
                                 }
 

@@ -31,7 +31,7 @@
                 if ($filials != 0){
                     $filial_id = $filials[0]['id'];
                     $filial_str = '<a href="filial.php?id='.$filials[0]['id'].'" class="ahref">'.$filials[0]['name'].'</a>';
-                    $add_group_str = "<a href='filial.php?id={$filials[0]['id']}&client_id_add={$_GET['id']}' class='b3'>Добавить в группу</a>";
+                    $add_group_str = "<a href='filial.php?id={$filials[0]['id']}&client_id_add={$_GET['id']}' class='b3' style='font-size: 90%;'>Добавить в группу</a>";
                 }else{
                     $filial_id = 0;
                     $filial_str = 'Не указан филиал';
@@ -193,9 +193,9 @@
                             </div>';
 					}
 				}else{
-					echo 'Не в группе '.$add_group_str;
+					echo 'Не в группе';
 				}
-				echo '
+				echo ' '.$add_group_str.'
                         </div>
                     </div>';
 

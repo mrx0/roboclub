@@ -22,6 +22,9 @@ if ($enter_ok){
             if ($client_j != 0){
 
 
+                //Пересчёт и получение кол-ва занятий
+                var_dump(calculateUpdateLessonsBalance($_GET['client_id']));
+
                 //Баланс контрагента
                 $client_balance = json_decode(calculateBalance ($client_j[0]['id']), true);
                 //Долг контрагента
@@ -160,7 +163,7 @@ if ($enter_ok){
 
                 echo '
 	                <div>
-						<ul style="width: 424px; display: inline-block; padding: 5px; margin: 10px 5px 10px 4px; border: 1px outset #AAA; font-size: 90%; vertical-align: top;">
+						<ul style="width: 430px; display: inline-block; padding: 5px; margin: 10px 5px 10px 4px; border: 1px outset #AAA; font-size: 90%; vertical-align: top;">
                             <li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: rgb(78, 78, 78); margin-bottom: 10px;">
                                 Посещенные занятия (этот месяц)
                             </li>';
@@ -304,7 +307,7 @@ if ($enter_ok){
                 }
 
                 echo '
-						<ul style="width: 424px; display: inline-block; padding: 5px; margin: 10px 5px 10px 4px; border: 1px outset #AAA; vertical-align: top;">
+						<ul style="width: 430px; display: inline-block; padding: 5px; margin: 10px 5px 10px 4px; border: 1px outset #AAA; vertical-align: top;">
 						    
 							<li class="cellsBlock" style="width: auto; text-align: left; font-size: 80%; color: rgb(78, 78, 78); margin-bottom: 5px;">
 								Амортизационный взнос за текущий год<br>
@@ -342,12 +345,35 @@ if ($enter_ok){
 
                 echo '
                     <div>
-                        <ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
+                        <ul id="invoices" style="width: 430px; padding: 5px; margin: 10px 5px 10px 4px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
                             <li style="font-size: 85%; color: rgb(78, 78, 78); margin-bottom: 5px; height: 30px; ">Выписанные счета</li>';
 
                 if (!empty($invoice_j)) {
 
                     foreach ($invoice_j as $invoice_item) {
+
+                        //Группы
+                        $group_j = array();
+
+                        $query = "SELECT j_gr.name AS group_name, j_gr.color AS color, s_o.name AS office_name FROM `journal_groups` j_gr
+                            LEFT JOIN `spr_office` s_o ON j_gr.filial = s_o.id
+                            WHERE j_gr.id='{$invoice_item['group_id']}'
+                            LIMIT 1;";
+                        //var_dump($query);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                $group_j['group_name'] = $arr['group_name'];
+                                $group_j['color'] = $arr['color'];
+                                $group_j['office_name'] = $arr['office_name'];
+                            }
+                        }
+                        //var_dump($group_j);
+
+
 
                         $invoiceTemp_str = '';
 
@@ -375,18 +401,19 @@ if ($enter_ok){
                                     <a href="invoice.php?id=' . $invoice_item['id'] . '" class="ahref">
                                         <b>Счёт #' . $invoice_item['id'] . '</b>
                                     </a><br>
+                                    <b style="font-size: 80%;"><i>'.$group_j['group_name'].' ['.$group_j['office_name'].']</i></b><br>
                                     <span style="font-size:80%;  color: #555;">';
 
                         if (($invoice_item['create_time'] != 0) || ($invoice_item['create_person'] != 0)) {
                             $invoiceTemp_str .= '
-                                        Добавлен: ' . date('d.m.y H:i', strtotime($invoice_item['create_time'])) . '<br>
+                                        Добавлен: ' . date('d.m.y', strtotime($invoice_item['create_time'])) . '<br>
                                         <!--Автор: ' . WriteSearchUser2('spr_workers', $invoice_item['create_person'], 'user', true) . '<br>-->';
                         } else {
                             $invoiceTemp_str .= 'Добавлен: не указано<br>';
                         }
                         if (($invoice_item['last_edit_time'] != 0) || ($invoice_item['last_edit_person'] != 0)) {
                             $invoiceTemp_str .= '
-                                        Последний раз редактировался: ' . date('d.m.y H:i', strtotime($invoice_item['last_edit_time'])) . '<br>
+                                        Редактировался: ' . date('d.m.y', strtotime($invoice_item['last_edit_time'])) . '<br>
                                         <!--Кем: ' . WriteSearchUser2('spr_workers', $invoice_item['last_edit_person'], 'user', true) . '-->';
                         }
                         $invoiceTemp_str .= '
@@ -457,9 +484,9 @@ if ($enter_ok){
                 $order_j = array();
 
                 echo '
-                        <ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
+                        <ul id="orders" style="width: 430px; padding: 5px; margin: 10px 5px 10px 4px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
                             <li style="font-size: 85%; color: rgb(78, 78, 78); margin-bottom: 5px; height: 30px;">
-                                Внесенные платежи <a href="add_order.php?client_id='.$client_j[0]['id'].'&filial_id='.$client_j[0]['filial'].'" class="b">Добавить новый</a>
+                                Ордеры <a href="add_order.php?client_id='.$client_j[0]['id'].'&filial_id='.$client_j[0]['filial'].'" class="b">Добавить новый</a>
                             </li>';
 
                 $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."'";
