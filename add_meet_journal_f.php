@@ -9,63 +9,36 @@
 		header("location: enter.php");
 	}else{
 		if ($_POST){
-			if (isset($_POST['group_id']) && isset($_POST['journalItems']) && isset($_POST['session_id'])){
+			if (isset($_POST['group_id']) && isset($_POST['journalItems'])){
 				include_once 'DBWork.php';
 				//var_dump ($_SESSION);
-		
-				$god_mode = FALSE;
-		
-				if ($_SESSION['permissions'] == '777'){
-					$god_mode = TRUE;
-				}else{
-					//Получили список прав
-					$permissions = SelDataFromDB('spr_permissions', $_SESSION['permissions'], 'id');	
-					//var_dump($permissions);
-				}
-				if (!$god_mode){
-					if ($permissions != 0){
-						$scheduler = json_decode($permissions[0]['scheduler'], true);
-					}
-				}else{
-					//Видимость
-					$scheduler['see_all'] = 0;
-					$scheduler['see_own'] = 0;
-					//
-					$scheduler['add_new'] = 0;
-					$scheduler['add_own'] = 0;
-					//
-					$scheduler['edit'] = 0;
-					//
-					$scheduler['close'] = 0;
-					//
-					$scheduler['reopen'] = 0;
-					//
-					$scheduler['add_worker'] = 0;
-					//
-					
-				}
+
+                //разбираемся с правами
+                $god_mode = FALSE;
+
+                require_once 'permissions.php';
 		
 				$j_group = SelDataFromDB('journal_groups', $_POST['group_id'], 'group');
 				
 				//Определяем подмены
 				$iReplace = FALSE;
+
+                $msql_cnnct = ConnectToDB ();
 				
-				require 'config.php';	
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
 				$query = "SELECT * FROM `journal_replacement` WHERE `group_id`='{$_POST['group_id']}' AND `user_id`='{$_SESSION['id']}'";
-				$res = mysql_query($query) or die(mysql_error());
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
 				if ($number != 0){
 					$iReplace = TRUE;
 				}else{
 				}
-				mysql_close();	
-				
+
 				if ($j_group !=0){	
 					
-					if (($scheduler['see_all'] == 1) || (($scheduler['see_own'] == 1) && (($j_group[0]['worker'] == $_POST['session_id']) || ($iReplace))) || $god_mode){
+					if (($scheduler['see_all'] == 1) || (($scheduler['see_own'] == 1) && (($j_group[0]['worker'] == $_SESSION['id']) || ($iReplace))) || $god_mode){
 						
 						$tempJSON = json_decode($_POST['journalItems'], true);
 						//var_dump ($tempJSON);
@@ -103,16 +76,15 @@
 							if (($scheduler['see_own'] == 1) && ($time - $dateForUpdate < 60*60*48)) {
 								$foreverEdit = TRUE;
 							}
-							
-							mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-							mysql_select_db($dbName) or die(mysql_error()); 
-							mysql_query("SET NAMES 'utf8'");
-							$query = "SELECT `status` FROM `journal_user` WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
-							$res = mysql_query($query) or die('1->'.mysql_error().'->'.$query);
-							$number = mysql_num_rows($res);
+
+                            $query = "SELECT `status` FROM `journal_user` WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                            $number = mysqli_num_rows($res);
+
 							if ($number != 0){
-								$res = mysql_fetch_assoc($res);
-								mysql_close();
+								$res = mysqli_fetch_assoc($res);
 								//var_dump ($res['status']);
 								
 								if ($newStatus == 0){
@@ -123,13 +95,12 @@
 											$editErrorText = 'Вы пытаетесь что-то сделать в будущем. Нельзя.';
 											break;
 										}else{
-											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-											mysql_select_db($dbName) or die(mysql_error()); 
-											mysql_query("SET NAMES 'utf8'");
+
 											$query = "DELETE FROM `journal_user` WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
-											mysql_query($query) or die('2->'.mysql_error().'->'.$query);
-											mysql_close();
-											AddLog ('0', $_POST['session_id'], '', 'Из журнала удалена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$res['status'].']');
+
+                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+											AddLog ('0', $_SESSION['id'], '', 'Из журнала удалена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$res['status'].']');
 										}
 									}else{
 										$editError = TRUE;
@@ -146,13 +117,11 @@
 												$editErrorText = 'Вы пытаетесь что-то сделать в будущем. Нельзя.';
 												break;
 											}else{
-												mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-												mysql_select_db($dbName) or die(mysql_error()); 
-												mysql_query("SET NAMES 'utf8'");
 												$query = "UPDATE `journal_user` SET `status`='{$newStatus}'  WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
-												mysql_query($query) or die('3->'.mysql_error().'->'.$query);
-												mysql_close();
-												AddLog ('0', $_POST['session_id'], '', 'В журнале изменена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');
+
+												$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+												AddLog ('0', $_SESSION['id'], '', 'В журнале изменена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');
 											}
 										}else{
 											$editError = TRUE;
@@ -171,13 +140,11 @@
 											$editErrorText = 'Вы пытаетесь что-то сделать в будущем. Нельзя.';
 											break;
 										}else{
-											mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-											mysql_select_db($dbName) or die(mysql_error()); 
-											mysql_query("SET NAMES 'utf8'");
 											$query = "INSERT INTO `journal_user` (`client_id`, `group_id`, `user_id`, `day`, `month`, `year`, `status`) VALUES ('{$client_id}', '{$_POST['group_id']}', '{$user_id}', '{$day}', '{$month}', '{$year}', '{$newStatus}')";
-											mysql_query($query) or die('4->'.mysql_error().'->'.$query);
-											mysql_close();
-											AddLog ('0', $_POST['session_id'], '', 'В журнал добавлена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. Добавил ['.$user_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');
+
+											$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+											AddLog ('0', $_SESSION['id'], '', 'В журнал добавлена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. Добавил ['.$user_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');
 										}
 									}else{
 										$editError = TRUE;

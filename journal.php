@@ -11,46 +11,38 @@
 			if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
 				include_once 'DBWork.php';
 				include_once 'functions.php';
-				include_once 'filter.php';
-				include_once 'filter_f.php';
-				
-				//Массив с месяцами
-				$monthsName = array(
-				'01' => 'Январь',
-				'02' => 'Февраль',
-				'03' => 'Март',
-				'04' => 'Апрель',
-				'05' => 'Май',
-				'06' => 'Июнь',
-				'07'=> 'Июль',
-				'08' => 'Август',
-				'09' => 'Сентябрь',
-				'10' => 'Октябрь',
-				'11' => 'Ноябрь',
-				'12' => 'Декабрь'
-				);
-				
-				
+
+                include_once 'widget_calendar.php';
+
+                require 'variables.php';
+
 				$j_group = SelDataFromDB('journal_groups', $_GET['id'], 'group');
 				//var_dump ($j_group);
 				
 				//Определяем подмены
 				$iReplace = FALSE;
-				
-				require 'config.php';	
-				
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+
+                $dop = '';
+
+                $msql_cnnct = ConnectToDB ();
 				
 				$query = "SELECT * FROM `journal_replacement` WHERE `group_id`='{$_GET['id']}' AND `user_id`='{$_SESSION['id']}'";
-				$res = mysql_query($query) or die(mysql_error());
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
 				if ($number != 0){
 					$iReplace = TRUE;
 				}else{
 				}
-				//mysql_close();	
+
+                foreach ($_GET as $key => $value){
+                    if ($key == 'id'){
+                        $dop .= '&'.$key.'='.$value;
+                    }
+                }
+
 				
 				if ($j_group != 0){
 					if (($scheduler['see_all'] == 1) || (($scheduler['see_own'] == 1) && (($j_group[0]['worker'] == $_SESSION['id']) || ($iReplace))) || $god_mode){
@@ -140,40 +132,18 @@
 											}
 										}
 										if (($scheduler['see_all'] == 1) || ($god_mode)){
-											echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Тренер: <a href="user.php?id='.$j_group[0]['worker'].'" class="ahref">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</a></span><br>';	
+											echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Тренер: '.WriteSearchUser2('spr_workers', $j_group[0]['worker'], 'user', true).'</span><br>';
 										}										
-										echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Сегодня: <a href="journal.php?id='.$_GET['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';	
+										//echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Сегодня: <a href="journal.php?id='.$_GET['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';
 
 										echo '
 											<div id="data">		
-												<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">
-													<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
-														<a href="journal.php?id='.$_GET['id'].'&m='.$prev.'&y='.$pYear.'" class="cellTime ahref" style="text-align: center;">
-															<span style="font-weight: normal; font-size: 70%;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
-														</a>
-														<div class="cellTime" style="text-align: center;">
-															<span style="color: #2EB703">'.$monthsName[$month].'</span><br>'.$year.'
-														</div>
-														<a href="journal.php?id='.$_GET['id'].'&m='.$next.'&y='.$nYear.'" class="cellTime ahref" style="text-align: center;">
-															<span style="font-weight: normal; font-size: 70%;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
-														</a>
-														
-														<div class="cellTime" style="text-align: center; width: auto;">
-															<select id="iWantThisMonth">';
-										foreach ($monthsName as $val => $name){
-											echo '
-																<option value="'.$val.'" ', ($val == $month) ? 'selected' : '' ,'>'.$name.'</option>';
-										}
-										echo '
-															</select>
-															<input id="iWantThisYear" type="number" value="'.$year.'" min="2000" max="9999" size="4" style="width: 60px;">
-															<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate()"></i>
-														</div>
-													</li>
-													<br>
-													
-													
-													
+												<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">';
+
+                                        echo widget_calendar ($month, $year, 'journal.php', $dop);
+
+                                        echo '
+                                            <br>
 													<li class="cellsBlock" style="font-weight: bold; width: auto;">	
 														<div class="cellPriority" style="text-align: center"></div>
 														<div class="cellFullName" style="text-align: center">ФИО</div>
@@ -207,10 +177,13 @@
 											$settings = array();
 											
 											$query = "SELECT * FROM `spr_settings` ORDER BY `time` DESC";
-											$res = mysql_query($query) or die(mysql_error());
-											$number = mysql_num_rows($res);
+
+                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                            $number = mysqli_num_rows($res);
+
 											if ($number != 0){
-												while ($arr = mysql_fetch_assoc($res)){
+												while ($arr = mysqli_fetch_assoc($res)){
 													$settings[$arr['name']][$arr['time']] = $arr;
 												}
 											}else{
@@ -222,10 +195,13 @@
 											$arr = array();
 											
 											$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
-											$res = mysql_query($query) or die(mysql_error());
-											$number = mysql_num_rows($res);
+
+                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                            $number = mysqli_num_rows($res);
+
 											if ($number != 0){
-												while ($arr = mysql_fetch_assoc($res)){
+												while ($arr = mysqli_fetch_assoc($res)){
 													$journal_uch[$arr['client_id']][$arr['day']] = $arr['status'];
 												}
 											}
@@ -254,9 +230,12 @@
 														<a href="client.php?id='.$uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter" style="position: relative;">'.$uch_arr[$i]['full_name'];
 														
 												$query = "SELECT * FROM `comments` WHERE `dtable`='spr_clients' AND `parent`='{$uch_arr[$i]['id']}'";
-												$res = mysql_query($query) or die(mysql_error());
-												$number = mysql_num_rows($res);
-												if ($number != 0){
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                                $number = mysqli_num_rows($res);
+
+                                                if ($number != 0){
 													echo '
 															<div style="position: absolute; top: 0; right: 3px; color: rgb(247, 188, 50);">
 																<i class="fa fa-commenting" title="Есть комментарии"></i>
@@ -391,10 +370,13 @@
 												$arr = array();
 												
 												$query = "SELECT * FROM `journal_user` WHERE `client_id` = '".$uch_arr[$i]['id']."' AND  `month` = '{$month}' AND  `year` = '{$year}' ORDER BY `day` ASC";
-												$res = mysql_query($query) or die(mysql_error());
-												$number = mysql_num_rows($res);
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                                $number = mysqli_num_rows($res);
+
 												if ($number != 0){
-													while ($arr = mysql_fetch_assoc($res)){
+													while ($arr = mysqli_fetch_assoc($res)){
 														//var_dump($arr);
 														array_push($journal_uch_all, $arr);
 													}
@@ -500,10 +482,13 @@
 												$summa = 0;
 
 												$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}' AND `client`='".$uch_arr[$i]['id']."'";
-												$res = mysql_query($query) or die(mysql_error());
-												$number = mysql_num_rows($res);
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+												$number = mysqli_num_rows($res);
+
 												if ($number != 0){
-													while ($arr = mysql_fetch_assoc($res)){
+													while ($arr = mysqli_fetch_assoc($res)){
 														array_push($journal_fin, $arr);
 													}
 												}else{
@@ -528,10 +513,13 @@
 												$summaRemLast = 0;
 
 												$query = "SELECT * FROM `journal_finance_rem` WHERE `last_month` = '{$month}' AND `last_year` = '{$year}' AND `client`='".$uch_arr[$i]['id']."'";
-												$res = mysql_query($query) or die(mysql_error());
-												$number = mysql_num_rows($res);
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                                $number = mysqli_num_rows($res);
+
 												if ($number != 0){
-													while ($arr = mysql_fetch_assoc($res)){
+													while ($arr = mysqli_fetch_assoc($res)){
 														array_push($journal_rem_last, $arr);
 													}
 												}else{
@@ -592,10 +580,13 @@
 												$summaRem = 0;
 
 												$query = "SELECT * FROM `journal_finance_rem` WHERE `month` = '{$month}' AND `year` = '{$year}' AND `client`='".$uch_arr[$i]['id']."'";
-												$res = mysql_query($query) or die(mysql_error());
-												$number = mysql_num_rows($res);
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                                $number = mysqli_num_rows($res);
+
 												if ($number != 0){
-													while ($arr = mysql_fetch_assoc($res)){
+													while ($arr = mysqli_fetch_assoc($res)){
 														array_push($journal_rem, $arr);
 													}
 												}else{
@@ -711,11 +702,13 @@
 												
 												$query = "SELECT `descr` FROM `journal_exercize` WHERE `group_id` = '{$_GET['id']}' AND `day`= '{$weekDaysArr[2]}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 												//var_dump($query);
-												
-												$res = mysql_query($query) or die(mysql_error());
-												$number = mysql_num_rows($res);
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+												$number = mysqli_num_rows($res);
+
 												if ($number != 0){
-													$arr = mysql_fetch_assoc($res);
+													$arr = mysqli_fetch_assoc($res);
 													if (($arr['descr'] == '') || ($arr['descr'] == null)){
 														echo '<div id="'.$weekDaysArr[2].'" class="cellTime doExercize" style="text-align: center; width: 70px; min-width: 70px; color: #FF9900; cursor: pointer">';
 														echo '<i class="fa fa-dot-circle-o"></i>';
@@ -741,10 +734,13 @@
 											mysql_query("SET NAMES 'utf8'");*/
 											
 											$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
-											$res = mysql_query($query) or die(mysql_error());
-											$number = mysql_num_rows($res);
+
+                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                            $number = mysqli_num_rows($res);
+
 											if ($number != 0){
-												while ($arr = mysql_fetch_assoc($res)){
+												while ($arr = mysqli_fetch_assoc($res)){
 													$journal_uch[$arr['client_id']][$arr['day']] = $arr['status'];
 												}
 											}
@@ -787,8 +783,10 @@
 															
 												$query = "SELECT * FROM `comments` WHERE `dtable`='spr_clients' AND `parent`='{$us_id}'";
 												//var_dump ($query);
-												$res = mysql_query($query) or die(mysql_error());
-												$number = mysql_num_rows($res);
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+												$number = mysqli_num_rows($res);
+
 												if ($number != 0){
 													echo '
 																<div style="position: absolute; top: 0; right: 3px; color: rgb(247, 188, 50);">
@@ -846,14 +844,14 @@
 											echo '
 													</ul>';
 										}
-										
-										mysql_close();
-										
+
+
+
 										echo '
 												</div>
 												<br><br>
 												<div id="errror"></div>
-												<input type="button" class="b" value="Сохранить изменения" onclick=Ajax_change_journal()>';
+												<input type="button" class="b" value="Сохранить изменения" onclick=Ajax_change_journal('.$_GET['id'].')>';
 										echo '		
 												<br><br>
 												<span style="font-size: 80%; color: rgb(150, 150, 150);">Если допустили ошибку, то, чтобы увидеть актуальный журнал, <a href="" class="ahref">обновите страницу</a></span>
@@ -926,51 +924,10 @@
 											}
 										}
 										echo '											
-													document.getElementById("errror").innerHTML = "<span style=\"color: blue; font-size: 80%;\">Вы внесли изменения в журнал, не забудьте сохранить.<br>Или обновите страницу для сброса.</span>";
+												document.getElementById("errror").innerHTML = "<span style=\"color: blue; font-size: 80%;\">Вы внесли изменения в журнал, не забудьте сохранить.<br>Или обновите страницу для сброса.</span>";
 												}
 												
-												function Ajax_change_journal() {
-													
-													var items = $(".journalItemVal");
-													var resJournalItems = {};
-													
-													$.each(items, function(){
-														//var arr = (this.id).split("_");
-														if (this.value == 0){
-															resJournalItems[this.id] = "0";
-														}
-														if (this.value == 1){
-															resJournalItems[this.id] = "1";
-														}
-														if (this.value == 2){
-															resJournalItems[this.id] = "2";
-														}
-														if (this.value == 3){
-															resJournalItems[this.id] = "3";
-														}
-														if (this.value == 4){
-															resJournalItems[this.id] = "4";
-														}
-													});
-													//console.log(resJournalItems);
-													ajax({
-														url: "add_meet_journal_f.php",
-														method: "POST",
-														
-														data:
-														{
-															group_id: '.$_GET['id'].',
-															journalItems: JSON.stringify(resJournalItems),
-															session_id: '.$_SESSION['id'].'
-														},
-														success: function(req){
-															//document.getElementById("errror").innerHTML = req;
-															alert(req);
-															document.getElementById("errror").innerHTML = "";
-															//location.reload(true);
-														}
-													});
-												}
+
 												
 												
 												var elems = document.getElementsByClassName("doExercize"), newInput;

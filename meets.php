@@ -91,9 +91,9 @@
 									echo '
 										<li class="cellsBlock" style="font-weight: bold; width: auto;">	
 											<div class="cellPriority" style="text-align: center"></div>
-											<div class="cellFullName" style=""><a href="client.php?id='.$value['client_id'].'" class="ahref">'.WriteSearchUser('spr_clients', $value['client_id'], 'user_full').'</a></div>
+											<div class="cellFullName" style="">'.WriteSearchUser2('spr_clients', $value['client_id'], 'user_full', true).'</div>
 											<div class="cellTime" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'">'.$journal_ico.'</div>
-											<div class="cellFullName" style="text-align: right"><a href="user.php?id='.$value['user_id'].'" class="ahref">'.WriteSearchUser('spr_workers', $value['user_id'], 'user').'</a></div>
+											<div class="cellFullName" style="text-align: right">'.WriteSearchUser2('spr_workers', $value['user_id'], 'user', true).'</div>
 										</li>';
 								}
 								echo '</ul>';

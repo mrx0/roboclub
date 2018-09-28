@@ -2418,7 +2418,58 @@
         }
     };
 
+    function Ajax_change_journal(journal_id) {
 
+        var link = "add_meet_journal_f.php";
+
+        var items = $(".journalItemVal");
+        var resJournalItems = {};
+
+        $.each(items, function () {
+            //var arr = (this.id).split("_");
+            if (this.value == 0) {
+                resJournalItems[this.id] = "0";
+            }
+            if (this.value == 1) {
+                resJournalItems[this.id] = "1";
+            }
+            if (this.value == 2) {
+                resJournalItems[this.id] = "2";
+            }
+            if (this.value == 3) {
+                resJournalItems[this.id] = "3";
+            }
+            if (this.value == 4) {
+                resJournalItems[this.id] = "4";
+            }
+        });
+
+        var reqData = {
+            group_id: journal_id,
+            journalItems: JSON.stringify(resJournalItems)
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+            },
+            success: function (res) {
+                //console.log (res);
+
+                //document.getElementById("errror").innerHTML = req;
+                alert(res);
+                document.getElementById("errror").innerHTML = "";
+                setTimeout(function () {
+                    location.reload(true);
+                }, 500);
+            }
+        })
+    }
 
 
 
