@@ -35,7 +35,7 @@
                         echo '
                                 <ul style="margin-left: 6px; margin-bottom: 10px;">
                                      <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-                                         Пациент: ' . WriteSearchUser2('spr_clients', $invoice_j[0]['client_id'], 'user_full', true) . '
+                                         Контрагент: ' . WriteSearchUser2('spr_clients', $invoice_j[0]['client_id'], 'user_full', true) . '
                                      </li> 
                                 </ul>';
 

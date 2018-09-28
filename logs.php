@@ -50,7 +50,7 @@ if ($enter_ok){
 					<h1>Логи</h1>
 				</header>		
 				<!--<p style="margin: 5px 0; padding: 1px; font-size:80%;">
-					Быстрый поиск по врачу: 
+					Быстрый поиск по исполнителю: 
 					<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
 				</p>-->
 				<div id="data">

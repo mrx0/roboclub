@@ -1,7 +1,7 @@
     //Меняем цвет текста от фона
     function changeTextColor(target) {
 
-        $(target).each(function(){
+        /*$(target).each(function(){
             //console.log($(this).css('backgroundColor'));
 
             var rgb = $(this).css('backgroundColor');
@@ -18,7 +18,7 @@
 
             $(this).css('color', 'rgb(' + ir + ',' + ig + ',' + ib + ')');
 
-        });
+        });*/
     }
 
 
@@ -1896,7 +1896,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res.data);
+                //console.log(res.data);
 
                 fillInvoiseRez(true);
 
@@ -1971,7 +1971,8 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res);
+                //console.log(res);
+
                 $('.center_block').remove();
                 $('#overlay').hide();
 
@@ -1992,11 +1993,11 @@
                         '</li>'+
                         '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                         '<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
-                        '</li>'+
-                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        ' '+
+                        ''+
                         '<a href="add_order.php?client_id='+client_id+'&invoice_id='+res.data+'" class="b">Добавить ордер</a>'+
-                        '</li>'+
-                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        ' '+
+                        ''+
                         '<a href="client_balance.php?client_id='+client_id+'" class="b">Баланс</a>'+
                         '</li>'+
                         '</ul>');
@@ -2011,6 +2012,7 @@
     //Показываем блок с суммами и кнопками Для наряда
     function showInvoiceAdd(){
         //console.log(mode);
+
         $('#overlay').show();
 
         var Summ = $("#calculateInvoice").html();
@@ -2233,7 +2235,8 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res);
+                //console.log(res);
+
                 $('.center_block').remove();
                 $('#overlay').hide();
 
@@ -2325,6 +2328,7 @@
                 // действие, при ответе с сервера
                 success: function (res) {
                     //console.log(res);
+
                     if (res.result == "success") {
                         location.reload();
                         //console.log(res.data);
@@ -2359,16 +2363,18 @@
             },
             // действие, при ответе с сервера
             success:function(res){
-                console.log(res);
+                //console.log(res);
+
                 if(res.result == 'success') {
                     //console.log(1);
                     $("#errrror").html(res.data);
                     setTimeout(function () {
-                        window.location.replace('invoice.php?id=' + id);
+                        window.location.replace('client_balance.php?client_id=' + client_id);
                         //console.log('client.php?id='+id);
                     }, 100);
                 }else{
                     //console.log(2);
+
                     $("#errrror").html(res.data);
                 }
             }
@@ -2399,6 +2405,7 @@
                 },
                 success: function (res) {
                     //console.log(data);
+
                     $("#errrror").html(res.data);
                     if (res.result == 'success') {
                         setTimeout(function () {

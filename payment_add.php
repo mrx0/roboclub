@@ -164,7 +164,7 @@
                                 echo '
 											<div class="cellName">';
                                 echo
-                                    'Пациент <br /><b>' . WriteSearchUser2('spr_clients', $sheduler_zapis[0]['patient'], 'user', true) . '</b>';
+                                    'Контрагент <br /><b>' . WriteSearchUser2('spr_clients', $sheduler_zapis[0]['patient'], 'user', true) . '</b>';
                                 echo '
 											</div>';
                                 echo '
@@ -179,7 +179,7 @@
                                 echo '
 											<div class="cellName">';
                                 echo
-                                    $sheduler_zapis[0]['kab'] . ' кабинет<br>' . 'Врач: <br><b>' . WriteSearchUser2('spr_workers', $sheduler_zapis[0]['worker'], 'user', true) . '</b>';
+                                    $sheduler_zapis[0]['kab'] . ' кабинет<br>' . 'Исполнитель: <br><b>' . WriteSearchUser2('spr_workers', $sheduler_zapis[0]['worker'], 'user', true) . '</b>';
                                 echo '
 											</div>';
                                 echo '

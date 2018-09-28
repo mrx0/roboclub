@@ -61,7 +61,7 @@
 			}
 			if (($sw == 'cosmet') || ($sw == 'stomat') || ($sw == 'stat_stomat2')){
 				echo '
-									Врач';
+									Исполнитель';
 			}
 			if ($sw == 'clients'){
 				echo '

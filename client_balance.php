@@ -109,7 +109,7 @@ if ($enter_ok){
                                 Доступно занятий:
                             </li>
                             <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
-                                <div class="availableBalance" id="availableBalance"  draggable="true" ondragstart="return dragStart(event)" style="display: inline;">'. 444 .'</div><div style="display: inline;"></div>
+                                <div class="availableBalance" id="availableBalance"  draggable="true" ondragstart="return dragStart(event)" style="display: inline;">'. 0 .'</div><div style="display: inline;"></div>
                             </li>
                         </ul>
             
@@ -205,7 +205,7 @@ if ($enter_ok){
                 //но было бы круто определять не по типу тарифа, а по периоду оплат period_type
                 //типа выбрать такие, которые платить раз в год...
                 $query = "SELECT ji.* FROM `journal_invoice` ji
-                          LEFT JOIN `journal_invoice_ex` jix ON ji.id = jix.invoice_id AND jix.tarif_id IN (
+                          INNER JOIN `journal_invoice_ex` jix ON ji.id = jix.invoice_id AND jix.tarif_id IN (
                           SELECT id FROM `spr_tarifs` WHERE `type` = '2'
                           )
                           WHERE ji.client_id='{$_GET['client_id']}' AND YEAR(ji.date_in) = YEAR(now());";
@@ -235,12 +235,14 @@ if ($enter_ok){
                         $amortThisYear .= '
                             <li class="cellsBlock" style="width: auto;">';
                         if ($arr['status'] != 9) {
-                            $amortThisYear .= '
+                            /*$amortThisYear .= '
                                 <div class="cellName" style="position: relative; width: 150px; min-width: 150px;" invoice_attrib="true" invoice_id="' . $arr['id'] . '"
                                 ondragenter="return dragEnter(event)"
-                                ondrop="return dragDrop(event)" 
-                                ondragover="return dragOver(event)" 
-                                >';
+                                ondrop="return dragDrop(event)"
+                                ondragover="return dragOver(event)"
+                                >';*/
+                            $amortThisYear .= '
+                                <div class="cellName" style="position: relative; width: 150px; min-width: 150px;" invoice_attrib="true" invoice_id="' . $arr['id'] . '">';
                         }else{
                             $amortThisYear .= '
                                 <div class="cellName" style="position: relative; width: 150px; min-width: 150px;">';
@@ -387,12 +389,14 @@ if ($enter_ok){
                         $invoiceTemp_str .= '
                             <li class="cellsBlock" style="width: auto;">';
                         if ($invoice_item['status'] != 9) {
-                            $invoiceTemp_str .= '
+                            /*$invoiceTemp_str .= '
                                 <div class="cellName" style="position: relative;  width: 150px; min-width: 150px;" invoice_attrib="true" invoice_id="' . $invoice_item['id'] . '"
                                 ondragenter="return dragEnter(event)"
                                 ondrop="return dragDrop(event)" 
                                 ondragover="return dragOver(event)" 
-                                >';
+                                >';*/
+                            $invoiceTemp_str .= '
+                                <div class="cellName" style="position: relative;  width: 150px; min-width: 150px;" invoice_attrib="true" invoice_id="' . $invoice_item['id'] . '">';
                         }else{
                             $invoiceTemp_str .= '
                                 <div class="cellName" style="position: relative; width: 150px; min-width: 150px;">';

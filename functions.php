@@ -436,7 +436,7 @@
 
         $time = date('Y-m-d H:i:s', time());
 
-        //Вставим новую запись баланса пациента
+        //Вставим новую запись баланса ребёнка
         $query = "INSERT INTO `journal_balance` (
                             `client_id`, `summ`, `create_time`, `create_person`)
                             VALUES (
@@ -453,7 +453,7 @@
 
         $time = date('Y-m-d H:i:s', time());
 
-        //Вставим новую запись баланса пациента
+        //Вставим новую запись баланса ребёнка
         $query = "INSERT INTO `journal_debt` (
                             `client_id`, `summ`, `create_time`, `create_person`)
                             VALUES (
@@ -677,6 +677,62 @@
         //return ($Summ);
     }
 
+
+
+
+    //Добавляем клиенту новую запись с общим или по группе балансом по урокам
+    function addClientLessonsBalanceNew ($client_id, $Summ, $is_group, $group_id){
+
+        $msql_cnnct = ConnectToDB ();
+
+        //$time = date('Y-m-d H:i:s', time());
+
+        //Вставим новую запись баланса
+        if ($is_group && ($group_id != 0)){
+            $query = "INSERT INTO `journal_lessons_balance_group` (
+                                `client_id`, `group_id`, `summ`)
+                                VALUES (
+                                    '{$client_id}', '{$group_id}', '{$Summ}')";
+        }else{
+            $query = "INSERT INTO `journal_lessons_balance` (
+                                `client_id`, `summ`)
+                                VALUES (
+                                    '{$client_id}', '{$Summ}')";
+        }
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+    }
+
+    //Смотрим есть ли общий баланс занятий или конкретной группы
+    function watchLessonsBalance ($client_id, $Summ, $is_group, $group_id){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $clientLBalance = array();
+
+        //Посмотрим баланс, если он есть. Если нет, то сделаем INSERT
+        if ($is_group && ($group_id != 0)){
+            $query = "SELECT * FROM `journal_lessons_balance_group` WHERE `client_id`='$client_id' AND `group_id`='$group_id'";
+        }else {
+            $query = "SELECT * FROM `journal_lessons_balance` WHERE `client_id`='$client_id'";
+        }
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientLBalance, $arr);
+            }
+        }else {
+            addClientLessonsBalanceNew($client_id, $Summ, $is_group, $group_id);
+        }
+
+        return($clientLBalance);
+    }
+
+
+
     //Пересчёт количества занятий в конкретной группе, к которым допущен ребёнок
     function calculateUpdateLessonsBalance($client_id){
         $lessons_summ = 0;
@@ -686,21 +742,31 @@
 
         //Соберем
         //Общая сумма количеств занятий выписанных ребенку для всех групп
-        $query = "SELECT jiex.*, ji.client_id AS client_id, ji.group_id AS group_id FROM `journal_invoice_ex` jiex
+        /*$query = "SELECT jiex.*, ji.client_id AS client_id, ji.group_id AS group_id FROM `journal_invoice_ex` jiex
               LEFT JOIN `journal_invoice` ji ON ji.id = jiex.invoice_id
               LEFT JOIN `spr_tarifs` st ON st.id = jiex.tarif_id AND jiex.tarif_id IN (
               SELECT id FROM `spr_tarifs` WHERE `type` = '3'
               )
-              WHERE ji.client_id='$client_id';";
+              WHERE ji.client_id='$client_id';";*/
 
         //для отдельной группы
-        /*$query = "SELECT jiex.*, ji.client_id AS client_id FROM `journal_invoice_ex` jiex
-              LEFT JOIN `journal_invoice` ji ON ji.id = jiex.invoice_id
-              LEFT JOIN `spr_tarifs` st ON st.id = jiex.tarif_id AND jiex.tarif_id IN (
-              SELECT id FROM `spr_tarifs` WHERE `type` = '3'
+        /*$query = "SELECT jiex.*, ji.client_id AS client_id, jg.name AS group_name  FROM `journal_invoice_ex` jiex
+              INNER JOIN `journal_invoice` ji ON ji.id = jiex.invoice_id
+              INNER JOIN `journal_groups` jg ON jg.id = ji.group_id
+              INNER JOIN `spr_tarifs` st ON st.id = jiex.tarif_id AND jiex.tarif_id IN (
+              SELECT id FROM `spr_tarif_types` WHERE `period_type` = '3'
               )
-              WHERE ji.client_id='2170' AND ji.group_id='$group_id';";*/
+              WHERE ji.client_id='$client_id';";*/
 
+        //Получили все позиции всех нарядов из всех филиалов, из которых пойдет дальше количество занятий оформленных
+        $query = "SELECT jiex.*, ji.group_id AS group_id, jg.name AS group_name, so.name AS office_name FROM `journal_invoice_ex` jiex
+              INNER JOIN `spr_tarifs` st ON st.id = jiex.tarif_id 
+              INNER JOIN `spr_tarif_types` stt ON stt.id = st.type AND stt.period_type = '3'
+              INNER JOIN `journal_invoice` ji ON ji.id = jiex.invoice_id AND ji.client_id='$client_id'
+              LEFT JOIN `journal_groups` jg ON jg.id = ji.group_id
+              LEFT JOIN `spr_office` so ON so.id = jg.filial;";
+
+        //var_dump($query);
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -717,10 +783,48 @@
             }
         }
 
+        //!!!!!
+        //!!!!!!
+        //Доделай чистку баланса, если нет нихера нарядов
+        //!!!!!!!!!!
+        //!!!!!!!!!!!!
 
-        if (!empty)
+        $Summ = 0;
+        $group_summ = array();
 
-        return ($invoice_ex_j);
+        //Если что-то есть в нарядах
+        if (!empty($invoice_ex_j)){
+            //Соберем суммы всех филиалов в отдельный массив и посчитаем общую сумму
+            foreach ($invoice_ex_j as $group_id => $group_arr){
+                foreach ($group_arr as $group_item) {
+                    //var_dump($group_item);
+
+                    $Summ += $group_item['quantity'];
+
+                    if (!isset($group_summ[$group_id])) {
+                        $group_summ[$group_id] = $group_item['quantity'];
+                    } else {
+                        $group_summ[$group_id] += $group_item['quantity'];
+                    }
+                }
+            }
+            //var_dump($Summ);
+
+            //Херачим общий баланс
+            watchLessonsBalance ($client_id, $Summ, false, 0);
+
+            //Херачим балансы по каждой из групп
+            foreach ($group_summ as $group_id => $group_item_summ){
+                watchLessonsBalance ($client_id, $group_item_summ, true, $group_id);
+            }
+
+
+
+            //!!!Потом где-то тут дальше будет расчет посещенных занятий
+
+        }
+
+        return ($group_summ);
 
         //Переменная для суммы
         /*$Summ = 0;

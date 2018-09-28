@@ -50,11 +50,11 @@
                     if($invoice_j[0]['status'] == 9) {
                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Наряд был удален. Оплатить нельзя</div>'));
                     }else{
-                        //Ищем пациента
+                        //Ищем ребёнка
                         $client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
 
                         if ($client_j != 0) {
-                            //Если это был наряд того пациента
+                            //Если это был наряд того ребёнка
                             if ($client_j[0]['id'] == $invoice_j[0]['client_id']) {
                                 //ID клиента
                                 $client_id = $client_j[0]['id'];

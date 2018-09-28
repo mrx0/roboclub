@@ -60,24 +60,31 @@
 
                 echo json_encode(array('result' => 'error', 'data' => $data));
             }else {
-                if (!empty($calculate_j)) {
-                    $data = '<div class="query_neok" style="padding-bottom: 10px;"><h3>По наряду созданы расчёты. Удалить нельзя.</h3></div>';
+                //if (!empty($calculate_j)) {
+                    //$data = '<div class="query_neok" style="padding-bottom: 10px;"><h3>По наряду созданы расчёты. Удалить нельзя.</h3></div>';
 
-                    echo json_encode(array('result' => 'error', 'data' => $data));
-                }else {
+                    //echo json_encode(array('result' => 'error', 'data' => $data));
+                //}else {
 
-                    $query = "UPDATE `journal_invoice` SET `status`='9' WHERE `id`='{$_POST['id']}'";
+                    //$query = "UPDATE `journal_invoice` SET `status`='9' WHERE `id`='{$_POST['id']}'";
+                    $query = "DELETE FROM `journal_invoice` WHERE `id`='{$_POST['id']}'";
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                    //Удаляем все расширенные записи для наряда
+                    $query = "DELETE FROM `journal_invoice_ex` WHERE `invoice_id`='{$_POST['id']}'";
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                     //mysql_close();
 
                     //!!! @@@ Пересчет долга
                     calculateDebt($_POST['client_id']);
+                    //Пересчёт кол-ва занятий
+                    calculateUpdateLessonsBalance($_POST['client_id']);
 
                     $data = '<div class="query_ok" style="padding-bottom: 10px;"><h3>Наряд удален.</h3></div>';
 
                     echo json_encode(array('result' => 'success', 'data' => $data));
-                }
+                //}
             }
 		}else{
             echo json_encode(array('result' => 'error', 'data' => 'Ошибка #13'));

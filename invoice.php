@@ -98,7 +98,7 @@
 										<div class="cellsBlock2" style="margin-bottom: 10px;">
 											<span style="font-size:80%;  color: #555;">';
 
-                            //echo 'Врач:'.WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true).'<br>';
+                            //echo 'Исполнитель:'.WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true).'<br>';
 
 							if (($invoice_j[0]['create_time'] != 0) || ($invoice_j[0]['create_person'] != 0)){
 								echo '

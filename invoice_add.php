@@ -42,7 +42,7 @@
                             ($client_j[0]['sex'] == 0) ||
                             ($client_j[0]['address'] == NULL)
                         ){
-                            echo '<div class="query_neok">В <a href="client.php?id='.$_GET['client_id'].'">карточке пациента</a> не заполнены все необходимые графы.</div>';
+                            echo '<div class="query_neok">В <a href="client.php?id='.$_GET['client_id'].'">карточке ребёнка</a> не заполнены все необходимые графы.</div>';
                         }else{*/
 
 

@@ -71,7 +71,7 @@ if ($enter_ok){
             //var_dump ($clientDP);
 
             /*if (($t_f_data_db != 0) || ($cosmet_task != 0) || ($clientDP != 0)){
-                echo '<i style="color:red;">У пациента есть посещения или открыт счёт. Удалять нельзя.</i>';
+                echo '<i style="color:red;">У ребёнка есть посещения или открыт счёт. Удалять нельзя.</i>';
             }else{*/
                 echo '				
 								<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">

@@ -179,7 +179,7 @@
 											var arr = (this.name).split("_");
 											if (this.checked){
 												//console.log(arr[1]);
-												//ыconsole.log(arr[0]);
+												//console.log(arr[0]);
 												resShedItems[arr[1]]["time_id"] = arr[0];
 											}else{
 												//resShedItems[arr[1]]["time_id"] = 0;
