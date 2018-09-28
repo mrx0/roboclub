@@ -782,7 +782,8 @@
                 array_push($invoice_ex_j[$arr['group_id']], $arr);
             }
         }
-        
+<<<<<<< origin/master
+
         //!!!!!
         //!!!!!!
         //Доделай чистку баланса, если нет нихера нарядов
@@ -812,6 +813,9 @@
 
             //Херачим общий баланс
             watchLessonsBalance ($client_id, $Summ, false, 0);
+=======
+        
+>>>>>>> local
 
             //Херачим балансы по каждой из групп
             foreach ($group_summ as $group_id => $group_item_summ){
