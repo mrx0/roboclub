@@ -23,7 +23,8 @@ if ($enter_ok){
 
 
                 //Пересчёт и получение кол-ва занятий
-                var_dump(calculateUpdateLessonsBalance($_GET['client_id']));
+                //var_dump(calculateUpdateLessonsBalance($_GET['client_id']));
+                calculateUpdateLessonsBalance($_GET['client_id']);
 
                 //Баланс контрагента
                 $client_balance = json_decode(calculateBalance ($client_j[0]['id']), true);
