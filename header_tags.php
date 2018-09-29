@@ -311,7 +311,7 @@
 			echo '<li><a href="contacts.php">Сотрудники</a></li>';
 		}
 		if (($finance['see_all'] == 1) || $god_mode){
-			echo '<li><a href="finances.php">Финансы</a></li>';
+			echo '<li><a href="finances2.php">Финансы</a></li>';
 		}
 		if ($god_mode){
 			echo '<li><a href="admin.php">Adm</a></li>';

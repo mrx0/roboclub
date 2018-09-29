@@ -237,7 +237,7 @@
 				echo "
 				<script>
                     $(document).ready(function(){
-                        changeTextColor('.colorizeText');
+                        //changeTextColor('.colorizeText');
                     })
                 </script>";
 

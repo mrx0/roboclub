@@ -1,7 +1,7 @@
     //Меняем цвет текста от фона
     function changeTextColor(target) {
 
-        /*$(target).each(function(){
+        $(target).each(function(){
             //console.log($(this).css('backgroundColor'));
 
             var rgb = $(this).css('backgroundColor');
@@ -18,7 +18,7 @@
 
             $(this).css('color', 'rgb(' + ir + ',' + ig + ',' + ib + ')');
 
-        });*/
+        });
     }
 
 
@@ -2471,8 +2471,90 @@
         })
     }
 
+    //Получаем ордеры
+    function getOrdersDatafunc (thisObj, reqData){
+        $.ajax({
+            url:"fl_get_orders_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: reqData,
+
+            cache: false,
+            beforeSend: function() {
+                thisObj.html("<div style='width: 150px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка данных</span></div>");
+            },
+            success:function(res){
+                //console.log(res);
+                //thisObj.html(res);
+
+                if(res.result == 'success'){
+
+                    ids = thisObj.attr("id");
+                    ids_arr = ids.split("_");
+                    //console.log(ids_arr);
+
+                    filial = ids_arr[0];
+                    month = ids_arr[1];
+                    year = ids_arr[2];
+
+                    if (res.status == 1){
+                        thisObj.html(res.data);
+
+                        //Показываем оповещения
+                        //$("#tabs_notes_"+permission+"_"+worker).show();
+                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
+                        //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+
+                        /*$("#tabs_notes_"+permission+"_"+worker).css("display", "inline-block");
+                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "inline-block");*/
+
+                        thisObj.parent().find(".summOrders").html(res.summCalc);
+
+                    }else{
+                        //$("#tabs_notes_"+permission+"_"+worker).css("display", "none");
+                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "none");
+                    }
+
+                    if (res.status == 0){
+                        thisObj.html("Нет данных по ордерам/платежам");
+                    }
+                }
+
+                if(res.result == 'error'){
+                    thisObj.html(res.data);
 
 
+                }
+
+                //Сумма со всех филиалов
+                /*$(".summOrders").each(function() {
+                    console.log(Number($(this).html()));
+
+                    $(".allSumm").html(Number($(".allSumm").html())+Number($(this).html()));
+                });*/
+
+            }
+        });
+    }
+
+    //Обновим данные, но только в данной вкладке
+    function refreshOnlyThisTab(thisObj, filial, month, year){
+        //console.log(permission_id+' _ '+worker_id+' _ '+office_id);
+        //console.log(thisObj.parent());
+
+        var needOrderObj = thisObj.parent().find('.ordersData');
+
+        var reqData = {
+            filial: filial,
+            month: month,
+            year: year
+        };
+
+        getOrdersDatafunc (needOrderObj, reqData);
+
+    }
 
 
 
