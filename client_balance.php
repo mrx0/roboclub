@@ -23,8 +23,8 @@ if ($enter_ok){
 
 
                 //Пересчёт и получение кол-ва занятий
-                //var_dump(calculateUpdateLessonsBalance($_GET['client_id']));
-                calculateUpdateLessonsBalance($_GET['client_id']);
+                $client_lessons_balance = json_decode(calculateUpdateLessonsBalance($_GET['client_id']), true);
+                //var_dump($client_lessons_balance);
 
                 //Баланс контрагента
                 $client_balance = json_decode(calculateBalance ($client_j[0]['id']), true);
@@ -33,65 +33,62 @@ if ($enter_ok){
                 //var_dump($client_balance);
                 //var_dump($client_debt);
 
+
+                $msql_cnnct = ConnectToDB ();
+
+                //Статистика занятий за этот месяц
+
+                //Присутствовал
+                $journal_was = 0;
+                //Кол-во отсутствий
+                $journal_x = 0;
+                //Кол-во справок
+                $journal_spr = 0;
+                //Кол-во пробных
+                $journal_try = 0;
+
+                //Смотрим посещения
+                $journal_uch = array();
+
+                $query = "SELECT * FROM `journal_user` WHERE `client_id` = '".$client_j[0]['id']."' AND  `month` = '".date('m')."' AND  `year` = '".date('Y')."' ORDER BY `day` ASC";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+
+                        array_push($journal_uch, $arr);
+                    }
+                }
+
+                if (!empty($journal_uch)){
+                    //var_dump($journal_uch);
+
+                    foreach ($journal_uch as $journal_item){
+                        if ($journal_item['status'] == 1){
+                            $journal_was++;
+                        }
+                        if ($journal_item['status'] == 2){
+                            $journal_x++;
+                        }
+                        if ($journal_item['status'] == 3){
+                            $journal_spr++;
+                        }
+                        if ($journal_item['status'] == 4){
+                            $journal_try++;
+                        }
+                    }
+                }
+
+
                 echo '
 						<header style="margin-bottom: 5px;">
 							<h1>Баланс + посещения. Контрагент: <a href="client.php?id='.$client_j[0]['id'].'" class="ahref">'.$client_j[0]['full_name'].'</a></h1>
 						</header>';
 
- /*               if (isset($_GET['m']) && isset($_GET['y'])){
-                    $year = $_GET['y'];
-                    $month = $_GET['m'];
-                }else{
-                    $year = date("Y");
-                    $month = date("m");
-                }
 
-                include_once 'DBWork.php';
-                include_once 'functions.php';
-                include_once 'filter.php';
-                include_once 'filter_f.php';
-
-                //Массив с месяцами
-                $monthsName = array(
-                    '01' => 'Январь',
-                    '02' => 'Февраль',
-                    '03' => 'Март',
-                    '04' => 'Апрель',
-                    '05' => 'Май',
-                    '06' => 'Июнь',
-                    '07'=> 'Июль',
-                    '08' => 'Август',
-                    '09' => 'Сентябрь',
-                    '10' => 'Октябрь',
-                    '11' => 'Ноябрь',
-                    '12' => 'Декабрь'
-                );
-
-                if ((int)$month - 1 < 1){
-                    $prev = '12';
-                    $pYear = $year - 1;
-                }else{
-                    $pYear = $year;
-                    if ((int)$month - 1 < 10){
-                        $prev = '0'.strval((int)$month-1);
-                    }else{
-                        $prev = strval((int)$month-1);
-                    }
-                }
-
-                if ((int)$month + 1 > 12){
-                    $next = '01';
-                    $nYear = $year + 1;
-                }else{
-                    $nYear = $year;
-                    if ((int)$month + 1 < 10){
-                        $next = '0'.strval((int)$month+1);
-                    }else{
-                        $next = strval((int)$month+1);
-                    }
-                }*/
-
-                //echo '<span style="font-size: 80%; color: #CCC;">Сегодня: <a href="client_finance.php?client='.$client_j[0]['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';
                 echo '
 				<div id="data">';
 
@@ -109,8 +106,15 @@ if ($enter_ok){
                             <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
                                 Доступно занятий:
                             </li>
-                            <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
-                                <div class="availableBalance" id="availableBalance"  draggable="true" ondragstart="return dragStart(event)" style="display: inline;">'. 0 .'</div><div style="display: inline;"></div>
+                            <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">';
+                if (($client_lessons_balance['summ'] - $client_lessons_balance['debt']) > 0) {
+                    echo '
+                                <div class="availableBalance" id="availableLessonceBalance"  draggable="true" style="display: inline;">' . ($client_lessons_balance['summ'] - $client_lessons_balance['debt']) . '</div><div style="display: inline;"></div>';
+                }else {
+                    echo '
+                                <div class="calculateInvoice" id="availableLessonceBalance"  draggable="true" style="display: inline;">' . ($client_lessons_balance['summ'] - $client_lessons_balance['debt']) . ' <i class="fa fa-exclamation-triangle" aria-hidden="true" title="Некоторые уроки не оплачены или есть незакрытые счета"></i></div><div style="display: inline;"></div>';
+                }
+                echo '
                             </li>
                         </ul>
             
@@ -119,7 +123,7 @@ if ($enter_ok){
                                 Доступный остаток средств:
                             </li>
                             <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
-                                <div class="availableBalance" id="availableBalance"  draggable="true" ondragstart="return dragStart(event)" style="display: inline;">'.($client_balance['summ'] - $client_balance['debited']).'</div><div style="display: inline;"> руб.</div>
+                                <div class="availableBalance" id="availableBalance"  draggable="true" style="display: inline;">'.($client_balance['summ'] - $client_balance['debited']).'</div><div style="display: inline;"> руб.</div>
                             </li>
                         </ul>
             
@@ -144,24 +148,6 @@ if ($enter_ok){
                 echo '
                     </div>';
 
-                $msql_cnnct = ConnectToDB ();
-
-
-
-                //Статистика занятий
-                //Присутствовал
-                $journal_was = 0;
-                //Цена если был
-                $need_cena = 0;
-                //Общий долг
-                $need_summ = 0;
-                //Кол-во отсутствий
-                $journal_x = 0;
-                //Кол-во справок
-                $journal_spr = 0;
-                //Кол-во пробных
-                $journal_try = 0;
-
                 echo '
 	                <div>
 						<ul style="width: 430px; display: inline-block; padding: 5px; margin: 10px 5px 10px 4px; border: 1px outset #AAA; font-size: 90%; vertical-align: top;">
@@ -185,9 +171,14 @@ if ($enter_ok){
                             </li>';
 
                 echo '
-                            <li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 0px;">
+                            <li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 10px;">
                                 Пробные: <span style="font-weight: bold; font-size: 110%; color: rgba(0, 201, 255, 0.5);">'.$journal_try.'</span>
                             </li>';
+
+                echo '
+                            <li class="cellsBlock" style="width: auto; text-align: left; font-size: 90%; color: rgb(78, 78, 78); margin-bottom: 5px;">
+								<a href="journal_all.php?client_id='.$client_j[0]['id'].'" class="b2">Подробно</a>
+							</li>';
 
                 echo '
 						</ul>';
@@ -316,9 +307,9 @@ if ($enter_ok){
 								Амортизационный взнос за текущий год<br>
 								<span style="font-size: 80%; color: #7D7D7D;"><i>Отображаются счета, в которые включён Амортизационный взнос</i></span>
 							</li>
-							<li class="cellsBlock" style="width: auto; text-align: left; font-size: 80%; color: rgb(78, 78, 78); margin-bottom: 10px;">
+							<!--<li class="cellsBlock" style="width: auto; text-align: left; font-size: 80%; color: rgb(78, 78, 78); margin-bottom: 10px;">
 								<input type="button" class="b2" value="Показать все" onclick="showAllAmortizationInvoices();">
-							</li>		
+							</li>-->		
 							<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 0px;">
 								'.$amortThisYear.'
 							</li>
@@ -330,10 +321,21 @@ if ($enter_ok){
                 $invoiceAll_str = '';
                 //$invoiceClose_str = '';
 
-                //Получим все выписанные счета
+                //Получим все выписанные счета + если там встречается амортизационный взнос, то тоже укажем
                 $invoice_j = array();
 
-                $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."'";
+                /*$query = "SELECT ji.*, jix.????? FROM `journal_invoice` ji
+                          LEFT JOIN  `journal_invoice_ex` jix ON ji.id = jix.invoice_id AND jix.tarif_id IN (
+                          SELECT st.id FROM `spr_tarifs` st WHERE st.type = '2'
+                          )
+                          WHERE ji.client_id = '".$client_j[0]['id']."'";*/
+
+                $query = "SELECT ji.*, st.type AS st_type FROM `journal_invoice` ji
+                          LEFT JOIN  `journal_invoice_ex` jix ON ji.id = jix.invoice_id AND jix.tarif_id IN (
+                          SELECT `id` FROM `spr_tarifs` WHERE `type` = '2'
+                          )
+                          LEFT JOIN `spr_tarifs` st ON jix.tarif_id = st.id 
+                          WHERE ji.client_id = '".$client_j[0]['id']."'";
                 //var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -349,7 +351,9 @@ if ($enter_ok){
                 echo '
                     <div>
                         <ul id="invoices" style="width: 430px; padding: 5px; margin: 10px 5px 10px 4px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
-                            <li style="font-size: 85%; color: rgb(78, 78, 78); margin-bottom: 5px; height: 30px; ">Выписанные счета</li>';
+                            <li style="font-size: 85%; color: rgb(78, 78, 78); margin-bottom: 5px; height: 30px; ">Все выписанные счета<br>
+                            <span style="font-size: 80%; color: #7D7D7D;"><i>Отдельно выделены счета, в которые включены Амортизационные взносы</i></span>
+                            </li>';
 
                 if (!empty($invoice_j)) {
 
@@ -377,7 +381,6 @@ if ($enter_ok){
                         //var_dump($group_j);
 
 
-
                         $invoiceTemp_str = '';
 
                         //Отметка об объеме оплат
@@ -387,8 +390,16 @@ if ($enter_ok){
                             $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Закрыт"></i>';
                         }
 
+
+                        if ($invoice_item['st_type'] == 2) {
+                            $background_color = 'background-color: rgba(150, 233, 255, 0.61);';
+                        }else{
+                            $background_color = '';
+                        }
+
+
                         $invoiceTemp_str .= '
-                            <li class="cellsBlock" style="width: auto;">';
+                            <li class="cellsBlock" style="width: auto; '.$background_color.'">';
                         if ($invoice_item['status'] != 9) {
                             /*$invoiceTemp_str .= '
                                 <div class="cellName" style="position: relative;  width: 150px; min-width: 150px;" invoice_attrib="true" invoice_id="' . $invoice_item['id'] . '"

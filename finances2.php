@@ -15,6 +15,7 @@ if ($enter_ok){
         include_once 'functions.php';
         include_once 'filter.php';
         include_once 'filter_f.php';
+        include_once 'widget_calendar.php';
 
         include_once 'widget_calendar.php';
 
@@ -27,6 +28,10 @@ if ($enter_ok){
 
         echo '
                 <header style="margin-bottom: 5px;">
+                    <div class="nav">
+                        <a href="invoice_report1.php" class="b">Незакрытые счета</a>
+                        <a href="amort_report1.php" class="b">Амортизационные взносы</a>
+                    </div>
                     <h1>Финансы</h1>
                     <a href="finances.php" class="b" style="background-color: #CCC;">Финансы (старое) <i class="fa fa-rub"></i></a>';
         echo '    
@@ -45,14 +50,22 @@ if ($enter_ok){
             $month = date("m");
         }
 
-
-
         echo widget_calendar ($month, $year, 'finances2.php', $dop);
 
         //
         echo '
                     <div style="margin-top: 20px;">
-                        <b>Всего со всех филиалов</b> <span class="b3" onclick="$(\'.allSumm\').html(0);$(\'.summOrders\').each(function(){console.log(Number($(this).html()));$(\'.allSumm\').html(Number($(\'.allSumm\').html())+Number($(this).html()));});">показать/обновить</span>: <span class="calculateOrder allSumm">0</span> руб.       
+                        <div style="display: inline-block; vertical-align: top;">
+                            <b>Всего со всех филиалов:</b>
+                        </div>
+                        <div style="display: inline-block">
+                            <div style="margin-bottom: 2px;"> 
+                                <span class="calculateOrder allSumm">0</span> руб.
+                            </div>
+                            <div onclick="updateAllSumm ();">
+                                <span  class="yellowLink">обновить</span>
+                            </div>
+                        </div>
                     </div>
                     <div id="tabs_w" style="margin-top: 20px; font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">';
         echo '
@@ -133,7 +146,13 @@ if ($enter_ok){
                             getOrdersDatafunc (thisObj, certData);
                         });
                     });
-				
+
+                    function iWantThisDate(){
+                        var iWantThisMonth = $("#iWantThisMonth").val();
+                        var iWantThisYear =  $("#iiWantThisYear").val();
+                        
+                        window.location.replace("finances2.php?m="+iWantThisMonth+"&y="+iWantThisYear);
+                    }
                 
 				</script>';
 

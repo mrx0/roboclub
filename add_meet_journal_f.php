@@ -73,7 +73,7 @@
 							}
 							
 							//!!! время на изменение журнала
-							if (($scheduler['see_own'] == 1) && ($time - $dateForUpdate < 60*60*48)) {
+							if (($scheduler['see_own'] == 1) && ($time - $dateForUpdate < 60*60*72)) {
 								$foreverEdit = TRUE;
 							}
 
@@ -90,7 +90,7 @@
 								if ($newStatus == 0){
 									//var_dump ('Надо удалить запись');
 									if ($foreverEdit){
-										if ($dateForUpdate > $time){
+										if (($dateForUpdate > $time) && !$god_mode){
 											$editError = TRUE;
 											$editErrorText = 'Вы пытаетесь что-то сделать в будущем. Нельзя.';
 											break;
@@ -112,7 +112,7 @@
 									
 									if ($newStatus != $res['status']){
 										if ($foreverEdit){
-											if ($dateForUpdate > $time){
+                                            if (($dateForUpdate > $time) && !$god_mode){
 												$editError = TRUE;
 												$editErrorText = 'Вы пытаетесь что-то сделать в будущем. Нельзя.';
 												break;
@@ -135,7 +135,7 @@
 									//var_dump ('Надо добавить запись');
 									
 									if ($foreverEdit){
-										if ($dateForUpdate > $time){
+                                        if (($dateForUpdate > $time) && !$god_mode){
 											$editError = TRUE;
 											$editErrorText = 'Вы пытаетесь что-то сделать в будущем. Нельзя.';
 											break;

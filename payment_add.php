@@ -338,7 +338,7 @@
                                                                                 <td><span class="lit_grey_text">Номер</span></td><td><span class="lit_grey_text">Номинал</span></td><td><span class="lit_grey_text">К оплате (остаток)</span></td>
                                                                             </tr>
                                                                         </table>
-                                                                        
+
                                                                     </li>
                                                                 </ul>
                                                             </div>

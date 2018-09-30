@@ -4,7 +4,11 @@
 //Календарик
 
 function widget_calendar ($month, $year, $path, $dop){
-	
+	//var_dump($month);
+	//var_dump($year);
+	//var_dump($path);
+	//var_dump($dop);
+
 	$result = '';
 	
 	//if ($month < 10) $month = '0'.$month;
@@ -85,7 +89,7 @@ function widget_calendar ($month, $year, $path, $dop){
 	$result .= '
 			</select>
 			<input id="iWantThisYear" type="number" value="'.$year.'" min="2000" max="2030" size="4" style="width: 60px;">
-			<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate(\''.$path.'?'.$dop.'\')"></i>
+			<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate(\''.$path.'?'.$dop.'&\')"></i>
 		</div>
 	</li>';
 	

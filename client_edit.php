@@ -153,7 +153,7 @@
 				echo '					
 											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 											<div id="errror"></div>
-											<input type="button" class="b" value="Редактировать" onclick="Ajax_edit_client()">
+											<input type="button" class="b" value="Применить" onclick="Ajax_edit_client()">
 										</form>';	
 						echo '
 						

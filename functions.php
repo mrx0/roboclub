@@ -719,7 +719,7 @@
 
 
     //Добавляем клиенту новую запись с общим или по группе балансом по урокам
-    function addClientLessonsBalanceNew ($client_id, $Summ, $is_group, $group_id){
+    function addClientLessonsBalanceNew ($client_id, $Summ, $debt, $is_group, $group_id){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -730,12 +730,34 @@
             $query = "INSERT INTO `journal_lessons_balance_group` (
                                 `client_id`, `group_id`, `summ`)
                                 VALUES (
-                                    '{$client_id}', '{$group_id}', '{$Summ}')";
+                                    '{$client_id}', '{$group_id}', '{$Summ}', '{$debt}')";
         }else{
             $query = "INSERT INTO `journal_lessons_balance` (
-                                `client_id`, `summ`)
+                                `client_id`, `summ`, `debt`)
                                 VALUES (
-                                    '{$client_id}', '{$Summ}')";
+                                    '{$client_id}', '{$Summ}', '{$debt}')";
+        }
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+    }
+
+    //Обновляем клиенту запись с общим или по группе балансом по урокам
+    function  updateClientLessonsBalance ($balance_id, $Summ, $debt, $is_group){
+
+        $msql_cnnct = ConnectToDB ();
+
+        //$time = date('Y-m-d H:i:s', time());
+
+        //Вставим новую запись баланса
+        if ($is_group && ($group_id != 0)){
+            $query = "UPDATE `journal_lessons_balance_group` 
+                      SET `summ`='$Summ', `debt`= '$debt'
+                      WHERE `id`='$balance_id'";
+        }else{
+            $query = "UPDATE `journal_lessons_balance`
+                      SET `summ`='$Summ', `debt`= '$debt'
+                      WHERE `id`='$balance_id'";
         }
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -743,7 +765,7 @@
     }
 
     //Смотрим есть ли общий баланс занятий или конкретной группы
-    function watchLessonsBalance ($client_id, $Summ, $is_group, $group_id){
+    function watchLessonsBalance ($client_id, $Summ, $debt, $is_group, $group_id){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -751,19 +773,24 @@
 
         //Посмотрим баланс, если он есть. Если нет, то сделаем INSERT
         if ($is_group && ($group_id != 0)){
-            $query = "SELECT * FROM `journal_lessons_balance_group` WHERE `client_id`='$client_id' AND `group_id`='$group_id'";
+            $query = "SELECT `id` FROM `journal_lessons_balance_group` WHERE `client_id`='$client_id' AND `group_id`='$group_id' LIMIT 1";
         }else {
-            $query = "SELECT * FROM `journal_lessons_balance` WHERE `client_id`='$client_id'";
+            $query = "SELECT `id` FROM `journal_lessons_balance` WHERE `client_id`='$client_id' LIMIT 1";
         }
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
         $number = mysqli_num_rows($res);
+
         if ($number != 0){
             while ($arr = mysqli_fetch_assoc($res)){
-                array_push($clientLBalance, $arr);
+                //array_push($clientLBalance, $arr);
+                $balance_id = $arr['id'];
             }
+
+            updateClientLessonsBalance($balance_id, $Summ, $debt, $is_group);
         }else {
-            addClientLessonsBalanceNew($client_id, $Summ, $is_group, $group_id);
+            addClientLessonsBalanceNew($client_id, $Summ, $debt, $is_group, $group_id);
         }
 
         return($clientLBalance);
@@ -820,12 +847,6 @@
                 array_push($invoice_ex_j[$arr['group_id']], $arr);
             }
         }
-        
-        //!!!!!
-        //!!!!!!
-        //Доделай чистку баланса, если нет нихера нарядов
-        //!!!!!!!!!!
-        //!!!!!!!!!!!!
 
         $Summ = 0;
         $group_summ = array();
@@ -848,48 +869,75 @@
             }
             //var_dump($Summ);
 
-            //Херачим общий баланс
-            watchLessonsBalance ($client_id, $Summ, false, 0);
 
-            //Херачим балансы по каждой из групп
-            foreach ($group_summ as $group_id => $group_item_summ){
-                watchLessonsBalance ($client_id, $group_item_summ, true, $group_id);
+        }
+
+        //Расчет посещенных занятий
+
+        //Присутствовал
+        $journal_was = 0;
+        //Кол-во отсутствий
+        $journal_x = 0;
+        //Кол-во справок
+        $journal_spr = 0;
+        //Кол-во пробных
+        $journal_try = 0;
+
+        //Смотрим посещения
+        $journal_uch = array();
+
+        $query = "SELECT * FROM `journal_user` 
+                  WHERE `client_id` = '".$client_id."' 
+                  AND  ((`year` = '2018' AND `month` > '09')  
+                  OR  (`year` > '2018'))";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+
+                array_push($journal_uch, $arr);
             }
-
-
-
-            //!!!Потом где-то тут дальше будет расчет посещенных занятий
-
         }
 
-        return ($group_summ);
+        if (!empty($journal_uch)){
+            //var_dump($journal_uch);
 
-        //Переменная для суммы
-        /*$Summ = 0;
-
-        //Если были там какие-то наряды
-        if (!empty($clientInvoices)) {
-            //Посчитаем сумму
-            foreach ($clientInvoices as $invoices) {
-                $Summ += $invoices['summ'] - $invoices['paid'];
+            foreach ($journal_uch as $journal_item){
+                if ($journal_item['status'] == 1){
+                    $journal_was++;
+                }
+                if ($journal_item['status'] == 2){
+                    $journal_x++;
+                }
+                if ($journal_item['status'] == 3){
+                    $journal_spr++;
+                }
+                if ($journal_item['status'] == 4){
+                    $journal_try++;
+                }
             }
         }
 
-        //Смотрим есть ли долг в базе вообще
-        $clientDebt = watchDebt ($client_id, $Summ);
-        //var_dump($clientBalance);
+        $debt = $journal_was + $journal_x + $journal_try;
 
-        //Если че та там есть с долгом
-        if (!empty($clientDebt)){
-            $rezult['summ'] = $Summ;
+        //Херачим общий баланс
+        watchLessonsBalance ($client_id, $Summ, $debt, false, 0);
 
-            //Обновим баланс контрагента
-            updateDebt ($clientDebt[0]['id'], $client_id, $Summ);
-        }else {
-            $rezult['summ'] = $Summ;
-        }
+        //Херачим балансы по каждой из групп
+        // !!!!! отключил подсчет по группам отдельно, так как им это пока не надо
+        /*foreach ($group_summ as $group_id => $group_item_summ){
+            watchLessonsBalance ($client_id, $group_item_summ, true, $group_id);
+        }*/
 
-        return (json_encode($rezult, true));*/
+        $rezult['group_summ'] = $group_summ;
+        $rezult['summ'] = $Summ;
+        $rezult['debt'] = $debt;
+
+        //return ($group_summ);
+        return (json_encode($rezult, true));
 
     }
 

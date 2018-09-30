@@ -109,7 +109,7 @@
 											<br /><br />';
 									if (($scheduler['see_all'] == 1)|| ($scheduler['see_own'] == 1) || $god_mode){
 											echo '
-														<a href="journal.php?id='.$_GET['id'].'" class="b">Журнал</a>';
+														<a href="journal_new.php?id='.$_GET['id'].'" class="b">Журнал</a>';
 									}
 								/*}else{
 									echo '<h3>Нету Расписание для группы</h3>';

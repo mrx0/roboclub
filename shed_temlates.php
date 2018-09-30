@@ -1,7 +1,7 @@
 <?php
 
-//groups.php
-//Группы
+//shed_temlates.php
+//
 
     require_once 'header.php';
 	

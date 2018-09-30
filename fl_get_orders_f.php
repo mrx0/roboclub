@@ -38,6 +38,7 @@
                           WHERE jo.filial_id='{$_POST['filial']}' AND YEAR(jo.date_in) = '{$_POST['year']}' AND MONTH(jo.date_in) = '{$_POST['month']}'
                           ";
 
+
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                 $number = mysqli_num_rows($res);
@@ -56,7 +57,7 @@
                         foreach ($rez as $order_item){
 
                             $orderTemp_str .= '
-                                <li class="cellsBlock cellsBlockHover" style="display: inline-block; width: auto; font-size: 100%;">';
+                                <li class="cellsBlock cellsBlockHover" style="display: inline-block; width: auto; border: 1px solid #CCC; box-shadow: 1px 1px 0px 0px rgba(101, 101, 101, 1); font-size: 100%;">';
                             $orderTemp_str .= '
                                     <div class="cellOrder" style="position: relative;">
                                         <a href="order.php?id='.$order_item['id'].'" class="ahref" style="position: relative;">

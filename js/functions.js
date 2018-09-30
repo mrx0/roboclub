@@ -108,8 +108,15 @@
 		return result;
 	}
 
+    //
+    /*function iWantThisDate(link){
+        var iWantThisMonth = $("#iWantThisMonth").val();
+        var iWantThisYear =  $("#iiWantThisYear").val();
 
-    //Окрасить кнопки с зубами
+        window.location.replace(link+"?m="+iWantThisMonth+"&y="+iWantThisYear);
+    }*/
+
+    //Окрасить кнопки
     function colorizeTButton (t_number_active){
         $(".sel_tooth").each(function() {
             this.style.background = '';
@@ -2470,6 +2477,17 @@
             }
         })
     }
+
+    //Обновляем общую сумму на филиале
+    function updateAllSumm (){
+        $('.allSumm').html(0);
+        $('.summOrders').each(function(){
+            //console.log(Number($(this).html()));
+
+            $('.allSumm').html(Number($('.allSumm').html())+Number($(this).html()));
+        });
+    }
+
 
     //Получаем ордеры
     function getOrdersDatafunc (thisObj, reqData){

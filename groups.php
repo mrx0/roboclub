@@ -57,6 +57,7 @@
 							<div class="cellPriority" style="text-align: center"></div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Название</div>
 							<div class="cellCosmAct" style="text-align: center" title="Журнал группы">-</div>
+							<div class="cellCosmAct" style="text-align: center" title="Участники группы">-</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Филиал</div>
 							<div class="cellCosmAct" style="text-align: center" title="Расписание филиала">-</div>
 							<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Возраст</div>
@@ -119,7 +120,8 @@
 								<li class="cellsBlock cellsBlockHover">
 									<div class="cellPriority" style="text-align: center; background-color: '.$journal_groups[$i]['color'].';"></div>
 									<a href="group.php?id='.$journal_groups[$i]['id'].'" class="cellName ahref" style="background-color: '.$filialColor.';">'.$journal_groups[$i]['name'].'</a>
-									<a href="journal.php?id='.$journal_groups[$i]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: green" title="Журнал группы"><i class="fa fa-calendar"></i></a>
+									<a href="journal_new.php?id='.$journal_groups[$i]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: green" title="Журнал группы"><i class="fa fa-calendar"></i></a>
+									<a href="group_client.php?id='.$journal_groups[$i]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: rgba(47, 47, 47, 0.93);" title="Участники группы"><i class="fa fa-users"></i></a>
 									<a href="filial.php?id='.$filials[0]['id'].'" id="4filter" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.$filial.'</a>
 									<a href="filial_shed.php?id='.$filials[0]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: rgb(182, 82, 227);" title="Расписание филиала"><i class="fa fa-clock-o"></i></a>
 									<div class="cellName" style="text-align: center; '.$bg_color.'">'.$age.'</div>
@@ -244,7 +246,7 @@
 										<li class="cellsBlock cellsBlockHover">
 											<div class="cellPriority" style="text-align: center; background-color: '.$j_group[0]['color'].';"></div>
 											<a href="group.php?id='.$j_group[0]['id'].'" class="cellName ahref" style="background-color: '.$filialColor.';">'.$j_group[0]['name'].'</a>
-											<a href="journal.php?id='.$j_group[0]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: green" title="Журнал группы"><i class="fa fa-calendar"></i></a>
+											<a href="journal_new.php?id='.$j_group[0]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: green" title="Журнал группы"><i class="fa fa-calendar"></i></a>
 											<a href="filial.php?id='.$filials[0]['id'].'" id="4filter" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.$filial.'</a>
 											<a href="filial_shed.php?id='.$filials[0]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: rgb(182, 82, 227);" title="Расписание филиала"><i class="fa fa-clock-o"></i></a>
 											<div class="cellName" style="text-align: center; '.$bg_color.'">'.$age.'</div>

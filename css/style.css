@@ -87,6 +87,10 @@ header{
 	/*margin-bottom: 5px;*/
 }
 
+.nav {
+	margin-bottom: 20px;
+}
+
 header div.nav a{
 	margin: 0 1px 5px;
 	font-size: 80%;
@@ -108,7 +112,7 @@ header div.nav a:hover {
 
 /* выравниваем страницу по центру, делаем отступы и цвет фона */
 section#main {
-	padding: 20px;
+	padding: 10px 15px 20px;
 	margin: 0 20px 40px;
 	background:#fff;
 }
@@ -2063,4 +2067,14 @@ ul.ul-tree li:last-child {
 	padding: 1em;
 	float: right;
 	width: 40em;
+}
+
+/**/
+.yellowLink {
+	border-bottom: 1px dashed #000080;
+	text-decoration: none;
+	font-size: 70%;
+	color: red;
+	background-color: rgba(252, 252, 0, 0.3);
+	cursor: pointer;
 }

@@ -1,7 +1,7 @@
 <?php
 
-//journal.php
-//
+//journal_new.php
+//Новый журнал после введения новой финансовой системы
 
 	require_once 'header.php';
 	
@@ -46,14 +46,14 @@
 				if ($j_group != 0){
 					if (($scheduler['see_all'] == 1) || (($scheduler['see_own'] == 1) && (($j_group[0]['worker'] == $_SESSION['id']) || ($iReplace))) || $god_mode){
 						echo '
-
 							<header style="margin-bottom: 5px;">
 							     <div class="nav">
-							        <a href="journal_new.php?id='.$_GET['id'].'" class="b3" style="">Журнал посещений</a>
+							        <a href="journal.php?id='.$_GET['id'].'" class="b3" style="background-color: #CCC;">Журнал посещений (старое)</a>
 							     </div>
-								<h1>Журнал посещений (старое)< <a href="group.php?id='.$_GET['id'].'" class="ahref">'.$j_group[0]['name'].'</a> ></h1>
+								<h1>Журнал посещений< <a href="group.php?id='.$_GET['id'].'" class="ahref">'.$j_group[0]['name'].'</a> ></h1>
 							</header>';
 
+								
 						if ($j_group[0]['close'] == '1'){
 							echo '<span style="color:#EF172F;font-weight:bold;">ГРУППА ЗАКРЫТА</span>';
 						}else{
@@ -82,15 +82,6 @@
 										$month = date("m");
 									}
 
-                                    /*var_dump($month);
-                                    var_dump($year);*/
-
-									echo '
-										<!--<p style="margin: 5px 0; padding: 1px; font-size:80%;">
-											Быстрый поиск: 
-											<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-										</p>-->';
-									
 									for ($i = 1; $i <= count($spr_shed_templs_arr); $i++) {
 										//var_dump($spr_shed_templs_arr[$i]['time_id']);
 										if ($spr_shed_templs_arr[$i]['time_id'] != 0){
@@ -139,14 +130,14 @@
 										}
 										if (($scheduler['see_all'] == 1) || ($god_mode)){
 											echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Тренер: '.WriteSearchUser2('spr_workers', $j_group[0]['worker'], 'user', true).'</span><br>';
-										}
-										//echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Сегодня: <a href="journal.php?id='.$_GET['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';
+										}										
+										//echo '<span style="font-size: 80%; color: rgb(125, 125, 125);">Сегодня: <a href="journal_new.php?id='.$_GET['id'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>';
 
 										echo '
 											<div id="data">		
 												<ul class="live_filter" style="margin-left: 6px; margin-bottom: 20px;">';
 
-                                        echo widget_calendar ($month, $year, 'journal.php', $dop);
+                                        echo widget_calendar ($month, $year, 'journal_new.php', $dop);
 
                                         echo '
                                             <br>
@@ -174,29 +165,6 @@
 										$journal_uch = array();										
 										
 										if ($uch_arr != 0){	
-
-											//количество допущенных
-											$dopusk = 0;
-											
-											//!!!Настройки цены,елать
-											$arr = array();
-											$settings = array();
-											
-											$query = "SELECT * FROM `spr_settings` ORDER BY `time` DESC";
-
-                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                                            $number = mysqli_num_rows($res);
-
-											if ($number != 0){
-												while ($arr = mysqli_fetch_assoc($res)){
-													$settings[$arr['name']][$arr['time']] = $arr;
-												}
-											}else{
-												$settings = 0;
-											}
-											
-											//var_dump ($settings);
 
 											$arr = array();
 											
@@ -267,61 +235,18 @@
 															$journal_ico = '<i class="fa fa-check"></i>';
 															$journal_value = 1;
 															
-															//$journal_was++;
-															
-															/*foreach($settings['cena1'] as $key_time => $value_time_arr){
-																$need_cena = 0;
-																
-																//если только одно значение 
-																if (count($settings['cena1']) == 1){
-																	$need_cena = $settings['cena1'][$key_time]['value'];
-																	$need_summ += $settings['cena1'][$key_time]['value'];
-																}else{
-																	//Если указанное в посещении время меньше чем текущее в цикле
-																	if ($timeForPay < $key_time){
-																		continue;
-																	}else{
-																		$need_cena = $settings['cena1'][$key_time]['value'];
-																		$need_summ += $settings['cena1'][$key_time]['value'];
-																		break;
-																	}
-																}
-															}*/
 
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 2){
 															$backgroundColor = "background-color: rgba(255, 0, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-times"></i>';
 															$journal_value = 2;
-								
-															//$journal_x++;
-															
-															/*foreach($settings['cena1'] as $key_time => $value_time_arr){
-																$need_cena = 0;
-																
-																//если только одно значение 
-																if (count($settings['cena1']) == 1){
-																	$need_cena = $settings['cena1'][$key_time]['value'];
-																	$need_summ += $settings['cena1'][$key_time]['value'];
-																}else{
-																	//Если указанное в посещении время меньше чем текущее в цикле
-																	if ($timeForPay < $key_time){
-																		continue;
-																	}else{
-																		$need_cena = $settings['cena1'][$key_time]['value'];
-																		$need_summ += $settings['cena1'][$key_time]['value'];
-																		break;
-																	}
-																}
-															}*/
-															
+
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 3){
 															$backgroundColor = "background-color: rgba(255, 252, 0, 0.5)";
 															$journal_ico = '<i class="fa fa-file-text-o"></i>';
 															$journal_value = 3;
 															
-															//$journal_spr++;
-															
-															//$need_cena = 0;
+
 															
 														}elseif($journal_uch[$uch_arr[$i]['id']][$weekDaysArr[2]] == 4){
 															$backgroundColor = "background-color: rgba(0, 201, 255, 0.5)";
@@ -330,25 +255,7 @@
 								
 															$journal_try++;
 															
-															/*foreach($settings['cena2'] as $key_time => $value_time_arr){
-																$need_cena = 0;
-																
-																//если только одно значение 
-																if (count($settings['cena2']) == 1){
-																	$need_cena = $settings['cena2'][$key_time]['value'];
-																	$need_summ += $settings['cena2'][$key_time]['value'];
-																}else{
-																	//Если указанное в посещении время меньше чем текущее в цикле
-																	if ($timeForPay < $key_time){
-																		continue;
-																	}else{
-																		$need_cena = $settings['cena2'][$key_time]['value'];
-																		$need_summ += $settings['cena2'][$key_time]['value'];
-																		break;
-																	}
-																}
-															}*/
-															
+
 														}else{
 															$backgroundColor = '';
 															$journal_ico = '-';
@@ -365,15 +272,11 @@
 														$journal_ico = '-';
 														$journal_value = 0;
 													}
-													//!!!! закрываем редактирование в старом журнале
-													//echo '<div id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$uch_arr[$i]['id'].', \''.$weekDays[$j].'\');" >'.$journal_ico.'</div>';
-													echo '<div id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="alert(\'Редактирование старого журнала закрыто\');" >'.$journal_ico.'</div>';
+													echo '<div id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'" class="cellTime journalItem" style="text-align: center; width: 70px; min-width: 70px; '.$backgroundColor.'" onclick="JournalEdit('.$uch_arr[$i]['id'].', \''.$weekDays[$j].'\');">'.$journal_ico.'</div>';
 													echo '<input type="hidden" id="'.$uch_arr[$i]['id'].'_'.$weekDays[$j].'_value" class="journalItemVal" value="'.$journal_value.'">';
 												}	
 												
-												
-												//!!!Надо посмотреть все занятия во всех группах, вдруг был в другой. Двойная работа... так бывает
-												
+
 												$journal_uch_all = array();
 												$arr = array();
 												
@@ -395,16 +298,16 @@
 												
 												if ($journal_uch_all != 0){
 													foreach ($journal_uch_all as $key => $value) {
-														
+
 														$timeForPay = strtotime($value['day'].'.'.$value['month'].'.'.$value['year'].' 23:59:59');
-														
+
 														if ($value['status'] == 1){
 															$journal_was++;
-															
-															foreach($settings['cena1'] as $key_time => $value_time_arr){
+
+															/*foreach($settings['cena1'] as $key_time => $value_time_arr){
 																$need_cena = 0;
-																
-																//если только одно значение 
+
+																//если только одно значение
 																if (count($settings['cena1']) == 1){
 																	$need_cena = $settings['cena1'][$key_time]['value'];
 																	$need_summ += $settings['cena1'][$key_time]['value'];
@@ -418,60 +321,22 @@
 																		break;
 																	}
 																}
-															}
-															
+															}*/
+
 														}elseif($value['status'] == 2){
 
 															$journal_x++;
 
-															foreach($settings['cena1'] as $key_time => $value_time_arr){
-																$need_cena = 0;
-																
-																//если только одно значение 
-																if (count($settings['cena1']) == 1){
-																	$need_cena = $settings['cena1'][$key_time]['value'];
-																	$need_summ += $settings['cena1'][$key_time]['value'];
-																}else{
-																	//Если указанное в посещении время меньше чем текущее в цикле
-																	if ($timeForPay < $key_time){
-																		continue;
-																	}else{
-																		$need_cena = $settings['cena1'][$key_time]['value'];
-																		$need_summ += $settings['cena1'][$key_time]['value'];
-																		break;
-																	}
-																}
-															}
-															
 														}elseif($value['status'] == 3){
 
 															$journal_spr++;
-															
-															$need_cena = 0;
-															
+
+															//$need_cena = 0;
+
 														}elseif($value['status'] == 4){
 
 															$journal_try++;
 
-															foreach($settings['cena2'] as $key_time => $value_time_arr){
-																$need_cena = 0;
-																
-																//если только одно значение 
-																if (count($settings['cena2']) == 1){
-																	$need_cena = $settings['cena2'][$key_time]['value'];
-																	$need_summ += $settings['cena2'][$key_time]['value'];
-																}else{
-																	//Если указанное в посещении время меньше чем текущее в цикле
-																	if ($timeForPay < $key_time){
-																		continue;
-																	}else{
-																		$need_cena = $settings['cena2'][$key_time]['value'];
-																		$need_summ += $settings['cena2'][$key_time]['value'];
-																		break;
-																	}
-																}
-															}
-															
 														}else{
 															$backgroundColor = '';
 															$journal_ico = '-';
@@ -481,215 +346,84 @@
 													}
 												}else{
 												}
-												
-												//Смотрим оплаты
-												$arr = array();
-												$journal_fin = array();
-												
-												//Общая внесённая сумма
-												$summa = 0;
 
-												$query = "SELECT * FROM `journal_finance` WHERE `month` = '{$month}' AND  `year` = '{$year}' AND `client`='".$uch_arr[$i]['id']."'";
+												//Смотрим количество доступных занятий у ребёнка
+                                                $journal_uch_lessons_balance = array();
 
-                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                                $lessons_summ = 0;
+                                                $lessons_debt = 0;
 
-												$number = mysqli_num_rows($res);
-
-												if ($number != 0){
-													while ($arr = mysqli_fetch_assoc($res)){
-														array_push($journal_fin, $arr);
-													}
-												}else{
-													$journal_fin = 0;
-												}
-												//var_dump($journal_fin);
-
-												if ($journal_fin != 0){
-													for ($k = 0; $k < count($journal_fin); $k++) { 
-														if ($journal_fin[$k]['type'] != 2){
-															$summa += $journal_fin[$k]['summ'];
-														}
-													}
-												}else{
-												}
-												
-												//Смотрим переносы ИЗ ЭТОГО месяца
-												$arr = array();
-												$journal_rem_last = array();
-												
-												//Общая внесённая сумма
-												$summaRemLast = 0;
-
-												$query = "SELECT * FROM `journal_finance_rem` WHERE `last_month` = '{$month}' AND `last_year` = '{$year}' AND `client`='".$uch_arr[$i]['id']."'";
+                                                $query = "SELECT `summ`, `debt` FROM `journal_lessons_balance` WHERE `client_id` = '".$uch_arr[$i]['id']."' LIMIT 1";
 
                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                                                 $number = mysqli_num_rows($res);
 
-												if ($number != 0){
-													while ($arr = mysqli_fetch_assoc($res)){
-														array_push($journal_rem_last, $arr);
-													}
-												}else{
-													$journal_rem_last = 0;
-												}
-												//var_dump($journal_rem_last);
+                                                if ($number != 0){
+                                                    while ($arr = mysqli_fetch_assoc($res)){
+                                                        //var_dump($arr);
+                                                        //array_push($journal_uch_lessons_balance, $arr);
+                                                        $lessons_summ = $arr['summ'];
+                                                        $lessons_debt = $arr['debt'];
+                                                    }
+                                                }
 
-												if ($journal_rem_last != 0){
-													/*echo '
-														<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 10px; margin-top: 10px;">
-															Перерасчет <b>из</b> этого месяца в другой
-														</li>';
-													echo '
-														<li class="cellsBlock" style="font-weight: bold; width: auto;">	
-															<div class="cellName" style="text-align: center">Дата</div>
-															<div class="cellName" style="text-align: center">Имя</div>
-															<div class="cellName" style="text-align: center">Из месяц/год</div>
-															<div class="cellName" style="text-align: center">В месяц/год</div>
-															<div class="cellTime" style="text-align: center">Сумма</div>
-														</li>';*/
-													for ($k = 0; $k < count($journal_rem_last); $k++) {
-														
-														if ($journal_rem_last[$k]['summ'] < 0){
-															/*$SummColor = 'color: rgba(255, 0, 0, 0.86);';
-															$znak = 'долг:<br>';
-															$znak2 = '';*/
-														}elseif($journal_rem_last[$k]['summ'] > 0){
-															/*$SummColor = 'color: rgba(9, 198, 31, 0.92);';
-															$znak = 'избыток:<br>';
-															$znak2 = '+';*/
-														}else{
-														}
-														
-														/*echo '
-															<li class="cellsBlock cellsBlockHover" style="width: auto;">	
-																<a href="remove.php?id='.$journal_rem_last[$k]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal_rem_last[$k]['create_time']).'</a>
-																<a href="client.php?id='.$journal_rem_last[$k]['client'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal_rem_last[$k]['client'], 'user').'</a>
-																<div class="cellName" style="text-align: center">'.$monthsName[$journal_rem_last[$k]['last_month']].'/'.$journal_rem_last[$k]['last_year'].'</div>
-																<div class="cellName" style="text-align: center">'.$monthsName[$journal_rem_last[$k]['month']].'/'.$journal_rem_last[$k]['year'].'</div>
-																<div class="cellTime" style="text-align: center; font-size: 110%;">'.$znak.' <span style="'.$SummColor.' font-weight: bold;">'.$znak2.$journal_rem_last[$k]['summ'].'</span></div>
-															</li>';*/
-													
-														//Если перерасчет сделан ИЗ этого месяца
-														if ($month == $journal_rem_last[$k]['month']){				
-															$summaRemLast -= $journal_rem_last[$k]['summ'];
-														}else{
-															$summaRemLast += $journal_rem_last[$k]['summ'];
-														}
-													}
-												}else{
-												}
-											
-												//Смотрим переносы В ЭТОТ месяца
-												$arr = array();
-												$journal_rem = array();
-												
-												//Общая внесённая сумма
-												$summaRem = 0;
-
-												$query = "SELECT * FROM `journal_finance_rem` WHERE `month` = '{$month}' AND `year` = '{$year}' AND `client`='".$uch_arr[$i]['id']."'";
-
-                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                                                $number = mysqli_num_rows($res);
-
-												if ($number != 0){
-													while ($arr = mysqli_fetch_assoc($res)){
-														array_push($journal_rem, $arr);
-													}
-												}else{
-													$journal_rem = 0;
-												}
-												//var_dump($journal_rem);
-
-												if ($journal_rem != 0){
-													/*echo '
-														<li class="cellsBlock" style="width: auto; text-align: right; font-size: 90%; color: #777; margin-bottom: 10px; margin-top: 10px;">
-															Перерасчет <b>в</b> этот месяца из другого
-														</li>';
-													echo '
-														<li class="cellsBlock" style="font-weight: bold; width: auto;">	
-															<div class="cellName" style="text-align: center">Дата</div>
-															<div class="cellName" style="text-align: center">Имя</div>
-															<div class="cellName" style="text-align: center">Из месяц/год</div>
-															<div class="cellName" style="text-align: center">В месяц/год</div>
-															<div class="cellTime" style="text-align: center">Сумма</div>
-														</li>';*/
-													for ($k = 0; $k < count($journal_rem); $k++) { 
-													
-														if ($journal_rem[$k]['summ'] < 0){
-															/*$SummColor = 'color: rgba(255, 0, 0, 0.86);';
-															$znak = 'долг:<br>';
-															$znak2 = '';*/
-														}elseif($journal_rem[$k]['summ'] > 0){
-															/*$SummColor = 'color: rgba(9, 198, 31, 0.92);';
-															$znak = 'избыток:<br>';
-															$znak2 = '+';*/
-														}else{
-														}
-													
-														/*echo '
-															<li class="cellsBlock cellsBlockHover" style="width: auto;">	
-																<a href="remove.php?id='.$journal_rem[$k]['id'].'" class="cellName ahref" style="text-align: center">'.date('d.m.y H:i', $journal_rem[$k]['create_time']).'</a>
-																<a href="client.php?id='.$journal_rem[$k]['client'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_clients', $journal_rem[$k]['client'], 'user').'</a>
-																<div class="cellName" style="text-align: center">'.$monthsName[$journal_rem[$k]['last_month']].'/'.$journal_rem[$k]['last_year'].'</div>
-																<div class="cellName" style="text-align: center">'.$monthsName[$journal_rem[$k]['month']].'/'.$journal_rem[$k]['year'].'</div>
-																<div class="cellTime" style="text-align: center; font-size: 110%;">'.$znak.' <span style="'.$SummColor.' font-weight: bold;">'.$znak2.$journal_rem[$k]['summ'].'</span></div>
-															</li>';*/
-														//Если перерасчет сделан В этот месяц
-														if ($month == $journal_rem[$k]['month']){				
-															$summaRem -= $journal_rem[$k]['summ'];
-														}else{
-															$summaRem += $journal_rem[$k]['summ'];
-														}
-													}
-												}else{
-												}
-												
 												//Итог
-												//Разница между потрачено и внесено
-												$thisMonthRazn = $summa - $need_summ;
-												
-												//!!!!!Если есть какие-то перерасчеты
-												/*if ($summaRemLast + $summaRem != 0){
-													$rezColor = '#555';
-	
-													if ($thisMonthRazn  - ($summaRemLast + $summaRem) < 0){
-														$rezColor = 'rgba(255, 0, 0, 0.86);';
-													}
-													if ($thisMonthRazn  - ($summaRemLast + $summaRem) > 0){
-														$rezColor = 'rgba(9, 198, 31, 0.92);';
-													}	
+												//Разница между потрачено и внесено уроков
+												if (($lessons_summ - $lessons_debt) > 0){
+
 													echo '
-													<li class="cellsBlock" style="width: auto; text-align: right; font-size: 100%; color: #777; margin-bottom: 10px;">
-														Разница с учетом перерасчетов: <span style="font-weight: bold; font-size: 110%; color: '.$rezColor.'">'.($summa - $need_summ - ($summaRemLast + $summaRem)).'</span> руб.
-													</li>';
-												}*/
-												
-												if ($thisMonthRazn  - ($summaRemLast + $summaRem) > 0){
-													
-													$dopusk++;
-													
-													echo '
-														<div id="" class="cellTime" style="text-align: center; width: 20px; min-width: 20px; background-color: rgb(143, 243, 0); color: rgb(62, 56, 56);">
-															<i class="fa fa-thumbs-o-up"></i>
+														<div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(143, 243, 0); color: rgb(62, 56, 56);">
+												            '.($lessons_summ - $lessons_debt).' <i class="fa fa-thumbs-o-up"></i>
 														</div>';
-														
-													$SummColor = '';
+
 												}else{
 													echo '
-														<div id="" class="cellTime" style="text-align: center; width: 20px; min-width: 20px; background-color: rgb(210, 11, 11); color: #FFF;">
-															<i class="fa fa-thumbs-down"></i>
+														<div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(210, 11, 11); color: #FFF;">
+													        '.($lessons_summ - $lessons_debt).' <i class="fa fa-thumbs-down"></i>
 														</div>';
-														
-													$SummColor = 'color: rgb(210, 11, 11);';
+
 												}
-												if (($finance['see_all'] == 1) || $god_mode){
+
+                                                //Смотрим баланс денежек
+                                                if (($finance['see_all'] == 1) || $god_mode){
+                                                    //Смотрим количество доступных занятий у ребёнка
+                                                    $journal_balance = array();
+
+                                                    $summ = 0;
+                                                    $debited = 0;
+
+                                                    /*$query = "SELECT `summ`, `debited` FROM `journal_balance` WHERE `client_id` = '".$uch_arr[$i]['id']."' LIMIT 1";
+
+                                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                                    $number = mysqli_num_rows($res);
+
+                                                    if ($number != 0){
+                                                        while ($arr = mysqli_fetch_assoc($res)){
+                                                            //var_dump($arr);
+                                                            //array_push($journal_uch_lessons_balance, $arr);
+                                                            $summ = $arr['summ'];
+                                                            $debited = $arr['debited'];
+                                                        }
+                                                    }*/
+
+                                                    $client_debt = json_decode(calculateDebt ($uch_arr[$i]['id']), true);
+
+                                                    //Итог
+                                                    //Разница между потрачено и внесено денег
+                                                    if (($client_debt['summ']) <= 0) {
+                                                        $SummColor = '';
+                                                    }else {
+                                                        $SummColor = 'color: rgb(210, 11, 11);';
+                                                    }
+
+												    //Сумма долга
 													echo '
 														<div id="" class="cellTime" style="text-align: right; width: 70px; min-width: 70px; '.$SummColor.'">
-															'.($thisMonthRazn  - ($summaRemLast + $summaRem)).'
+															'.($client_debt['summ']).'
 														</div>
-														<a href="client_finance.php?client='.$uch_arr[$i]['id'].'" class="cellTime ahref" style="text-align: center; width: 20px; min-width: 20px;" title="История"><i class="fa fa-rub"></i></a>';
+														<a href="client_balance.php?client_id='.$uch_arr[$i]['id'].'" class="cellTime ahref" style="text-align: center; width: 20px; min-width: 20px;" title="Баланс"><i class="fa fa-rub"></i></a>';
 												}
 
 												echo '				
@@ -737,10 +471,7 @@
 											echo '<h3>В этой группе нет участников</h3>';
 											
 											//Но если они когда-то были
-											/*mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-											mysql_select_db($dbName) or die(mysql_error()); 
-											mysql_query("SET NAMES 'utf8'");*/
-											
+
 											$query = "SELECT `client_id`, `day`, `status` FROM `journal_user` WHERE `group_id` = '{$_GET['id']}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 
                                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -859,7 +590,7 @@
 												</div>
 												<br><br>
 												<div id="errror"></div>
-												<input type="button" class="b" value="Сохранить изменения" onclick="Ajax_change_journal('.$_GET['id'].')" disabled>';
+												<input type="button" class="b" value="Сохранить изменения" onclick=Ajax_change_journal('.$_GET['id'].')>';
 										echo '		
 												<br><br>
 												<span style="font-size: 80%; color: rgb(150, 150, 150);">Если допустили ошибку, то, чтобы увидеть актуальный журнал, <a href="" class="ahref">обновите страницу</a></span>
@@ -997,7 +728,7 @@
 													var iWantThisMonth = document.getElementById("iWantThisMonth").value;
 													var iWantThisYear = document.getElementById("iWantThisYear").value;
 													
-													window.location.replace("journal.php?id='.$_GET['id'].'&m="+iWantThisMonth+"&y="+iWantThisYear);
+													window.location.replace("journal_new.php?id='.$_GET['id'].'&m="+iWantThisMonth+"&y="+iWantThisYear);
 												}
 											</script>';
 									}

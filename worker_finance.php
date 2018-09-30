@@ -243,7 +243,7 @@
 								$groupVal .= '
 									<div class="cellName" style="display: inline-block !important; text-align: center; width: 100px; '.$backgroundColor.'">
 										<div>
-											<a href="journal.php?id='.$group_id.'&m='.$month.'&y='.$year.'" class="ahref">
+											<a href="journal_new.php?id='.$group_id.'&m='.$month.'&y='.$year.'" class="ahref">
 												<div>'.$day.'.'.$month.'.'.$year.'</div>
 												<div style="font-size: 70%; border-bottom: 1px dashed #CCC; margin-bottom: 5px;">'.$groupValName.'</div>
 											</a>
@@ -297,7 +297,7 @@
 									<ul style="margin-left: 6px; margin-bottom: 5px; border: 1px solid #CCC; width: auto; padding: 7px; background-color: rgba(204, 204, 204, 0.25);">
 										<li class="cellsBlock" style="width: auto; text-align: right; margin-bottom: 5px;">
 											Расписание группы <
-											<a href="journal.php?id='.$group_id.'&m='.$month.'&y='.$year.'" class="ahref">
+											<a href="journal_new.php?id='.$group_id.'&m='.$month.'&y='.$year.'" class="ahref">
 												'.$groupValName.'
 											</a>>
 											на '.$monthsName[$month].' '.$year.'

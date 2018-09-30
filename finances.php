@@ -291,8 +291,8 @@
 			echo '
 				<script type="text/javascript">
 					function iWantThisDate(){
-						var iWantThisMonth = document.getElementById("iWantThisMonth").value;
-						var iWantThisYear = document.getElementById("iWantThisYear").value;
+                        var iWantThisMonth = $("#iWantThisMonth").val();
+                        var iWantThisYear =  $("#iiWantThisYear").val();
 						
 						window.location.replace("finances.php?m="+iWantThisMonth+"&y="+iWantThisYear);
 					}

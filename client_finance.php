@@ -301,7 +301,7 @@
 							$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
 							
 							echo '
-								<a href="journal.php?id='.$value['group_id'].'&m='.$value['month'].'&y='.$value['year'].'" class="cellName ahref" style="text-align: center; width: 100px; '.$backgroundColor.'">
+								<a href="journal_new.php?id='.$value['group_id'].'&m='.$value['month'].'&y='.$value['year'].'" class="cellName ahref" style="text-align: center; width: 100px; '.$backgroundColor.'">
 									'.$value['day'].'.'.$value['month'].'.'.$value['year'].'<br>
 									<span style="font-size: 70%;">';
 							if ($group != 0){

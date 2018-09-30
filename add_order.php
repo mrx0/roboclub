@@ -15,8 +15,10 @@
             //require 'variables.php';
 
 			//Если у нас по GET передали клиента
-			if (isset($_GET['client_id']) && isset($_GET['filial_id'])){
+			if (isset($_GET['client_id'])){
 				$client = SelDataFromDB('spr_clients', $_GET['client_id'], 'user');
+				//var_dump ($client);
+
 				if ($client !=0){
 
                     $invoice_id = 0;
@@ -25,31 +27,34 @@
                         $invoice_id = $_GET['invoice_id'];
                     }
 
-                    echo '
-                    <div id="status">
-                        <header>
-                            <h2>Новый ордер</h2>
-                            <ul style="margin-left: 6px; margin-bottom: 10px;">
-								<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-								    Плательщик: <a href="client.php?id='.$_GET['client_id'].'" class="ahref">'.WriteSearchUser('spr_clients', $_GET['client_id'], 'user_full').'</a>
-							    </li>';
-					//Календарик
-					echo '
-								<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-									<span style="color: rgb(125, 125, 125);">
-									    Дата внесения: <input type="text" id="date_in" name="date_in" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date("d").'.'.date("m").'.'.date("Y").'" onfocus="this.select();_Calendar.lcs(this)" 
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
-									</span>
-								</li>';
-					echo '
-							</ul>   
-					    </header>';
+                    if ($client[0]['filial'] != 0){
+                        $filial_id = $client[0]['filial'];
 
-                    echo '
-                        <div id="data">';
+                        echo '
+                        <div id="status">
+                            <header>
+                                <h2>Новый ордер</h2>
+                                <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                    <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+                                        Плательщик: '.WriteSearchUser2('spr_clients', $_GET['client_id'], 'user_full', true).'
+                                    </li>';
+                        //Календарик
+                        echo '
+                                    <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+                                        <span style="color: rgb(125, 125, 125);">
+                                            Дата внесения: <input type="text" id="date_in" name="date_in" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date("d").'.'.date("m").'.'.date("Y").'" onfocus="this.select();_Calendar.lcs(this)" 
+                                                    onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+                                        </span>
+                                    </li>';
+                        echo '
+                                </ul>   
+                            </header>';
 
-                    //Филиал
-                    //if (isset($_SESSION['filial'])){
+                        echo '
+                            <div id="data">';
+
+                        //Филиал
+                        //if (isset($_SESSION['filial'])){
 
                         echo '
 							<div class="cellsBlock2">
@@ -97,11 +102,11 @@
 
                             echo "
                                         <select name='filial' id='filial'>
-                                             <option value='0' ", $_GET['filial_id'] == 0 ? "selected" : "" ,">Не указано</option>";
+                                             <option value='0' ", $filial_id == 0 ? "selected" : "" ,">Не указано</option>";
 
                             if ($filials != 0){
                                 for ($i=0;$i<count($filials);$i++){
-                                    echo "<option value='".$filials[$i]['id']."' ", $_GET['filial_id'] == $filials[$i]['id'] ? "selected" : "" ,">".$filials[$i]['name']."</option>";
+                                    echo "<option value='".$filials[$i]['id']."' ", $filial_id == $filials[$i]['id'] ? "selected" : "" ,">".$filials[$i]['name']."</option>";
                                 }
                             }
 
@@ -130,26 +135,28 @@
 							</div>';
 
 
-                    /*}else{
+                        /*}else{
+                            echo '
+                                    <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
+                        }*/
+
+
                         echo '
-								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
-                    }*/
-
-
-                    echo '
-                            <div>
-                                <div id="errror"></div>
-                                <input type="hidden" id="client_id" name="client_id" value="'.$_GET['client_id'].'">
-                                <input type="hidden" id="invoice_id" name="invoice_id" value="'.$invoice_id.'">
-                                <input type="button" class="b" value="Сохранить" onclick=" Ajax_order_add(\'add\')">
+                                <div>
+                                    <div id="errror"></div>
+                                    <input type="hidden" id="client_id" name="client_id" value="'.$_GET['client_id'].'">
+                                    <input type="hidden" id="invoice_id" name="invoice_id" value="'.$invoice_id.'">
+                                    <input type="button" class="b" value="Сохранить" onclick=" Ajax_order_add(\'add\')">
+                                </div>
                             </div>
+    
+                            
                         </div>
-
-						
-                    </div>
-					<!-- Подложка только одна -->
-					<div id="overlay"></div>';
-
+                        <!-- Подложка только одна -->
+                        <div id="overlay"></div>';
+                    }else{
+                        echo '<h1>У ребёнка '.WriteSearchUser2('spr_clients', $_GET['client_id'], 'user_full', true).' не указан филиал</h1><a href="index.php">Вернуться на главную</a>';
+                    }
                 }else{
                     echo '<h1>Такого такого ребёнка нет в базе</h1><a href="index.php">Вернуться на главную</a>';
                 }
