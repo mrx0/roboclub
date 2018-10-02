@@ -17,6 +17,8 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 
+            $closed = FALSE;
+
             $msql_cnnct = ConnectToDB ();
 
 			$client = SelDataFromDB('spr_clients', $_GET['id'], 'user');
@@ -42,9 +44,17 @@
 						<header>
 							<h2>Карточка ребёнка #'.$client[0]['id'];
 
-                if (($clients['edit'] == 1) || $god_mode){
-                    echo '
-							<a href="client_edit.php?id='.$_GET['id'].'" class=""><img src="img/edit.png" title="Редактировать"></a>';
+                if ($client[0]['status'] == 9) {
+
+                    $closed = TRUE;
+
+                    echo '<div style="margin: 10px;"><span style= "color: #333; background: rgba(255,39,119,0.7);">в архиве</span></div>';
+                }else{
+
+                    if (($clients['edit'] == 1) || $god_mode) {
+                        echo '
+							<a href="client_edit.php?id=' . $_GET['id'] . '" class=""><img src="img/edit.png" title="Редактировать"></a>';
+                    }
                 }
 
                 /*if (($clients['close'] == 1) || $god_mode){
@@ -56,23 +66,25 @@
 				            </h2>
 						</header>';
 
-                if (($finance['add_new'] == 1) || $god_mode){
-                    echo '
-							<a href="add_order.php?client_id='.$_GET['id'].'&filial_id='.$filial_id.'" class="b3">Добавить ордер</a>';
-                }
+                if (!$closed) {
+                    if (($finance['add_new'] == 1) || $god_mode) {
+                        echo '
+                                <a href="add_order.php?client_id=' . $_GET['id'] . '&filial_id=' . $filial_id . '" class="b3">Добавить ордер</a>';
+                    }
 
-                if (($finance['see_all'] == 1) || $god_mode){
-                    echo '
-							<a href="client_balance.php?client_id='.$_GET['id'].'" class="b3">Баланс</a>';
-                }
+                    if (($finance['see_all'] == 1) || $god_mode) {
+                        echo '
+                                <a href="client_balance.php?client_id=' . $_GET['id'] . '" class="b3">Баланс</a>';
+                    }
 
-                if (($finance['add_new'] == 1) || $god_mode){
-                    echo '
-							<a href="add_finance.php?client='.$_GET['id'].'" class="b3" style="background-color: #CCC;">Добавить платёж (старое) <i class="fa fa-rub"></i></a>';
-                }
-                if (($finance['see_all'] == 1) || $god_mode){
-                    echo '
-							<a href="client_finance.php?client='.$_GET['id'].'" class="b3" style="background-color: #CCC;">История (старое) <i class="fa fa-rub"></i></a>';
+                    if (($finance['add_new'] == 1) || $god_mode) {
+                        echo '
+                                <a href="add_finance.php?client=' . $_GET['id'] . '" class="b3" style="background-color: #CCC;">Добавить платёж (старое) <i class="fa fa-rub"></i></a>';
+                    }
+                    if (($finance['see_all'] == 1) || $god_mode) {
+                        echo '
+                                <a href="client_finance.php?client=' . $_GET['id'] . '" class="b3" style="background-color: #CCC;">История (старое) <i class="fa fa-rub"></i></a>';
+                    }
                 }
 
 				if (($clients['see_all'] == 1) || $god_mode){
@@ -183,11 +195,13 @@
                                 <div style="display: inline; ">
                                     <a href="group.php?id='.$value['group_id'].'" class="ahref" style="padding: 0 4px;"><b>'.$value['group_name'].'</b> [<i>'.$value['office_name'].'</i>]</a>
                                 </div>';
-                        if (($finance['add_new'] == 1) || $god_mode){
-                            echo ' 
+                        if (!$closed) {
+                            if (($finance['add_new'] == 1) || $god_mode) {
+                                echo ' 
                                 <div style="display: inline;">
-							        <a href="invoice_add.php?client_id='.$_GET['id'].'&group_id='.$value['group_id'].'" class="b3" style="font-size: 90%">Добавить счёт</a>
+							        <a href="invoice_add.php?client_id=' . $_GET['id'] . '&group_id=' . $value['group_id'] . '" class="b3" style="font-size: 90%">Добавить счёт</a>
 							    </div>';
+                            }
                         }
                         echo '
                             </div>';
@@ -195,9 +209,36 @@
 				}else{
 					echo 'Не в группе';
 				}
-				echo ' '.$add_group_str.'
+
+
+                if (!$closed) {
+                    echo ' '.$add_group_str;
+                }
+                echo '
                         </div>
                     </div>';
+
+
+				if (($clients['close'] == 1) || $god_mode){
+                    if (!$closed) {
+                        echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Удалить в архив</div>
+									<div class="cellRight">
+									    <a href="client_close.php?id=' . $_GET['id'] . '"><img src="img/delete.png" title="Удалить в архив"></a>
+									</div>
+								</div>';
+                    }else{
+                        echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Восстановить из архива</div>
+									<div class="cellRight">
+									    <a href="client_open.php?id=' . $_GET['id'] . '"><img src="img/reset.png" title="Восстановить"></a>
+									</div>
+								</div>';
+                    }
+
+                }
 
 				//Тарифы
 
@@ -280,7 +321,8 @@
 				}				
 					
 				//оставить комментарий
-				echo '
+                if (!$closed) {
+                    echo '
 						<div style="margin-top: 5px;">
 							<form>
 								<div id="reqCom"></div>
@@ -289,7 +331,7 @@
 							</form>
 						</div>
 					</div>';
-
+                }
 
                 CloseDB($msql_cnnct);
 				

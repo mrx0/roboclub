@@ -750,7 +750,7 @@
         //$time = date('Y-m-d H:i:s', time());
 
         //Вставим новую запись баланса
-        if ($is_group && ($group_id != 0)){
+        if ($is_group){
             $query = "UPDATE `journal_lessons_balance_group` 
                       SET `summ`='$Summ', `debt`= '$debt'
                       WHERE `id`='$balance_id'";

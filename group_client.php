@@ -1,5 +1,6 @@
 <?php
-//user.php
+
+//group_client.php
 //
 
 	require_once 'header.php';
@@ -92,9 +93,15 @@
 					echo '
 								<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 					if ($uch_arr != 0){			
-						for ($i = 0; $i < count($uch_arr); $i++) { 
+						for ($i = 0; $i < count($uch_arr); $i++) {
+
+                            $bgColor = '';
+                            if ($uch_arr[$i]['status'] == 9){
+                                $bgColor = 'background-color: #ABABAB';
+                            }
+
 							echo '
-									<li class="cellsBlock cellsBlockHover" style="width: auto;">
+									<li class="cellsBlock cellsBlockHover" style="width: auto; '.$bgColor.'">
 										<a href="client.php?id='.$uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$uch_arr[$i]['full_name'].'</a>';
 							echo '
 										<div class="cellCosmAct" style="text-align: center">';
@@ -157,58 +164,60 @@
 										<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 										
 							for ($i = 0; $i < count($free_uch_arr); $i++) {
-								if ((getyeardiff($free_uch_arr[$i]['birthday']) >= $ages[0]['from_age']) && (getyeardiff( $free_uch_arr[$i]['birthday']) <= $ages[0]['to_age'])){
-									//а не находится ли он в другой группе
-									$inGroup = '';
-									$groups = SelDataFromDB('journal_groups_clients', $free_uch_arr[$i]['id'], 'client');
-									if ($groups != 0){
-										//var_dump ($groups);
-										foreach($groups as $key => $value){
-											$group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
-											if ($group != 0){
-												$inGroup .= '<a href="group.php?id='.$value['group_id'].'" class="ahref" style="padding: 0 4px; background-color: '.$group[0]['color'].'">'.$group[0]['name'].'</a>';	
-											}else{
-												$inGroup .= 'ошибка группы';
-											}
-										}
-									}else{
-										$inGroup .= 'не в группе';
-									}
-									
-									echo '
-											<li class="cellsBlock cellsBlockHover" style="width: auto;">
-												<a href="client.php?id='.$free_uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$free_uch_arr[$i]['full_name'].'</a>';
-									echo '
-												<div class="cellCosmAct" style="text-align: center">';
-									if ($free_uch_arr[$i]['sex'] != 0){
-										if ($free_uch_arr[$i]['sex'] == 1){
-											echo 'М';
-										}
-										if ($free_uch_arr[$i]['sex'] == 2){
-											echo 'Ж';
-										}
-									}else{
-										echo '-';
-									}
-									
-									echo '
-												</div>';
-									if (($free_uch_arr[$i]['birthday'] == "-1577934000") || ($free_uch_arr[$i]['birthday'] == 0)){
-										$age = '';
-									}else{
-										$age = getyeardiff( $free_uch_arr[$i]['birthday']).' лет';
-									}
+							    if ($free_uch_arr[$i]['status'] != 9) {
+                                    if ((getyeardiff($free_uch_arr[$i]['birthday']) >= $ages[0]['from_age']) && (getyeardiff($free_uch_arr[$i]['birthday']) <= $ages[0]['to_age'])) {
+                                        //а не находится ли он в другой группе
+                                        $inGroup = '';
+                                        $groups = SelDataFromDB('journal_groups_clients', $free_uch_arr[$i]['id'], 'client');
+                                        if ($groups != 0) {
+                                            //var_dump ($groups);
+                                            foreach ($groups as $key => $value) {
+                                                $group = SelDataFromDB('journal_groups', $value['group_id'], 'id');
+                                                if ($group != 0) {
+                                                    $inGroup .= '<a href="group.php?id=' . $value['group_id'] . '" class="ahref" style="padding: 0 4px; background-color: ' . $group[0]['color'] . '">' . $group[0]['name'] . '</a>';
+                                                } else {
+                                                    $inGroup .= 'ошибка группы';
+                                                }
+                                            }
+                                        } else {
+                                            $inGroup .= 'не в группе';
+                                        }
 
-									echo '
-												<div class="cellTime" style="width: 140px; text-align: center">', (($free_uch_arr[$i]['birthday'] == "-1577934000") || ($free_uch_arr[$i]['birthday'] == 0)) ? "не указана" : date("d.m.Y", $free_uch_arr[$i]["birthday"]) ,' / <b>'.$age.'</b></div>
-												<div id="addClientInGroup" class="cellCosmAct addClientInGroup" style="text-align: center" onclick="addClientInGroup('.$free_uch_arr[$i]['id'].', '.$_GET['id'].');">
-													<i class="fa fa-plus" style="color: green; cursor: pointer;"></i>
-												</div>
-												<div id="cellTime" class="cellTime" style="text-align: center; font-size: 80%;">
-													'.$inGroup.'
-												</div>
-											</li>';
-								}
+                                        echo '
+                                                <li class="cellsBlock cellsBlockHover" style="width: auto;">
+                                                    <a href="client.php?id=' . $free_uch_arr[$i]['id'] . '" class="cellFullName ahref" id="4filter">' . $free_uch_arr[$i]['full_name'] . '</a>';
+                                        echo '
+                                                    <div class="cellCosmAct" style="text-align: center">';
+                                        if ($free_uch_arr[$i]['sex'] != 0) {
+                                            if ($free_uch_arr[$i]['sex'] == 1) {
+                                                echo 'М';
+                                            }
+                                            if ($free_uch_arr[$i]['sex'] == 2) {
+                                                echo 'Ж';
+                                            }
+                                        } else {
+                                            echo '-';
+                                        }
+
+                                        echo '
+                                                    </div>';
+                                        if (($free_uch_arr[$i]['birthday'] == "-1577934000") || ($free_uch_arr[$i]['birthday'] == 0)) {
+                                            $age = '';
+                                        } else {
+                                            $age = getyeardiff($free_uch_arr[$i]['birthday']) . ' лет';
+                                        }
+
+                                        echo '
+                                                    <div class="cellTime" style="width: 140px; text-align: center">', (($free_uch_arr[$i]['birthday'] == "-1577934000") || ($free_uch_arr[$i]['birthday'] == 0)) ? "не указана" : date("d.m.Y", $free_uch_arr[$i]["birthday"]), ' / <b>' . $age . '</b></div>
+                                                    <div id="addClientInGroup" class="cellCosmAct addClientInGroup" style="text-align: center" onclick="addClientInGroup(' . $free_uch_arr[$i]['id'] . ', ' . $_GET['id'] . ');">
+                                                        <i class="fa fa-plus" style="color: green; cursor: pointer;"></i>
+                                                    </div>
+                                                    <div id="cellTime" class="cellTime" style="text-align: center; font-size: 80%;">
+                                                        ' . $inGroup . '
+                                                    </div>
+                                                </li>';
+                                    }
+                                }
 							}
 								
 							echo '

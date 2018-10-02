@@ -826,6 +826,27 @@
         })
     };
 
+    //Тип тарифов  в архив
+    function Ajax_del_client(id) {
+
+        ajax({
+            url:"client_close_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                setTimeout(function () {
+                    window.location.replace('client.php?id='+id);
+                    //console.log('client.php?id='+id);
+                }, 500);
+            }
+        })
+    };
+
     //Возрастная группа из архива
     function Ajax_open_age_type(id) {
 
@@ -883,6 +904,27 @@
                 $("#errrror").html(data);
                 setTimeout(function () {
                     window.location.replace('tarifs.php');
+                    //console.log('client.php?id='+id);
+                }, 500);
+            }
+        })
+    };
+
+    //Ребёнка из архива
+    function Ajax_open_client(id) {
+
+        ajax({
+            url:"client_open_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                setTimeout(function () {
+                    window.location.replace('client.php?id='+id);
                     //console.log('client.php?id='+id);
                 }, 500);
             }

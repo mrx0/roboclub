@@ -197,9 +197,14 @@
 												$journal_try = 0;
 												//
 												$thisMonthRazn = 0;
-												
+
+												$bgColor = '';
+                                                if ($uch_arr[$i]['status'] == 9){
+                                                    $bgColor = 'background-color: #ABABAB';
+                                                }
+
 												echo '
-													<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto;">	
+													<li class="cellsBlock cellsBlockHover" style="font-weight: bold; width: auto; '.$bgColor.'">	
 														<div class="cellPriority" style="text-align: center;"></div>
 														<a href="client.php?id='.$uch_arr[$i]['id'].'" class="cellFullName ahref" id="4filter" style="position: relative;">'.$uch_arr[$i]['full_name'];
 														
@@ -378,11 +383,18 @@
 														</div>';
 
 												}else{
-													echo '
-														<div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(210, 11, 11); color: #FFF;">
-													        '.($lessons_summ - $lessons_debt).' <i class="fa fa-thumbs-down"></i>
-														</div>';
+                                                    if (($lessons_summ - $lessons_debt) < 0) {
+                                                        echo '
+                                                            <div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(210, 11, 11); color: #FFF;">
+                                                                ' . ($lessons_summ - $lessons_debt) . ' <i class="fa fa-thumbs-down"></i>
+                                                            </div>';
 
+                                                    }else{
+                                                        echo '
+                                                            <div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(255, 153, 0); color: #FFF;">
+                                                                ' . ($lessons_summ - $lessons_debt) . ' <i class="fa fa-thumbs-down"></i>
+                                                            </div>';
+                                                    }
 												}
 
                                                 //Смотрим баланс денежек

@@ -121,9 +121,9 @@
 			//$time = time();
 			
 			if (($clients['see_all'] == 1) || $god_mode){
-				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
+				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' AND `status` <> '9' ORDER BY DATE_FORMAT(`birth`, '%d') ASC";
 			}elseif ($clients['see_own'] == 1){
-				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' AND 
+				$query = "SELECT * FROM `spr_clients` WHERE DATE_FORMAT(`birth`, '%m') = '{$month}' AND `status` <> '9' AND 
 				(
 				`id` IN (SELECT `client` FROM `journal_groups_clients` WHERE `group_id` IN (SELECT `id` FROM `journal_groups` WHERE `worker`='{$_SESSION['id']}'))
 				OR

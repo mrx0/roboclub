@@ -11,6 +11,7 @@
 		if ($_POST){
 			if (isset($_POST['group_id']) && isset($_POST['journalItems'])){
 				include_once 'DBWork.php';
+                include_once 'functions.php';
 				//var_dump ($_SESSION);
 
                 //разбираемся с правами
@@ -100,6 +101,9 @@
 
                                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
+                                            //обновим баланс занятий
+                                            calculateUpdateLessonsBalance($client_id);
+
 											AddLog ('0', $_SESSION['id'], '', 'Из журнала удалена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$res['status'].']');
 										}
 									}else{
@@ -120,6 +124,9 @@
 												$query = "UPDATE `journal_user` SET `status`='{$newStatus}'  WHERE `group_id` = '{$_POST['group_id']}' AND `client_id` = '{$client_id}' AND `day` = '{$day}' AND  `month` = '{$month}' AND  `year` = '{$year}'";
 
 												$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+												//обновим баланс занятий
+                                                calculateUpdateLessonsBalance($client_id);
 
 												AddLog ('0', $_SESSION['id'], '', 'В журнале изменена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');
 											}
@@ -144,6 +151,9 @@
 
 											$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
+                                            //обновим баланс занятий
+                                            calculateUpdateLessonsBalance($client_id);
+
 											AddLog ('0', $_SESSION['id'], '', 'В журнал добавлена запись о посещении. Группа ['.$_POST['group_id'].']. Ребёнок ['.$client_id.']. Добавил ['.$user_id.']. День ['.$day.']. Месяц ['.$month.']. Год ['.$year.']. Статус ['.$newStatus.']');
 										}
 									}else{
@@ -157,7 +167,7 @@
 						if ($editError){
 							echo $editErrorText;
 						}else{
-							echo 'В журнал внесены изменения.';
+                            echo 'В журнал внесены изменения.';
 						}
 					}else{
 						echo 'Не хватает прав доступа.';

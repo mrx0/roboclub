@@ -1,7 +1,7 @@
 <?php
 
-//index.php
-//Главная
+//clients.php
+//Список детей
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -157,37 +157,65 @@
 								<div class="cellText cellComment" style="text-align: center">Комментарий</div>
 							</li>';
 
-				for ($i = 0; $i < count($clients_j); $i++) { 
 
-					echo '
+                $clientsStr = '';
+                $clientsDelStr = '';
+
+				for ($i = 0; $i < count($clients_j); $i++) {
+
+                    $clientsTempStr = '';
+
+                    $clientsTempStr .= '
 							<li class="cellsBlock cellsBlockHover">
 								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
-					echo '
+                    $clientsTempStr .= '
 								<div class="cellCosmAct" style="text-align: center">';
 					if ($clients_j[$i]['sex'] != 0){
 						if ($clients_j[$i]['sex'] == 1){
-							echo 'М';
+                            $clientsTempStr .= 'М';
 						}
 						if ($clients_j[$i]['sex'] == 2){
-							echo 'Ж';
+                            $clientsTempStr .= 'Ж';
 						}
 					}else{
-						echo '-';
+                        $clientsTempStr .= '-';
 					}
-					
-					echo '
+
+                    $clientsTempStr .= '
 								</div>';
 					if (($clients_j[$i]['birthday'] == "-1577934000") || ($clients_j[$i]['birthday'] == 0)){
 						$age = '';
 					}else{
 						$age = getyeardiff( $clients_j[$i]['birthday']).' лет';
 					}
-					echo '
-								<div class="cellTime" style="width: 140px; text-align: right; font-size: 85%">', (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)) ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,' / <b>'.$age.'</b></div>
+                    $clientsTempStr .= '
+								<div class="cellTime" style="width: 140px; text-align: right; font-size: 85%">';
+
+                    if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)) {
+                        $clientsTempStr .= 'не указана';
+                    }else {
+                        $clientsTempStr .= date('d.m.Y', $clients_j[$i]['birthday']);
+
+                        $clientsTempStr .= ' / <b>' . $age . '</b></div>';
+                    }
+                    $clientsTempStr .= '
 								<div class="cellText" style="text-align: right;">'.$clients_j[$i]['contacts'].'</div>
 								<div class="cellText cellComment" style="text-align: right;">'.$clients_j[$i]['comments'].'</div>
 							</li>';
+
+                    if ($clients_j[$i]['status'] != 9) {
+                        $clientsStr .= $clientsTempStr;
+                    }else{
+                         $clientsDelStr .= $clientsTempStr;
+                    }
 				}
+
+				echo $clientsStr;
+
+				if (($clients['close'] == 1) || ($god_mode)){
+                    echo '<div style="margin-top: 25px; background-color: #ABABAB;">'.$clientsDelStr.'</div>';
+                }
+
 			}else{
 				echo '<h3>Нет фамилий, начинающихся на эту букву.</h3>';
 			}
