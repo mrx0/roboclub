@@ -15,7 +15,7 @@
 
             $msql_cnnct = ConnectToDB ();
 
-            $query = "SELECT * FROM `spr_tarif_types`;";
+            $query = "SELECT * FROM `spr_tarif_types` WHERE `status` <> '9';";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -70,10 +70,10 @@
                     /*if (max(array_keys($tarif_types_j)) == $id) $checked = true;
                     else $checked = false;*/
 
-                    if ($tarif_types_item['status'] != 9) {
+                    //if ($tarif_types_item['status'] != 9) {
                         echo '
                                 <input id="type" name="type" class="type type_'.$tarif_types_item['id'].'" value="' . $tarif_types_item['id'] . '" type="radio" >' . $tarif_types_item['name'] . '<br>';
-                    }
+                    //}
 
                 }
 

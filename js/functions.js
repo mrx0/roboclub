@@ -21,7 +21,29 @@
         });
     }
 
+    //Смена пароля
+    function changePass(id) {
 
+        var rys = confirm("Вы хотите сменить пароль. \n\nВы уверены?");
+
+        if (rys){
+            ajax({
+                url:"change_pass_f.php",
+                //statbox:"errrror",
+                method:"POST",
+                data:
+                    {
+                        id: id,
+                    },
+                success:function(data){
+                    alert(data);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 1000);
+                }
+            })
+        }
+    };
 
     //Размер объекта
 	Object.size = function(obj) {
@@ -116,6 +138,44 @@
         window.location.replace(link+"?m="+iWantThisMonth+"&y="+iWantThisYear);
     }*/
 
+    function Ajax_markOrder(order_id, thisObj, filial, month, year){
+        //console.log(order_id);
+        //console.log(thisObj.parent().parent().parent().parent().find('.refreshOnlyThisTab'));
+
+        var objToRefresh = thisObj.parent().parent().parent().parent().find('.refreshOnlyThisTab');
+
+        var link = "add_order_mark.php";
+
+        reqData = {
+            order_id: order_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if(res.result == "success") {
+                    //$("#status").html(res.data);
+                    setTimeout(function () {
+                        refreshOnlyThisTab(objToRefresh, filial, month, year, 'orders');
+                    }, 500);
+                }
+                if(res.result == "error"){
+                    console.log(res);
+                }
+            }
+        })
+    }
+
+
     //Окрасить кнопки
     function colorizeTButton (t_number_active){
         $(".sel_tooth").each(function() {
@@ -182,6 +242,82 @@
                             if(res.result == "success") {
                                 $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
                                     '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Новый тип тарифов добавлен</li>' +
+                                    '</ul>');
+                                setTimeout(function () {
+                                    window.location.replace('tarif_types.php');
+                                }, 1000);
+                            }
+                            if(res.result == "error"){
+                                console.log(res);
+                            }
+                        }
+                    })
+                } else {
+                    // перебираем массив с ошибками
+                    for (var errorField in res.text_error) {
+                        // выводим текст ошибок
+                        $('#' + errorField + '_error').html(res.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#' + errorField + '_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+
+                }
+            }
+        })
+    }
+
+    //редактировать тип тарифов
+    function Ajax_tarif_type_edit(id) {
+
+        hideAllErrors();
+
+        var link = "ajax_test.php";
+
+        var reqData = {
+            name: $("#name").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    //console.log (res.data);
+
+                    link = "tarif_type_edit_f.php";
+
+                    reqData = {
+                        id: id,
+                        name: $("#name").val(),
+                        descr: $("#descr").val()
+                    };
+
+                    $.ajax({
+                        url: link,
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: reqData,
+                        cache: false,
+                        beforeSend: function () {
+                        },
+                        success: function (res) {
+                            console.log (res);
+
+                            if(res.result == "success") {
+                                $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                                    '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Тип тарифов изменён</li>' +
                                     '</ul>');
                                 setTimeout(function () {
                                     window.location.replace('tarif_types.php');
@@ -289,6 +425,187 @@
                 }
             }
         })
+    }
+
+    //Редактировать тариф
+    function Ajax_tarif_edit(id) {
+
+        var type = document.querySelector('input[name="type"]:checked').value;
+        //console.log(type);
+
+        hideAllErrors();
+
+        var link = "ajax_test.php";
+
+        var reqData = {
+            name: $("#name").val(),
+            cost: $("#cost").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+            },
+            success: function (res) {
+                //console.log (res);
+                console.log (reqData);
+
+                if (res.result == "success") {
+                    //console.log (res.data);
+
+                    link = "tarif_edit_f.php";
+
+                    reqData = {
+                        id: id,
+                        name: $("#name").val(),
+                        descr: $("#descr").val(),
+                        cost: $("#cost").val(),
+                        type: type
+                    };
+
+                    $.ajax({
+                        url: link,
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: reqData,
+                        cache: false,
+                        beforeSend: function () {
+                        },
+                        success: function (res) {
+                            //console.log (res);
+
+                            if(res.result == "success") {
+                                $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                                    '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Тариф отредактирован</li>' +
+                                    '</ul>');
+                                setTimeout(function () {
+                                    window.location.replace('tarifs.php');
+                                }, 1000);
+                            }
+                            if(res.result == "error"){
+                                console.log(res);
+                            }
+                        }
+                    })
+                } else {
+                    // перебираем массив с ошибками
+                    for (var errorField in res.text_error) {
+                        // выводим текст ошибок
+                        $('#' + errorField + '_error').html(res.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#' + errorField + '_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+
+                }
+            }
+        })
+    }
+
+    //Добавить возрастную группу
+    function Ajax_add_age_type(){
+
+        hideAllErrors();
+
+        var link = "age_type_add_f.php";
+
+        var from_age =  $("#from_age").val();
+        var to_age =  $("#to_age").val();
+
+        if ((Number(from_age) > Number(to_age)) || isNaN(from_age) || isNaN(to_age)) {
+            $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+        }else {
+
+            var reqData = {
+                from_age: from_age,
+                to_age: to_age
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if(res.result == "success") {
+                        $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Новая возрастная группа добавлена</li>' +
+                            '</ul>');
+                        setTimeout(function () {
+                            window.location.replace('age_types.php');
+                        }, 1000);
+                    }
+                    if(res.result == "error"){
+                        //console.log(res);
+                        $("#errror").html(res.data);
+                    }
+                }
+            })
+        }
+    }
+
+
+    //Редактировать возрастную группу
+    function Ajax_age_type_edit(id){
+
+        hideAllErrors();
+
+        var link = "age_type_edit_f.php";
+
+        var from_age =  $("#from_age").val();
+        var to_age =  $("#to_age").val();
+
+        if ((Number(from_age) > Number(to_age)) || isNaN(from_age) || isNaN(to_age)) {
+            $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+        }else {
+
+            var reqData = {
+                id: id,
+                from_age: from_age,
+                to_age: to_age
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if(res.result == "success") {
+                        $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Возрастная группа изменена</li>' +
+                            '</ul>');
+                        setTimeout(function () {
+                            window.location.replace('age_types.php');
+                        }, 1000);
+                    }
+                    if(res.result == "error"){
+                        //console.log(res);
+                        $("#errror").html(res.data);
+                    }
+                }
+            })
+        }
     }
 
 
@@ -442,6 +759,132 @@
                     window.location.replace('client.php?id='+id);
                     //console.log('client.php?id='+id);
                 }, 100);
+            }
+        })
+    };
+
+    //Возрастная группа в архив
+    function Ajax_del_age_type(id) {
+
+        ajax({
+            url:"age_type_close_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                setTimeout(function () {
+                    window.location.replace('age_types.php');
+                    //console.log('client.php?id='+id);
+                }, 500);
+            }
+        })
+    };
+
+    //Тип тарифов  в архив
+    function Ajax_del_tarif_type(id) {
+
+        ajax({
+            url:"tarif_type_close_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                setTimeout(function () {
+                    window.location.replace('tarif_types.php');
+                    //console.log('client.php?id='+id);
+                }, 500);
+            }
+        })
+    };
+
+    //Тип тарифов  в архив
+    function Ajax_del_tarif(id) {
+
+        ajax({
+            url:"tarif_close_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                setTimeout(function () {
+                    window.location.replace('tarifs.php');
+                    //console.log('client.php?id='+id);
+                }, 500);
+            }
+        })
+    };
+
+    //Возрастная группа из архива
+    function Ajax_open_age_type(id) {
+
+        ajax({
+            url:"age_type_open_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                setTimeout(function () {
+                    window.location.replace('age_types.php');
+                    //console.log('client.php?id='+id);
+                }, 500);
+            }
+        })
+    };
+
+    //Тип тарифов из архива
+    function Ajax_open_tarif_type(id) {
+
+        ajax({
+            url:"tarif_type_open_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                setTimeout(function () {
+                    window.location.replace('tarif_types.php');
+                    //console.log('client.php?id='+id);
+                }, 500);
+            }
+        })
+    };
+
+    //Тариф из архива
+    function Ajax_open_tarif(id) {
+
+        ajax({
+            url:"tarif_open_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                setTimeout(function () {
+                    window.location.replace('tarifs.php');
+                    //console.log('client.php?id='+id);
+                }, 500);
             }
         })
     };
@@ -1967,6 +2410,7 @@
                 {
                     client_id: client_id,
                     group_id: $("#group_id").val(),
+                    filial_id: $("#filial_id").val(),
                     date_in: date_in,
 
                     summ: Summ
@@ -2479,9 +2923,9 @@
     }
 
     //Обновляем общую сумму на филиале
-    function updateAllSumm (){
+    function updateAllSumm (blocks){
         $('.allSumm').html(0);
-        $('.summOrders').each(function(){
+        $(blocks).each(function(){
             //console.log(Number($(this).html()));
 
             $('.allSumm').html(Number($('.allSumm').html())+Number($(this).html()));
@@ -2491,6 +2935,8 @@
 
     //Получаем ордеры
     function getOrdersDatafunc (thisObj, reqData){
+        //console.log(thisObj);
+
         $.ajax({
             url:"fl_get_orders_f.php",
             global: false,
@@ -2529,6 +2975,8 @@
                         $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "inline-block");*/
 
                         thisObj.parent().find(".summOrders").html(res.summCalc);
+                        $(".summOrders_"+filial).html(res.summCalc);
+                        //console.log($(".summOrders_"+filial));
 
                     }else{
                         //$("#tabs_notes_"+permission+"_"+worker).css("display", "none");
@@ -2557,12 +3005,97 @@
         });
     }
 
+    //Получаем счета с амортизационными взносами
+    function getAmortDatafunc (thisObj, reqData){
+        $.ajax({
+            url:"fl_get_amort_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: reqData,
+
+            cache: false,
+            beforeSend: function() {
+                thisObj.html("<div style='width: 150px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка данных</span></div>");
+            },
+            success:function(res){
+                //console.log(res);
+                //console.log(res.summAmortNotPaid);
+                //thisObj.html(res);
+
+                if(res.result == 'success'){
+
+                    ids = thisObj.attr("id");
+                    ids_arr = ids.split("_");
+                    //console.log(ids_arr);
+
+                    filial = ids_arr[0];
+                    //month = ids_arr[1];
+                    //year = ids_arr[2];
+
+                    if (res.status == 1){
+                        //thisObj.html(res.data);
+                        thisObj.html('');
+
+                        if (res.summAmort > 0) {
+                            thisObj.append(res.data);
+                            //console.log(res);
+                        }
+
+                        if (res.summAmortNotPaid > 0) {
+                            thisObj.append(res.dataNP);
+                        }
+
+                        //Показываем оповещения
+                        //$("#tabs_notes_"+permission+"_"+worker).show();
+                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
+                        //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+
+                        //$("#tabs_notes_"+permission+"_"+worker).css("display", "inline-block");
+                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
+
+                        thisObj.parent().find(".summAmorts").html(res.summAmort);
+                        $(".summAmorts_"+filial).html(res.summAmort);
+
+                        if (res.summAmortNotPaid > 0) {
+                            //console.log(res.summAmortNotPaid);
+                            thisObj.parent().find(".summAmortsNP").html('Сумма из неоплаченных: <i style="color: red;">'+res.summAmortNotPaid+'</i> <i style="font-weight: normal;">руб.</i>');
+                            $(".summAmortsNP_" + filial).html('/<i style="color: red;">'+res.summAmortNotPaid+'</i>');
+                        }
+
+                    }else{
+                        //$("#tabs_notes_"+permission+"_"+worker).css("display", "none");
+                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "none");
+                    }
+
+                    if (res.status == 0){
+                        thisObj.html("Нет данных по счетам");
+                    }
+                }
+
+                if(res.result == 'error'){
+                    thisObj.html(res.data);
+                }
+
+                //Сумма со всех филиалов
+                /*$(".summOrders").each(function() {
+                    console.log(Number($(this).html()));
+
+                    $(".allSumm").html(Number($(".allSumm").html())+Number($(this).html()));
+                });*/
+
+            }
+        });
+    }
+
     //Обновим данные, но только в данной вкладке
-    function refreshOnlyThisTab(thisObj, filial, month, year){
+    function refreshOnlyThisTab(thisObj, filial, month, year, label){
         //console.log(permission_id+' _ '+worker_id+' _ '+office_id);
         //console.log(thisObj.parent());
+        //console.log(thisObj);
 
-        var needOrderObj = thisObj.parent().find('.ordersData');
+        var needObj = thisObj.parent().find('.ordersData');
 
         var reqData = {
             filial: filial,
@@ -2570,7 +3103,12 @@
             year: year
         };
 
-        getOrdersDatafunc (needOrderObj, reqData);
+        if (label == 'orders') {
+            getOrdersDatafunc(needObj, reqData);
+        }
+        if (label == 'amort') {
+            getAmortDatafunc(needObj, reqData);
+        }
 
     }
 

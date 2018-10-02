@@ -1,7 +1,7 @@
 <?php
 
-//invoice_report1.php
-//Покажем все незакрытые счета
+//amort_report1.php
+//
 
 
 require_once 'header.php';

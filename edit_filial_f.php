@@ -6,16 +6,17 @@
 			include_once 'DBWork.php';
 			
 			$filial = SelDataFromDB('spr_office', $_POST['id'], 'id');
-			if ($filial !=0){	
-			
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+			if ($filial !=0){
+
+                $msql_cnnct = ConnectToDB();
+
 				$time = time();
+
 				$query = "UPDATE `spr_office` SET `name`='{$_POST['name']}', `address`='{$_POST['address']}', `contacts`='{$_POST['contacts']}', `color`='".'#'.$_POST['color']."'  WHERE `id`='{$_POST['id']}'";
-				mysql_query($query) or die(mysql_error());
-				mysql_close();
+
+				$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+				//mysql_close();
 				
 				//логирование
 				AddLog ('0', $_POST['session_id'], 'Название филиала ['.$filial[0]['name'].']. Адрес филиала ['.$filial[0]['address'].']. Контакты филиала ['.$filial[0]['contacts'].'].', 'Название филиала ['.$_POST['name'].']. Адрес филиала ['.$_POST['address'].']. Контакты филиала ['.$_POST['contacts'].'].');	

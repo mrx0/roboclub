@@ -27,7 +27,7 @@ if ($enter_ok){
                 <header style="margin-bottom: 5px;">
                     <div class="nav">
                         <a href="finances2.php" class="b">Финансы</a>
-                        <a href="amort_report1.php" class="b">Амортизационные взносы</a>
+                        <a href="amort_report.php" class="b">Амортизационные взносы</a>
                     </div>
                     <h1>Незакрытые счета</h1>';
         echo '

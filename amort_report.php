@@ -1,7 +1,7 @@
 <?php
 
-//finances2.php
-//Новый общий финансовый отчет по филиалам
+//amort_report.php
+//Все амортизационные взносы
 
 
 require_once 'header.php';
@@ -29,12 +29,14 @@ if ($enter_ok){
         echo '
                 <header style="margin-bottom: 5px;">
                     <div class="nav">
+                        <a href="finances2.php" class="b">Финансы</a>
                         <a href="invoice_report1.php" class="b">Незакрытые счета</a>
-                        <a href="amort_report.php" class="b">Амортизационные взносы</a>
-                        <a href="finances.php" class="b" style="background-color: #CCC;">Финансы (старое)</a>
                     </div>
-                    <h1>Финансы</h1>
-                    ';
+                    <h1>Амортизационные взносы</h1>';
+        echo '
+                    <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+                        В отчёте отображаются счета, в которых встречаются позиции типа "Амортизационный взнос". Сумма считается только из полностью оплаченных счетов. 
+                    </span>';
         echo '    
                 </header>';
         echo '
@@ -51,7 +53,7 @@ if ($enter_ok){
             $month = date("m");
         }
 
-        echo widget_calendar ($month, $year, 'finances2.php', $dop);
+        echo widget_calendar ($month, $year, 'amort_report.php', $dop);
 
         //
         echo '
@@ -61,9 +63,9 @@ if ($enter_ok){
                         </div>
                         <div style="display: inline-block">
                             <div style="margin-bottom: 2px;"> 
-                                <span class="calculateOrder allSumm">0</span> руб.
+                                <span class="calculateOrder allSumm" style="color: rgba(0, 201, 255, 1);">0</span> руб.
                             </div>
-                            <div onclick="updateAllSumm (\'.summOrders\');">
+                            <div onclick="updateAllSumm (\'.summAmorts\');">
                                 <span  class="yellowLink">обновить</span>
                             </div>
                         </div>
@@ -77,8 +79,8 @@ if ($enter_ok){
                                 <span style="position: absolute; height: 30px; padding: 4px 0; border: 1px solid #BFBCB5; vertical-align: middle; width: 4px; min-width: 4px; background-color: '.$filials_item['color'].';"></span>
                                 <a href="#tabs-'.$filials_item['id'].'">
                                     '.$filials_item['name'].'<br>
-                                    <i>Всего: </i><span class="summOrders_'.$filials_item['id'].'" style="font-weight: bold; color: rgb(2, 108, 33);">0</span><i> руб.</i>
-                                </a>                                
+                                    <i>Всего: </i><span class="summAmorts_'.$filials_item['id'].'" style="font-weight: bold; color: rgba(0, 201, 255, 1);">0</span><i> руб.</i> <span class="summAmortsNP_'.$filials_item['id'].'" style="font-weight: bold;"></span>
+                                </a>
                             </li>';
         }
         echo '
@@ -92,13 +94,13 @@ if ($enter_ok){
                                     <b>Филиал</b>: <i>'.$filials_item['name'].'</i>
                                 </div>
                                 <div>
-                                    <b>Всего</b>: <span class="calculateOrder summOrders">0</span> руб.    
+                                    <b>Всего</b>: <span class="calculateOrder summAmorts" style="color: rgba(0, 201, 255, 1);">0</span> руб. <span class="summAmortsNP" style="font-weight: bold;"></span>
                                 </div>
                             </div>
                             <div class="ordersData" id="'.$filials_item['id'].'_'.$month.'_'.$year.'" style="border: 1px solid rgba(228, 228, 228, 0.72); padding: 5px 30px; ">
                             </div>
 
-                            <div class="refreshOnlyThisTab" style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 110%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$filials_item['id'].', '.$month.', '.$year.', \'orders\');" title="Обновить эту вкладку">
+                            <div class="refreshOnlyThisTab" style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 110%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$filials_item['id'].', '.$month.', '.$year.', \'amort\');" title="Обновить эту вкладку">
                                 <span style="font-size: 80%;">Обновить эту вкладку</span> <i class="fa fa-refresh" aria-hidden="true"></i>
                             </div>
                         </div>';
@@ -147,7 +149,7 @@ if ($enter_ok){
                             };
                             
                             
-                            getOrdersDatafunc (thisObj, certData);
+                            getAmortDatafunc (thisObj, certData);
                         });
                     });
 

@@ -56,8 +56,17 @@
 
                         foreach ($rez as $order_item){
 
+                            //Если стоит отметка о проверке, то поменяем цвет ордера
+                            if ($order_item['mark'] == 1){
+                                $bgColor = 'background-color: rgba(249, 238, 0, 0.3);';
+                                $mark = '<i class="fa fa-check" style="font-size: 160%; color: darkgreen; text-shadow:1px 1px 0 rgba(115, 115, 115, 0.8);"></i>';
+                            }else{
+                                $bgColor = '';
+                                $mark = '<i class="fa fa-dot-circle-o" style="font-size: 160%; color: rgba(194, 0, 255, 0.96); text-shadow:1px 1px 0 rgba(38, 212, 180, 0.8);"></i>';
+                            }
+
                             $orderTemp_str .= '
-                                <li class="cellsBlock cellsBlockHover" style="display: inline-block; width: auto; border: 1px solid #CCC; box-shadow: 1px 1px 0px 0px rgba(101, 101, 101, 1); font-size: 100%;">';
+                                <li class="cellsBlock cellsBlockHover" style="display: inline-block; position: relative; width: auto; '.$bgColor.' border: 1px solid #CCC; box-shadow: 1px 1px 0px 0px rgba(101, 101, 101, 1); font-size: 100%;">';
                             $orderTemp_str .= '
                                     <div class="cellOrder" style="position: relative;">
                                         <a href="order.php?id='.$order_item['id'].'" class="ahref" style="position: relative;">
@@ -91,6 +100,9 @@
                             $orderTemp_str .= '
                                     </div>';
                             $orderTemp_str .= '
+                                    <div style="position: absolute; top: 1px;; right: 1px; cursor: pointer;" onclick="Ajax_markOrder('.$order_item['id'].', $(this), '.$_POST['filial'].', '.$_POST['month'].', '.$_POST['year'].')">
+                                        '.$mark.'
+                                    </div>
                                 </li>';
 
 

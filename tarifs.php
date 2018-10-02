@@ -75,7 +75,8 @@ if ($enter_ok){
 								    <i>'.$tarifs_item['type_name'].'</i>
 								</div>
 								<div class="cellName" style="text-align: center; background-color:#FEFEFE;">
-								    ***
+								     <a href="tarif_edit.php?id='.$tarifs_item['id'].'" class=""><img src="img/edit.png" title="Редактировать"></a>
+                                    <a href="tarif_close.php?id='.$tarifs_item['id'].'"><img src="img/delete.png" title="Закрыть"></a>
 								</div>
                             </li>';
                 }else{
@@ -88,7 +89,8 @@ if ($enter_ok){
                                    '.$tarifs_item['descr'] . '
                                 </div>
                                 <div class="cellLeft" style="font-size: 90%; color: red;">
-                                    <i>Тариф в архиве</i>
+                                    <i>в архиве</i>
+                                    <a href="open_tarif.php?id='.$tarifs_item['id'].'" style="float: right;"><img src="img/reset.png" title="Открыть"></a>
                                 </div>
                             </div>';
                 }

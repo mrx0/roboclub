@@ -123,7 +123,10 @@
 											color:document.getElementById("color").value,
 											session_id:'.$_SESSION['id'].',
 										},
-										success:function(data){document.getElementById("status").innerHTML=data;}
+										success:function(data){document.getElementById("status").innerHTML=data;
+										setTimeout(function () {
+										    window.location.replace("filial.php?id='.$filial[0]['id'].'");
+                                        }, 700);}
 									})\'
 								>';
 					}

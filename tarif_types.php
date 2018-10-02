@@ -68,7 +68,8 @@
                                    '.$tarif_types_item['descr'] . '
                                 </div>
                                 <div class="cellLeft" style="font-size: 90%;">
-                                123
+                                    <a href="tarif_type_edit.php?id='.$tarif_types_item['id'].'" class=""><img src="img/edit.png" title="Редактировать"></a>
+                                    <a href="tarif_type_close.php?id='.$tarif_types_item['id'].'"><img src="img/delete.png" title="Закрыть"></a>
                                 </div>
                             </div>';
                     }else{
@@ -81,7 +82,8 @@
                                    '.$tarif_types_item['descr'] . '
                                 </div>
                                 <div class="cellLeft" style="font-size: 90%; color: red;">
-                                    <i>Тариф в архиве</i>
+                                    <i>в архиве</i>
+                                    <a href="open_tarif_type.php?id='.$tarif_types_item['id'].'" style="float: right;"><img src="img/reset.png" title="Открыть"></a>
                                 </div>
                             </div>';
                     }

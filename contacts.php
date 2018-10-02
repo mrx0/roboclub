@@ -76,7 +76,10 @@
                                     <div class="cellName" style="text-align: center; ' . $cl_color . '">' . $contacts[$i]['login'] . '</div>';
                         if ($god_mode) {
                             $item .= '
-                                        <div class="cellName" style="text-align: center; ' . $cl_color . '">' . $contacts[$i]['password'] . '</div>';
+                                        <div class="cellName" style="text-align: center; ' . $cl_color . '">
+                                            <div style="display:inline-block;">' . $contacts[$i]['password'] . '</div>
+                                            <div style="color: red; display: inline-block; cursor: pointer;" title="Сменить пароль" onclick=changePass('.$contacts[$i]['id'].')><i class="fa fa-key" aria-hidden="true"></i></div>
+                                        </div>';
                         } else {
                             $item .= '<div class="cellName" style="text-align: center; ' . $cl_color . '">****</div>';
                         }

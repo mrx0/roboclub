@@ -888,7 +888,7 @@
 
         $query = "SELECT * FROM `journal_user` 
                   WHERE `client_id` = '".$client_id."' 
-                  AND  ((`year` = '2018' AND `month` > '09')  
+                  AND  ((`year` = '2018' AND `month` > '08')  
                   OR  (`year` > '2018'))";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

@@ -14,7 +14,7 @@
 
 			$temp_arr = array();
 			
-			if (!isset($_POST['summ']) || !isset($_POST['client_id']) || !isset($_POST['group_id'])){
+			if (!isset($_POST['summ']) || !isset($_POST['client_id']) || !isset($_POST['group_id']) || !isset($_POST['filial_id'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 				//var_dump($_SESSION['invoice_data'][$_POST['client_id']][$_POST['group_id']]['data'][$_POST['zub']][$_POST['key']]);
@@ -37,9 +37,9 @@
                         //$discount = $_SESSION['invoice_data'][$_POST['client_id']][$_POST['group_id']]['discount'];
 
 						//Добавляем в базу
-						$query = "INSERT INTO `journal_invoice` (`group_id`, `client_id`, `summ`, `date_in`, `create_person`, `create_time`) 
+						$query = "INSERT INTO `journal_invoice` (`group_id`, `filial_id`, `client_id`, `summ`, `date_in`, `create_person`, `create_time`) 
 						VALUES (
-						'{$_POST['group_id']}', '{$_POST['client_id']}', '{$_POST['summ']}', '{$date_in}', '{$_SESSION['id']}', '{$time}')";
+						'{$_POST['group_id']}', '{$_POST['filial_id']}', '{$_POST['client_id']}', '{$_POST['summ']}', '{$date_in}', '{$_SESSION['id']}', '{$time}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 						

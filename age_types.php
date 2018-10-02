@@ -40,7 +40,7 @@ require_once 'header.php';
                                 <a href="options.php" class="b">Настройки</a>
                             </div>
 							<h2>Возрастные группы</h2>
-							<a href="add_age_type.php" class="b">Добавить</a>
+							<a href="age_type_add.php" class="b">Добавить</a>
 						</header>';
 
 			echo '
@@ -48,6 +48,7 @@ require_once 'header.php';
 
             if (!empty($age_types_j)){
 
+                $archiv_age_types = '';
                 $archiv_age_types = '';
 
                 echo '
@@ -74,11 +75,12 @@ require_once 'header.php';
                                    '.$age_types_item['to_age'] . '
                                 </div>
                                 <div class="cellLeft" style="font-size: 90%;">
-                                123
+                                    <a href="age_type_edit.php?id='.$age_types_item['id'].'" class=""><img src="img/edit.png" title="Редактировать"></a>
+                                    <a href="age_type_close.php?id='.$age_types_item['id'].'"><img src="img/delete.png" title="Закрыть"></a>
                                 </div>
                             </div>';
                     }else{
-                        $archiv_tarif_types .= '
+                        $archiv_age_types .= '
                             <div class="cellsBlock2" style="margin: 5px;">
                                 <div class="cellLeft" style="font-size: 90%;">
                                     '.$age_types_item['from_age'] . '
@@ -87,14 +89,15 @@ require_once 'header.php';
                                    '.$age_types_item['to_age'] . '
                                 </div>
                                 <div class="cellLeft" style="font-size: 90%; color: red;">
-                                    <i>в архиве</i>
+                                    <i>в архиве</i> 
+                                    <a href="open_age_type.php?id='.$age_types_item['id'].'" style="float: right;"><img src="img/reset.png" title="Открыть"></a>
                                 </div>
                             </div>';
                     }
 
 				}
 
-				//var_dump(!empty($archiv_tarif_types));
+				//var_dump(!empty($archiv_age_types));
 
 				if (!empty($archiv_age_types)){
 
