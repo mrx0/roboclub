@@ -1,6 +1,6 @@
 <?php
 
-//add_shed_group.php
+//filial_shed.php
 //
 
 	require_once 'header.php';
@@ -31,23 +31,26 @@
 						
 						$arr = array();
 						$rez = array();
-						
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-						mysql_select_db($dbName) or die(mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
+
+                        $msql_cnnct = ConnectToDB ();
+
 						$time = time();
+
 						//$query = "SELECT * FROM `spr_shed_templs` WHERE `id`=$id";
 						$query = "SELECT * FROM `spr_shed_templs` WHERE `group` IN (SELECT `id` FROM `journal_groups` WHERE `filial`='{$_GET['id']}')";
-						$res = mysql_query($query) or die(mysql_error());
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($rez, $arr);
 							}
 						}else
 							$rez = 0;
 						
-						mysql_close();
+						//mysql_close();
 						
 						if ($rez !=0){
 
@@ -116,12 +119,12 @@
 													$groupTitleComment = 'title="'.$j_group[0]['comment'].'"';
 													
 													$bg_color = 'background: '.$j_group[0]['color'].';';
-													$grop_shed_templs .= '<a href="group.php?id='.$j_group[0]['id'].'" class="b2" style="background: '.$j_group[0]['color'].';" '.$groupTitleComment.'><span style="font-weight: bold;">'.$j_group[0]['name'].'</span><br>';
+													$grop_shed_templs .= '<a href="group.php?id='.$j_group[0]['id'].'" class="b2" style="background: '.$j_group[0]['color'].';" '.$groupTitleComment.'><span style="font-weight: bold; font-size: 120%;">'.$j_group[0]['name'].'</span><br>';
 													
 													//Возрасты
 													$ages = SelDataFromDB('spr_ages', $j_group[0]['age'], 'ages');
 													if ($ages != 0){
-														$grop_shed_templs .= '<span style="font-size: 80%;">'.$ages[0]['from_age'].' - '.$ages[0]['to_age'].' лет</span> <span style="font-weight: bold; font-size: 110%;">';
+														$grop_shed_templs .= '<span style="font-size: 120%;">'.$ages[0]['from_age'].' - '.$ages[0]['to_age'].' лет</span> <span style="font-weight: bold; font-size: 110%;">';
 														//var_dump ($uch_arr);
 														if ($uch_arr != 0) 
 															$grop_shed_templs .= count($uch_arr); 
@@ -129,9 +132,9 @@
 															$grop_shed_templs .= 0;
 														$grop_shed_templs .= ' чел.</span>';
 													}else{
-														$grop_shed_templs .= '<span style="color: red; font-size: 75%">возраст не указан</span>';
+														$grop_shed_templs .= '<span style="color: red; font-size: 75%"><i>возраст не указан</i></span>';
 													}	
-													$grop_shed_templs .= '<br><span style="font-size: 80%">'.WriteSearchUser('spr_workers', $j_group[0]['worker'], 'user').'</span>';
+													$grop_shed_templs .= '<br><i>Тренер: <span style="font-size: 100%">'.WriteSearchUser2('spr_workers', $j_group[0]['worker'], 'user', false).'</span></i>';
 													$grop_shed_templs .= '</a>';
 													
 												}else{
