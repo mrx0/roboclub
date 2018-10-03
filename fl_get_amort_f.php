@@ -86,7 +86,7 @@
                         }
                         $amortThisMonth .= '
                                     <a href="invoice.php?id=' . $arr['id'] . '" class="ahref">
-                                        <b>Счёт #' . $arr['id'] . '</b>
+                                        <b>Счёт #' . $arr['id'] . '</b> от '.date('d.m.y' ,strtotime($arr['date_in'])).'
                                     </a><br>
                                     <span style="font-size:80%;  color: #555;">';
 

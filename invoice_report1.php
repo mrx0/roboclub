@@ -139,7 +139,7 @@ if ($enter_ok){
                 }
                 $invoiceTemp_str .= '
                                     <a href="invoice.php?id=' . $invoice_item['id'] . '" class="ahref">
-                                        <b>Счёт #' . $invoice_item['id'] . '</b>
+                                        <b>Счёт #' . $invoice_item['id'] . '</b> от '.date('d.m.y' ,strtotime($invoice_item['date_in'])).'
                                     </a><br>
                                     <span style="font-size:80%; color: #555;">Контрагент: <b>'.WriteSearchUser2('spr_clients', $invoice_item['client_id'], 'user', true).'</b></span><br>
                                     <b style="font-size: 80%;"><i>'.$group_j['group_name'].' ['.$group_j['office_name'].']</i></b><br>

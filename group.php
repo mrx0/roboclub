@@ -1,7 +1,7 @@
 <?php
 
-//user.php
-//
+//group.php
+//Группа
 
 	require_once 'header.php';
 	
@@ -18,19 +18,19 @@
 			
 				//Определяем подмены
 				$iReplace = FALSE;
-				
-				require 'config.php';	
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+
+                $msql_cnnct = ConnectToDB ();
+
 				$query = "SELECT * FROM `journal_replacement` WHERE `group_id`='{$_GET['id']}' AND `user_id`='{$_SESSION['id']}'";
-				$res = mysql_query($query) or die(mysql_error());
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+				$number = mysqli_num_rows($res);
 				if ($number != 0){
 					$iReplace = TRUE;
 				}else{
 				}
-				mysql_close();	
+				//mysql_close();
 			
 			
 				echo '
@@ -57,7 +57,10 @@
 
 										<div class="cellsBlock2">
 											<div class="cellLeft">Название группы</div>
-											<div class="cellRight" style="background-color: '.$j_group[0]['color'].';">'.$j_group[0]['name'].'</div>
+											<div class="cellPriority" style="text-align: center; background-color: '.$j_group[0]['color'].'; width: 10px; min-width: 10px; border: none; outline: 1px solid #BFBCB5;"></div>
+											<div class="cellRight" style="">
+											    '.$j_group[0]['name'].'
+											</div>
 										</div>
 
 										<div class="cellsBlock2">

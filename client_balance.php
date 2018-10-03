@@ -241,7 +241,7 @@ if ($enter_ok){
                         }
                         $amortThisYear .= '
                                     <a href="invoice.php?id=' . $arr['id'] . '" class="ahref">
-                                        <b>Счёт #' . $arr['id'] . '</b>
+                                        <b>Счёт #' . $arr['id'] . '</b> от '.date('d.m.y' ,strtotime($arr['date_in'])).'
                                     </a><br>
                                     <span style="font-size:80%;  color: #555;">';
 
@@ -415,7 +415,7 @@ if ($enter_ok){
                         }
                         $invoiceTemp_str .= '
                                     <a href="invoice.php?id=' . $invoice_item['id'] . '" class="ahref">
-                                        <b>Счёт #' . $invoice_item['id'] . '</b>
+                                        <b>Счёт #' . $invoice_item['id'] . '</b> от '.date('d.m.y' ,strtotime($invoice_item['date_in'])).'
                                     </a><br>
                                     <b style="font-size: 80%;"><i>'.$group_j['group_name'].' ['.$group_j['office_name'].']</i></b><br>
                                     <span style="font-size:80%;  color: #555;">';

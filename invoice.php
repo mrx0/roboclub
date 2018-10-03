@@ -70,7 +70,7 @@
 							<div id="status">
 								<header>
 
-									<h2>Счёт #'.$_GET['id'].'';
+									<h2>Счёт #'.$_GET['id'].' от '.date('d.m.y' ,strtotime($invoice_j[0]['date_in'])).'';
 
 							//Изменить дату внесения
 							/*if (($finance['see_all'] == 1) || $god_mode){

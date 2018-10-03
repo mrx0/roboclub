@@ -86,7 +86,7 @@ if ($enter_ok){
 
         foreach ($filials_j as $filials_item){
             echo '
-                        <div id="tabs-'.$filials_item['id'].'" style="width: auto; float: none; margin-left: 180px; font-size: 12px; padding: 5px 30px; ">
+                        <div id="tabs-'.$filials_item['id'].'" style="width: auto; float:   none; margin-left: 180px; font-size: 12px; padding: 5px 30px; ">
                             <div style="margin-bottom: 20px;">
                                 <div style="margin-bottom: 5px;">
                                     <b>Филиал</b>: <i>'.$filials_item['name'].'</i>

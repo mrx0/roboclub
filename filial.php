@@ -61,7 +61,8 @@
 					echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Название</div>
-									<div class="cellRight colorizeText" style="background-color: '.$filial[0]['color'].';">'.$filial[0]['name'].'</div>
+									<div class="cellPriority" style="text-align: center; background-color: '.$filial[0]['color'].'; width: 10px; min-width: 10px; border: none; outline: 1px solid #BFBCB5;"></div>
+									<div class="cellRight colorizeText" style="">'.$filial[0]['name'].'</div>
 								</div>
 								
 								<div class="cellsBlock2">
@@ -177,7 +178,7 @@
 									$result_html .= '
 											<li class="cellsBlock cellsBlockHover">
 												<div class="cellPriority" style="text-align: center; background-color: '.$journal_groups[$i]['color'].';"></div>
-												<a href="group.php?id='.$journal_groups[$i]['id'].'" class="cellName ahref colorizeText" style="background-color: '.$filialColor.';">'.$journal_groups[$i]['name'].'</a>
+												<a href="group.php?id='.$journal_groups[$i]['id'].'" class="cellName ahref colorizeText" style="">'.$journal_groups[$i]['name'].'</a>
 												<a href="journal_new.php?id='.$journal_groups[$i]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: green" title="Журнал группы"><i class="fa fa-calendar"></i></a>
 												<a href="group_client.php?id='.$journal_groups[$i]['id'].'" class="cellCosmAct ahref" style="text-align: center; font-size: 120%; color: rgba(47, 47, 47, 0.93);" title="Участники группы"><i class="fa fa-users"></i></a>
 												<a href="filial.php?id='.$filials[0]['id'].'" id="4filter" class="cellName ahref" style="text-align: center;'.$bg_color.'">'.$filial.'</a>
