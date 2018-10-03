@@ -160,7 +160,7 @@ if ($enter_ok){
                 $invoiceTemp_str .= '
                                     </span>
                                     
-                                    <div style="position: absolute; top: -4px; right: -4px; font-size: 120%;>'.$paid_mark.'</div>
+                                    <div style="position: absolute; top: -4px; right: -4px; font-size: 120%;">'.$paid_mark.'</div>
                                     </div>
                                     <div class="cellName">
                                         <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
