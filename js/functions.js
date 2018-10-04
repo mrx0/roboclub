@@ -133,7 +133,7 @@
     //
     /*function iWantThisDate(link){
         var iWantThisMonth = $("#iWantThisMonth").val();
-        var iWantThisYear =  $("#iiWantThisYear").val();
+        var iWantThisYear =  $("#iWantThisYear").val();
 
         window.location.replace(link+"?m="+iWantThisMonth+"&y="+iWantThisYear);
     }*/

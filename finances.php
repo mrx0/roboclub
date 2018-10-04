@@ -292,7 +292,7 @@
 				<script type="text/javascript">
 					function iWantThisDate(){
                         var iWantThisMonth = $("#iWantThisMonth").val();
-                        var iWantThisYear =  $("#iiWantThisYear").val();
+                        var iWantThisYear =  $("#iWantThisYear").val();
 						
 						window.location.replace("finances.php?m="+iWantThisMonth+"&y="+iWantThisYear);
 					}

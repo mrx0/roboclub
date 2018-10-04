@@ -153,7 +153,7 @@ if ($enter_ok){
 
                     function iWantThisDate(){
                         var iWantThisMonth = $("#iWantThisMonth").val();
-                        var iWantThisYear =  $("#iiWantThisYear").val();
+                        var iWantThisYear =  $("#iWantThisYear").val();
                         
                         window.location.replace("finances2.php?m="+iWantThisMonth+"&y="+iWantThisYear);
                     }
