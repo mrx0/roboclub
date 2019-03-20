@@ -381,21 +381,37 @@
                                                 //Разница между потрачено и внесено уроков
                                                 if (($lessons_summ - $lessons_debt) > 0){
 
+                                                    $bgColor = 'rgb(143, 243, 0)';
+
+                                                    if (($client_debt['summ']) > 0) {
+                                                        $bgColor = 'rgb(210, 11, 11);';
+                                                    }
+
                                                     echo '
-														<div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(143, 243, 0); color: rgb(62, 56, 56);">
+														<div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: '.$bgColor.'; color: rgb(62, 56, 56);">
 												            '.($lessons_summ - $lessons_debt).' <i class="fa fa-thumbs-o-up"></i>
 														</div>';
 
                                                 }else{
                                                     if (($lessons_summ - $lessons_debt) < 0) {
+
+                                                        $bgColor = 'rgb(210, 11, 11)';
+
                                                         echo '
-                                                            <div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(210, 11, 11); color: #FFF;">
+                                                            <div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: '.$bgColor.'; color: #FFF;">
                                                                 ' . ($lessons_summ - $lessons_debt) . ' <i class="fa fa-thumbs-down"></i>
                                                             </div>';
 
                                                     }else{
+
+                                                        $bgColor = 'rgb(255, 153, 0)';
+
+                                                        if (($client_debt['summ']) > 0) {
+                                                            $bgColor = 'rgb(210, 11, 11);';
+                                                        }
+
                                                         echo '
-                                                            <div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(255, 153, 0); color: #FFF;">
+                                                            <div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: '.$bgColor.'; color: #FFF;">
                                                                 ' . ($lessons_summ - $lessons_debt) . ' <i class="fa fa-thumbs-down"></i>
                                                             </div>';
                                                     }
@@ -410,8 +426,15 @@
 
                                                 //Сумма долга
                                                 echo '
-                                                    <div id="" class="cellTime" style="text-align: right; width: 70px; min-width: 70px; '.$SummColor.'">
-                                                        '.($client_debt['summ']).'
+                                                    <div id="" class="cellTime" style="text-align: right; width: 70px; min-width: 70px; '.$SummColor.'">';
+
+                                                if ($client_debt['summ'] < 0){
+
+                                                } else{
+                                                    echo  $client_debt['summ'];
+                                                }
+
+                                                echo '
                                                     </div>';
 
                                                 if (($finance['see_all'] == 1) || $god_mode){
