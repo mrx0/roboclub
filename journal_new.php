@@ -426,12 +426,17 @@
 
                                                 //Сумма долга
                                                 echo '
-                                                    <div id="" class="cellTime" style="text-align: right; width: 70px; min-width: 70px; '.$SummColor.'">';
+                                                    <div id="" class="cellTime" style="text-align: right; width: 90px; min-width: 90px; '.$SummColor.'">';
 
-                                                if ($client_debt['summ'] < 0){
+                                                if ($client_debt['summ'] <= 0){
 
+                                                    if (($finance['see_all'] == 1) || $god_mode) {
+                                                        echo  $client_debt['summ'].' руб.';
+                                                    }else{
+                                                        //--
+                                                    }
                                                 } else{
-                                                    echo  $client_debt['summ'];
+                                                    echo  '-'.$client_debt['summ'].' руб.';
                                                 }
 
                                                 echo '
