@@ -373,16 +373,20 @@
                                                     }
                                                 }
 
-												//Итог
-												//Разница между потрачено и внесено уроков
-												if (($lessons_summ - $lessons_debt) > 0){
 
-													echo '
+                                                //Смотрим баланс денежек
+                                                $client_debt = json_decode(calculateDebt ($uch_arr[$i]['id']), true);
+
+                                                //Итог
+                                                //Разница между потрачено и внесено уроков
+                                                if (($lessons_summ - $lessons_debt) > 0){
+
+                                                    echo '
 														<div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(143, 243, 0); color: rgb(62, 56, 56);">
 												            '.($lessons_summ - $lessons_debt).' <i class="fa fa-thumbs-o-up"></i>
 														</div>';
 
-												}else{
+                                                }else{
                                                     if (($lessons_summ - $lessons_debt) < 0) {
                                                         echo '
                                                             <div id="" class="cellTime" style="text-align: center; width: 40px; min-width: 40px; background-color: rgb(210, 11, 11); color: #FFF;">
@@ -395,46 +399,23 @@
                                                                 ' . ($lessons_summ - $lessons_debt) . ' <i class="fa fa-thumbs-down"></i>
                                                             </div>';
                                                     }
-												}
+                                                }
 
-                                                //Смотрим баланс денежек
+                                                //Разница между потрачено и внесено денег
+                                                if (($client_debt['summ']) <= 0) {
+                                                    $SummColor = '';
+                                                }else {
+                                                    $SummColor = 'color: rgb(210, 11, 11);';
+                                                }
+
+                                                //Сумма долга
+                                                echo '
+                                                    <div id="" class="cellTime" style="text-align: right; width: 70px; min-width: 70px; '.$SummColor.'">
+                                                        '.($client_debt['summ']).'
+                                                    </div>';
+
                                                 if (($finance['see_all'] == 1) || $god_mode){
-                                                    //Смотрим количество доступных занятий у ребёнка
-                                                    $journal_balance = array();
-
-                                                    $summ = 0;
-                                                    $debited = 0;
-
-                                                    /*$query = "SELECT `summ`, `debited` FROM `journal_balance` WHERE `client_id` = '".$uch_arr[$i]['id']."' LIMIT 1";
-
-                                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                                                    $number = mysqli_num_rows($res);
-
-                                                    if ($number != 0){
-                                                        while ($arr = mysqli_fetch_assoc($res)){
-                                                            //var_dump($arr);
-                                                            //array_push($journal_uch_lessons_balance, $arr);
-                                                            $summ = $arr['summ'];
-                                                            $debited = $arr['debited'];
-                                                        }
-                                                    }*/
-
-                                                    $client_debt = json_decode(calculateDebt ($uch_arr[$i]['id']), true);
-
-                                                    //Итог
-                                                    //Разница между потрачено и внесено денег
-                                                    if (($client_debt['summ']) <= 0) {
-                                                        $SummColor = '';
-                                                    }else {
-                                                        $SummColor = 'color: rgb(210, 11, 11);';
-                                                    }
-
-												    //Сумма долга
-													echo '
-														<div id="" class="cellTime" style="text-align: right; width: 70px; min-width: 70px; '.$SummColor.'">
-															'.($client_debt['summ']).'
-														</div>
+                                                    echo '
 														<a href="client_balance.php?client_id='.$uch_arr[$i]['id'].'" class="cellTime ahref" style="text-align: center; width: 20px; min-width: 20px;" title="Баланс"><i class="fa fa-rub"></i></a>';
 												}
 
