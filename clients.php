@@ -71,6 +71,8 @@
 			if (($clients['add_new'] == 1) || $god_mode){
 				echo '
 					<a href="add_client.php" class="b">Добавить</a>';
+				echo '
+					<a href="get_contacts.php" class="b">Список по филиалам</a>';
 			}
 			if (!$filter){
 				//echo '<button class="md-trigger b" data-modal="modal-11">Поиск</button>';
